@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "gen:api-types": "openapi-typescript https://maintenanceandinventorymanagementserver-production.up.railway.app/docs.json -o src/shared/types/api-generated.ts",
     "prepare": "husky"
