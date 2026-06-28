@@ -1,0 +1,100 @@
+/* Design tokens ported from the Mainstay design prototype (Mainstay.dc.html).
+   Theme/accent/density are switched at runtime via data-* attributes on
+   <html>, driven by shared/stores/ui-store.ts — see styles/index.css for how
+   Tailwind resolves utilities through these variables. */
+
+:root,
+[data-theme="light"] {
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --panel-2: #f4f4f5;
+  --panel-3: #fafafa;
+  --text: #18181b;
+  --text-2: #52525b;
+  --text-3: #9a9aa3;
+  --border: #e8e8eb;
+  --border-2: #dedee2;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: #eff4ff;
+  --accent-border: #d7e3ff;
+  --on-accent: #ffffff;
+  --red: #dc2626;
+  --red-soft: #fef2f2;
+  --red-border: #fbd8d8;
+  --amber: #b45309;
+  --amber-soft: #fef6e7;
+  --amber-border: #fae3b0;
+  --green: #15803d;
+  --green-soft: #ecfdf3;
+  --green-border: #c6e9cf;
+  --shadow: 0 1px 2px rgba(16, 17, 18, 0.05), 0 1px 3px rgba(16, 17, 18, 0.04);
+  --shadow-lg: 0 12px 40px rgba(16, 17, 18, 0.12);
+  --pad: 26px;
+}
+
+[data-theme="dark"] {
+  --bg: #09090b;
+  --panel: #141417;
+  --panel-2: #1d1d21;
+  --panel-3: #161619;
+  --text: #f4f4f5;
+  --text-2: #a1a1aa;
+  --text-3: #6b6b73;
+  --border: #262629;
+  --border-2: #34343b;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-soft: rgba(59, 130, 246, 0.15);
+  --accent-border: rgba(59, 130, 246, 0.32);
+  --on-accent: #ffffff;
+  --red: #f87171;
+  --red-soft: rgba(248, 113, 113, 0.13);
+  --red-border: rgba(248, 113, 113, 0.28);
+  --amber: #fbbf24;
+  --amber-soft: rgba(251, 191, 36, 0.12);
+  --amber-border: rgba(251, 191, 36, 0.26);
+  --green: #4ade80;
+  --green-soft: rgba(74, 222, 128, 0.12);
+  --green-border: rgba(74, 222, 128, 0.26);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.55);
+}
+
+[data-accent="indigo"] {
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef0ff;
+  --accent-border: #d9ddfb;
+}
+[data-accent="violet"] {
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-soft: #f4ecff;
+  --accent-border: #e4d6fb;
+}
+[data-accent="emerald"] {
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-soft: #e7f8f0;
+  --accent-border: #c4ecd8;
+}
+[data-theme="dark"][data-accent="indigo"] {
+  --accent: #818cf8;
+  --accent-soft: rgba(129, 140, 248, 0.16);
+  --accent-border: rgba(129, 140, 248, 0.3);
+}
+[data-theme="dark"][data-accent="violet"] {
+  --accent: #a78bfa;
+  --accent-soft: rgba(167, 139, 250, 0.16);
+  --accent-border: rgba(167, 139, 250, 0.3);
+}
+[data-theme="dark"][data-accent="emerald"] {
+  --accent: #34d399;
+  --accent-soft: rgba(52, 211, 153, 0.16);
+  --accent-border: rgba(52, 211, 153, 0.3);
+}
+
+[data-density="compact"] {
+  --pad: 16px;
+}
