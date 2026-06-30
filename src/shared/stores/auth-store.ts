@@ -3,7 +3,6 @@ import { create } from "zustand";
 import type { components } from "@/shared/types/api-generated";
 
 type User = components["schemas"]["User"];
-
 type AuthStatus = "pending" | "authenticated" | "unauthenticated";
 
 interface AuthState {
