@@ -28,17 +28,15 @@ export const BrandLogo = ({ variant = "default", showLabel = true, className }: 
           strokeWidth={2}
         />
       </div>
-      <span className="min-w-0 overflow-hidden">
-        <span
-          className={cn(
-            "block shrink-0 whitespace-nowrap text-lg font-semibold tracking-tight",
-            "transition-[opacity,transform] duration-300 ease-in-out",
-            isInverted ? "text-white" : "text-text",
-            showLabel ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0",
-          )}
-        >
-          Mainstay
-        </span>
+      <span
+        className={cn(
+          "shrink-0 whitespace-nowrap text-lg font-semibold tracking-tight",
+          "transition-[opacity,transform] duration-300 ease-in-out",
+          isInverted ? "text-white" : "text-text",
+          showLabel ? "translate-x-0 opacity-100" : "-translate-x-3 opacity-0",
+        )}
+      >
+        Mainstay
       </span>
     </div>
   );
