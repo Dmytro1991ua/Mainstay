@@ -67,7 +67,7 @@ export const Sidebar = () => {
                 only fades + glides a few px toward the icon. */}
             <span
               className={cn(
-                "shrink-0 whitespace-nowrap transition-[opacity,transform] duration-300 ease-in-out",
+                "shrink-0 whitespace-nowrap transition-[opacity,translate] duration-300 ease-in-out",
                 collapsed ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100",
               )}
             >
@@ -93,7 +93,7 @@ export const Sidebar = () => {
               the footer's overflow-x-hidden, fades + glides rather than reflow-snaps. */}
           <div
             className={cn(
-              "shrink-0 whitespace-nowrap transition-[opacity,transform] duration-300 ease-in-out",
+              "shrink-0 whitespace-nowrap transition-[opacity,translate] duration-300 ease-in-out",
               collapsed ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100",
             )}
           >
