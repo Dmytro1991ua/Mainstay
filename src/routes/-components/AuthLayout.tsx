@@ -4,6 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
 import { BrandLogo } from "@/shared/ui/brand-logo";
+import { ThemeToggleCycle } from "@/shared/ui/theme-toggle-cycle";
 
 const FEATURES = [
   "Live low-stock alerts with reorder thresholds",
@@ -16,7 +17,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 export const AuthLayout = () => {
   const status = useAuthStore((s) => s.status);
 
-  if (status === "authenticated") return <Navigate to="/" />;
+  if (status === "authenticated") return <Navigate to="/dashboard" />;
 
   return (
     <main className={cn("flex min-h-screen")}>
@@ -102,7 +103,10 @@ export const AuthLayout = () => {
           <span>© {CURRENT_YEAR} Mainstay</span>
         </div>
       </section>
-      <section className={cn("flex flex-1 items-center justify-center p-11 px-6.5")}>
+      <section className={cn("relative flex flex-1 items-center justify-center p-11 px-6.5")}>
+        <div className={cn("absolute top-6 right-6")}>
+          <ThemeToggleCycle />
+        </div>
         <div className={cn("w-full max-w-[384px]")}>
           <Outlet />
         </div>

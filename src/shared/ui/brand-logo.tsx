@@ -19,25 +19,27 @@ export const BrandLogo = ({ variant = "default", showLabel = true, className }: 
     <div className={cn("flex items-center gap-2.5", className)}>
       <div
         className={cn(
-          "flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-[9px]",
+          "relative z-10 flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-[9px]",
           isInverted ? "border border-white/25 bg-white/15" : "bg-accent",
         )}
       >
         <ClipboardCheck
-          className={cn("h-[19px] w-[19px]", isInverted ? "text-white" : "text-on-accent")}
+          className={cn("h-4.75 w-4.75", isInverted ? "text-white" : "text-on-accent")}
           strokeWidth={2}
         />
       </div>
-      {showLabel && (
+      <span className="min-w-0 overflow-hidden">
         <span
           className={cn(
-            "text-lg font-semibold tracking-tight",
+            "block shrink-0 whitespace-nowrap text-lg font-semibold tracking-tight",
+            "transition-[opacity,transform] duration-300 ease-in-out",
             isInverted ? "text-white" : "text-text",
+            showLabel ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0",
           )}
         >
           Mainstay
         </span>
-      )}
+      </span>
     </div>
   );
 };

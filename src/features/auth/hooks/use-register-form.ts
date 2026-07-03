@@ -31,7 +31,7 @@ export const useRegisterForm = () => {
 
   const onSubmit = handleSubmit((values) => {
     registerAccount.mutate(values, {
-      onSuccess: () => navigate({ to: "/" }),
+      onSuccess: () => navigate({ to: "/dashboard" }),
     });
   });
 

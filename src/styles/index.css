@@ -60,6 +60,10 @@
   --radius: 9px;
 }
 
+button {
+  cursor: pointer;
+}
+
 html,
 body {
   margin: 0;
