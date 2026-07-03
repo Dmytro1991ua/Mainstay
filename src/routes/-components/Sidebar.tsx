@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, LogOut } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 import { BrandLogo } from "@/shared/ui/brand-logo";
@@ -7,7 +7,7 @@ import { BrandLogo } from "@/shared/ui/brand-logo";
 import { useSidebar } from "./use-sidebar";
 
 export const Sidebar = () => {
-  const { collapsed, toggleSidebar, visibleItems, user, initials } = useSidebar();
+  const { collapsed, toggleSidebar, visibleItems, user, initials, logout } = useSidebar();
 
   return (
     <aside
@@ -78,7 +78,21 @@ export const Sidebar = () => {
       </nav>
 
       <div className={cn("shrink-0 overflow-x-hidden border-t border-border")}>
-        <div className={cn("flex items-center overflow-hidden px-2.5 py-3")}>
+        {/* The footer user block is a logout shortcut (the full account menu lives in
+            the header). Whole row is the button; the LogOut icon on the right is the
+            affordance. Same collapse recipe as the nav rows: fixed icon slot + labels
+            that glide/fade, so it stays smooth. */}
+        <button
+          type="button"
+          onClick={() => logout.mutate()}
+          disabled={logout.isPending}
+          title="Log out"
+          aria-label="Log out"
+          className={cn(
+            "group flex w-full items-center overflow-hidden px-2.5 py-3 text-left outline-none",
+            "transition-colors hover:bg-panel-2 focus-visible:bg-panel-2 disabled:opacity-60",
+          )}
+        >
           <span className={cn("relative z-10 flex w-10 shrink-0 items-center justify-center")}>
             <div
               className={cn(
@@ -89,8 +103,8 @@ export const Sidebar = () => {
               {initials}
             </div>
           </span>
-          {/* Same constant-width (shrink-0) treatment as the nav labels — clipped by
-              the footer's overflow-x-hidden, fades + glides rather than reflow-snaps. */}
+          {/* Constant-width (shrink-0) identity — clipped by the footer's
+              overflow-x-hidden, fades + glides rather than reflow-snaps. */}
           <div
             className={cn(
               "shrink-0 whitespace-nowrap transition-[opacity,translate] duration-300 ease-in-out",
@@ -104,7 +118,16 @@ export const Sidebar = () => {
               {user?.roles.join(", ")}
             </div>
           </div>
-        </div>
+          {/* Logout icon on the right — same glide/fade recipe as the nav trailing
+              elements so collapse/expand stays smooth. */}
+          <LogOut
+            className={cn(
+              "ml-auto h-4 w-4 shrink-0 text-text-3 transition-[opacity,translate] duration-300 ease-in-out",
+              "group-hover:text-destructive",
+              collapsed ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100",
+            )}
+          />
+        </button>
       </div>
     </aside>
   );

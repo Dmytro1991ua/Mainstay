@@ -1,11 +1,11 @@
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
 import { ThemeToggleCycle } from "@/shared/ui/theme-toggle-cycle";
 
 import { useHeader } from "./use-header";
+import { UserMenu } from "./UserMenu";
 
 export const Header = () => {
-  const { title, logout } = useHeader();
+  const { title } = useHeader();
 
   return (
     <header
@@ -14,14 +14,7 @@ export const Header = () => {
       <h1 className={cn("text-[15.5px] font-semibold")}>{title}</h1>
       <div className={cn("flex-1")} />
       <ThemeToggleCycle />
-      <Button
-        variant="default"
-        className="bg-accent text-on-accent hover:bg-accent/85"
-        onClick={() => logout.mutate()}
-        disabled={logout.isPending}
-      >
-        Log out
-      </Button>
+      <UserMenu />
     </header>
   );
 };
