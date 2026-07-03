@@ -16,7 +16,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 export const AuthLayout = () => {
   const status = useAuthStore((s) => s.status);
 
-  if (status === "authenticated") return <Navigate to="/dashboard" />;
+  if (status === "authenticated") return <Navigate to="/" />;
 
   return (
     <main className={cn("flex min-h-screen")}>

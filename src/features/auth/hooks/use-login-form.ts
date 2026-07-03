@@ -26,7 +26,7 @@ export const useLoginForm = () => {
 
   const onSubmit = handleSubmit((values) => {
     login.mutate(values, {
-      onSuccess: () => navigate({ to: "/dashboard" }),
+      onSuccess: () => navigate({ to: "/" }),
     });
   });
 
