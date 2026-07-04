@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+import { CommandItemRow } from "./command-menu-item";
 import { DEFAULT_EMPTY_MESSAGE, DEFAULT_PLACEHOLDER } from "./command-menu.constants";
 import { useCommandList } from "./use-command-list";
 
@@ -68,8 +69,6 @@ export function CommandMenu({
             ) : (
               rendered.map((item, index) => {
                 const showHeading = index === 0 || rendered[index - 1].group !== item.group;
-                const Icon = item.icon;
-                const isActive = index === activeIndex;
                 return (
                   <div key={item.id}>
                     {showHeading && (
@@ -77,29 +76,13 @@ export function CommandMenu({
                         {item.group}
                       </div>
                     )}
-                    <button
-                      type="button"
-                      data-index={index}
-                      onMouseMove={() => setActive(index)}
-                      onClick={() => selectAt(index)}
-                      className={cn(
-                        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm outline-none",
-                        isActive ? "bg-panel-2 text-text" : "text-text-2",
-                      )}
-                    >
-                      {Icon && (
-                        <Icon
-                          className={cn(
-                            "h-4 w-4 shrink-0",
-                            isActive ? "text-text-2" : "text-text-3",
-                          )}
-                        />
-                      )}
-                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                      {item.hint && (
-                        <span className="shrink-0 text-xs text-text-3">{item.hint}</span>
-                      )}
-                    </button>
+                    <CommandItemRow
+                      item={item}
+                      index={index}
+                      active={index === activeIndex}
+                      onSelect={() => selectAt(index)}
+                      onHover={() => setActive(index)}
+                    />
                   </div>
                 );
               })
