@@ -42,13 +42,10 @@ export const useCommandList = ({ items, onClose }: UseCommandListParams) => {
 
   const setQuery = (value: string) => {
     setQueryValue(value);
-    setActive(0);
+    setActive(0); // any query change re-ranks results, so restart the cursor at the top
   };
 
-  const reset = () => {
-    setQueryValue("");
-    setActive(0);
-  };
+  const reset = () => setQuery("");
 
   const selectAt = (index: number) => {
     const item = rendered[index];
