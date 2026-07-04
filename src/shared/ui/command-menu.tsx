@@ -30,9 +30,6 @@ export function CommandMenu({
   const { query, setQuery, reset, rendered, activeIndex, setActive, selectAt, onKeyDown, listRef } =
     useCommandList({ items, onClose: () => onOpenChange(false) });
 
-  // Track group boundaries so we can render a heading before each new group.
-  let lastGroup: string | null = null;
-
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
@@ -70,8 +67,7 @@ export function CommandMenu({
               <p className="px-2 py-6 text-center text-sm text-text-3">{emptyMessage}</p>
             ) : (
               rendered.map((item, index) => {
-                const showHeading = item.group !== lastGroup;
-                lastGroup = item.group;
+                const showHeading = index === 0 || rendered[index - 1].group !== item.group;
                 const Icon = item.icon;
                 const isActive = index === activeIndex;
                 return (
