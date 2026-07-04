@@ -1,4 +1,8 @@
-import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
+import { createContext, use, useCallback, useMemo, useState } from "react";
+
+import { useHotkey } from "@/shared/hooks/use-hotkey";
+
+import { COMMAND_MENU_KEY } from "./command-menu.constants";
 
 type CommandMenuContextValue = {
   open: boolean;
@@ -11,23 +15,14 @@ const CommandMenuContext = createContext<CommandMenuContextValue | null>(null);
 /**
  * Owns the command-palette open state and the global ⌘K / Ctrl+K shortcut, so the
  * header trigger button and the palette itself share one source of truth. State
- * is intentionally NOT in the persisted `ui-store` — a palette that reopens itself
- * on reload would be a bug, not a feature.
+ * is intentionally NOT in the persisted `ui-store` — a palette that reopened
+ * itself on reload would be a bug, not a feature.
  */
 export function CommandMenuProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const toggle = useCallback(() => setOpen((o) => !o), []);
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        toggle();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [toggle]);
+  useHotkey(COMMAND_MENU_KEY, toggle);
 
   const value = useMemo(() => ({ open, setOpen, toggle }), [open, toggle]);
 

@@ -8,3 +8,7 @@ export const isMac = (): boolean => {
   const source = navigator.platform || navigator.userAgent || "";
   return /Mac|iPhone|iPad|iPod/i.test(source);
 };
+
+/** Platform-aware shortcut label for a modifier+key combo, e.g. "⌘K" / "Ctrl K". */
+export const shortcutLabel = (key: string): string =>
+  isMac() ? `⌘${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`;

@@ -1,101 +1,36 @@
-import { CornerDownLeft, type LucideIcon, Search } from "lucide-react";
+import { CornerDownLeft, Search } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-export type CommandItem = {
-  /** Stable unique id (used for keys + scroll-into-view targeting). */
-  id: string;
-  label: string;
-  /** Heading this item is bucketed under (e.g. "Navigation", "Actions"). */
-  group: string;
-  icon?: LucideIcon;
-  /** Small muted text on the right (e.g. "Jump to"). */
-  hint?: string;
-  /** Extra text folded into the search match but not shown. */
-  keywords?: string;
-  onSelect: () => void;
-};
+import { DEFAULT_EMPTY_MESSAGE, DEFAULT_PLACEHOLDER } from "./command-menu.constants";
+import { useCommandList } from "./use-command-list";
 
-type CommandMenuProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  items: CommandItem[];
-  placeholder?: string;
-  emptyMessage?: string;
-};
+import type { CommandMenuProps } from "./command-menu.types";
 
-const normalize = (s: string) => s.toLowerCase().trim();
+export type { CommandItem, CommandMenuProps } from "./command-menu.types";
 
 /**
  * Dependency-free command palette (no `cmdk`) built on the Radix Dialog for its
- * focus trap, Esc handling, and a11y. Filtering + grouping + keyboard navigation
- * are handled here so the render order and the active-index cursor stay in lock
- * step. Purely presentational: it knows nothing about routes or auth — callers
- * pass in `items` with their own `onSelect`, which keeps it reusable and lets the
- * searchable set grow (inventory, tasks, …) without touching this file.
+ * focus trap, Esc handling, and a11y. All behaviour lives in `useCommandList`;
+ * this component only renders. Purely presentational — it knows nothing about
+ * routes or auth, so callers pass in `items` with their own `onSelect`, which
+ * keeps it reusable and lets the searchable set grow (inventory, tasks, …)
+ * without touching this file.
  */
 export function CommandMenu({
   open,
   onOpenChange,
   items,
-  placeholder = "Search pages and actions…",
-  emptyMessage = "No results found.",
+  placeholder = DEFAULT_PLACEHOLDER,
+  emptyMessage = DEFAULT_EMPTY_MESSAGE,
 }: CommandMenuProps) {
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const { query, setQuery, reset, rendered, activeIndex, setActive, selectAt, onKeyDown, listRef } =
+    useCommandList({ items, onClose: () => onOpenChange(false) });
 
-  // Filter (preserving source order), then lay items out grouped — with the flat
-  // `rendered` array following the exact on-screen order so `active` indexes it 1:1.
-  const rendered = useMemo(() => {
-    const q = normalize(query);
-    const filtered = q
-      ? items.filter((it) => normalize(`${it.label} ${it.keywords ?? ""} ${it.group}`).includes(q))
-      : items;
-
-    const groupOrder: string[] = [];
-    for (const it of filtered) if (!groupOrder.includes(it.group)) groupOrder.push(it.group);
-
-    return groupOrder.flatMap((group) => filtered.filter((it) => it.group === group));
-  }, [items, query]);
-
-  // Clamp so a shrinking result set (e.g. roles loading in) can never leave the
-  // cursor pointing past the end.
-  const activeIndex = rendered.length ? Math.min(active, rendered.length - 1) : 0;
-
-  // Keep the active row scrolled into view as the user arrows through.
-  useEffect(() => {
-    if (!open) return;
-    listRef.current
-      ?.querySelector(`[data-index="${activeIndex}"]`)
-      ?.scrollIntoView({ block: "nearest" });
-  }, [activeIndex, open]);
-
-  const runSelect = (index: number) => {
-    const item = rendered[index];
-    if (!item) return;
-    onOpenChange(false);
-    item.onSelect();
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (rendered.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActive((a) => (a + 1) % rendered.length);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActive((a) => (a - 1 + rendered.length) % rendered.length);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      runSelect(activeIndex);
-    }
-  };
-
-  // Track the group boundaries so we can render a heading before each new group.
+  // Track group boundaries so we can render a heading before each new group.
   let lastGroup: string | null = null;
 
   return (
@@ -106,8 +41,7 @@ export function CommandMenu({
           aria-describedby={undefined}
           onOpenAutoFocus={(e) => {
             e.preventDefault();
-            setQuery("");
-            setActive(0);
+            reset();
             inputRef.current?.focus();
           }}
           className={cn(
@@ -122,10 +56,7 @@ export function CommandMenu({
             <input
               ref={inputRef}
               value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setActive(0);
-              }}
+              onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
               className="h-12 w-full bg-transparent text-sm text-text outline-none placeholder:text-text-3"
@@ -154,7 +85,7 @@ export function CommandMenu({
                       type="button"
                       data-index={index}
                       onMouseMove={() => setActive(index)}
-                      onClick={() => runSelect(index)}
+                      onClick={() => selectAt(index)}
                       className={cn(
                         "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm outline-none",
                         isActive ? "bg-panel-2 text-text" : "text-text-2",
