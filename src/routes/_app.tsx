@@ -3,10 +3,10 @@ import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
-import { CommandMenuProvider } from "./-components/command-menu-provider";
-import { CommandMenu } from "./-components/CommandMenu";
-import { Header } from "./-components/Header";
-import { Sidebar } from "./-components/Sidebar";
+import { CommandMenuProvider } from "./-components/command-menu/command-menu-provider";
+import { CommandMenu } from "./-components/command-menu/CommandMenu";
+import { Header } from "./-components/header/Header";
+import { Sidebar } from "./-components/sidebar/Sidebar";
 
 const AppLayout = () => {
   const status = useAuthStore((s) => s.status);

@@ -1,4 +1,4 @@
-import { type AppPath, NAV_ITEMS, ROUTE_LABELS } from "./nav-config";
+import { type AppPath, NAV_ITEMS, ROUTE_LABELS } from "../nav-config";
 
 export type Crumb = {
   label: string;

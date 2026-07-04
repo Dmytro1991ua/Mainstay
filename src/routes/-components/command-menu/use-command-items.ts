@@ -7,8 +7,9 @@ import { useAuthStore } from "@/shared/stores/auth-store";
 import { useUiStore } from "@/shared/stores/ui-store";
 import type { CommandItem } from "@/shared/ui/command-menu";
 
+import { getVisibleNavItems } from "../nav-config";
+
 import { COMMAND_GROUP } from "./command-menu.constants";
-import { getVisibleNavItems } from "./nav-config";
 
 /**
  * Assembles the ⌘K palette's searchable set from the same role-filtered nav
