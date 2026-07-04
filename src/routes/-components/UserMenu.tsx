@@ -15,6 +15,7 @@ import {
 export const UserMenu = () => {
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
+
   const initials = user?.userName.slice(0, 2).toUpperCase() ?? "";
 
   return (
