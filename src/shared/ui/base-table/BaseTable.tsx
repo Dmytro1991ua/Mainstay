@@ -1,16 +1,27 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { cn } from "@/shared/lib/utils";
 import { Table } from "@/shared/ui/table";
 
 import { SCROLL_WRAPPER_ID } from "./constants";
+import { CustomizeColumns } from "./CustomizeColumns";
+import { ExportButton } from "./ExportButton";
+import { Filters } from "./filters/Filters";
+import { useTablePrefs } from "./hooks/use-table-prefs";
 import { SearchInput } from "./SearchInput";
+import { createSelectColumn } from "./SelectColumn";
 import { BaseTableBody } from "./TableBody";
 import { BaseTableHeader } from "./TableHeader";
 
-import type { ColumnDef, OnChangeFn, SortingState } from "@tanstack/react-table";
+import type { FiltersProp } from "./types";
+import type {
+  ColumnDef,
+  OnChangeFn,
+  RowSelectionState,
+  SortingState,
+} from "@tanstack/react-table";
 
 type BaseTableProps<TRow> = {
   columns: ColumnDef<TRow>[];
@@ -31,7 +42,21 @@ type BaseTableProps<TRow> = {
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
 
-  /** Toolbar slots for future filters / export / customize-columns. */
+  /** Declarative filter panel (checkbox/radio) — caller maps values to its query. */
+  filters?: FiltersProp;
+
+  /** Stable id → persist column visibility + widths and show the Customize button. */
+  tableId?: string;
+
+  /** Row selection with a select column + a selection action bar. */
+  enableSelection?: boolean;
+  getRowId?: (row: TRow) => string;
+  renderSelectionActions?: (selectedRows: TRow[], clearSelection: () => void) => ReactNode;
+
+  /** Enables a CSV export button that downloads the loaded rows. */
+  exportFileName?: string;
+
+  /** Extra toolbar slots (left / right). */
   toolbarStart?: ReactNode;
   toolbarEnd?: ReactNode;
 
@@ -48,12 +73,12 @@ type BaseTableProps<TRow> = {
 };
 
 /**
- * Reusable, server-driven table built on @tanstack/react-table. It owns
- * presentation only — sorting/search/pagination are controlled by the caller (a
- * fetch hook + URL state), so it stays feature-agnostic and every table shares
- * this one implementation. TanStack Table runs in manual mode (the server does
- * the sorting/filtering/paging); the column model here is just for rendering,
- * resizing, and (later) visibility/selection.
+ * Reusable, server-driven table on @tanstack/react-table. Presentation only —
+ * sorting/search/filters/pagination are controlled by the caller (a fetch hook +
+ * URL state), so one implementation serves every feature. Opt-in extras:
+ * `filters`, `tableId` (persisted visibility/width + customize), `enableSelection`,
+ * and `exportFileName`. TanStack Table runs in manual mode; its column model
+ * drives rendering, resizing, visibility, and selection.
  */
 export function BaseTable<TRow>({
   columns,
@@ -67,6 +92,12 @@ export function BaseTable<TRow>({
   searchTerm,
   onSearchChange,
   searchPlaceholder,
+  filters,
+  tableId,
+  enableSelection,
+  getRowId,
+  renderSelectionActions,
+  exportFileName,
   toolbarStart,
   toolbarEnd,
   onRowClick,
@@ -77,30 +108,59 @@ export function BaseTable<TRow>({
   className,
   scrollId = SCROLL_WRAPPER_ID,
 }: BaseTableProps<TRow>) {
-  const memoData = useMemo(() => data, [data]);
-  const memoColumns = useMemo(() => columns, [columns]);
+  const prefs = useTablePrefs(tableId);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- useReactTable's returned functions are intentionally non-memoized; this is expected TanStack Table usage.
+  const memoData = useMemo(() => data, [data]);
+  const tableColumns = useMemo(
+    () => (enableSelection ? [createSelectColumn<TRow>(), ...columns] : columns),
+    [columns, enableSelection],
+  );
+
+  // eslint-disable-next-line react-hooks/incompatible-library -- useReactTable's returned functions are intentionally non-memoized; expected TanStack Table usage.
   const table = useReactTable({
     data: memoData,
-    columns: memoColumns,
-    state: { sorting },
+    columns: tableColumns,
+    state: {
+      sorting,
+      rowSelection,
+      // Only control visibility/sizing when persisting, so an unpersisted table
+      // still resizes/hides ephemerally via TanStack's internal state.
+      ...(tableId
+        ? { columnVisibility: prefs.columnVisibility, columnSizing: prefs.columnSizing }
+        : {}),
+    },
     onSortingChange,
+    onRowSelectionChange: setRowSelection,
+    ...(tableId
+      ? {
+          onColumnVisibilityChange: prefs.onColumnVisibilityChange,
+          onColumnSizingChange: prefs.onColumnSizingChange,
+        }
+      : {}),
+    getRowId,
     getCoreRowModel: getCoreRowModel(),
     manualSorting: true,
     enableMultiSort: false,
+    enableRowSelection: enableSelection ?? false,
     enableColumnResizing: true,
-    columnResizeMode: "onChange",
+    columnResizeMode: "onEnd",
     defaultColumn: { minSize: 80, size: 180 },
   });
 
   const rows = table.getRowModel().rows;
-  const hasToolbar = onSearchChange || toolbarStart || toolbarEnd;
+  const selectedRows = enableSelection
+    ? table.getSelectedRowModel().rows.map((row) => row.original)
+    : [];
+
+  const hasToolbar =
+    filters || onSearchChange || exportFileName || tableId || toolbarStart || toolbarEnd;
 
   return (
     <div className="flex min-h-0 flex-col gap-3">
       {hasToolbar && (
         <div className="flex flex-wrap items-center gap-2">
+          {filters && <Filters {...filters} />}
           {toolbarStart}
           <div className="ml-auto flex items-center gap-2">
             {onSearchChange && (
@@ -111,7 +171,27 @@ export function BaseTable<TRow>({
                 className="w-64 max-w-full"
               />
             )}
+            {tableId && <CustomizeColumns table={table} />}
+            {exportFileName && (
+              <ExportButton table={table} fileName={exportFileName} disabled={rows.length === 0} />
+            )}
             {toolbarEnd}
+          </div>
+        </div>
+      )}
+
+      {enableSelection && selectedRows.length > 0 && (
+        <div className="flex items-center gap-3 rounded-lg border border-accent/30 bg-accent-soft px-3 py-1.5 text-sm">
+          <span className="font-medium text-accent">{selectedRows.length} selected</span>
+          <div className="ml-auto flex items-center gap-2">
+            {renderSelectionActions?.(selectedRows, () => table.resetRowSelection())}
+            <button
+              type="button"
+              onClick={() => table.resetRowSelection()}
+              className="text-xs text-text-3 hover:text-text"
+            >
+              Clear
+            </button>
           </div>
         </div>
       )}
@@ -137,7 +217,7 @@ export function BaseTable<TRow>({
             <BaseTableHeader headerGroups={table.getHeaderGroups()} />
             <BaseTableBody
               rows={rows}
-              columnCount={columns.length}
+              columnCount={tableColumns.length}
               loading={loading}
               error={error}
               emptyMessage={emptyMessage}
