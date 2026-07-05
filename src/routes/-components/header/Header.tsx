@@ -8,7 +8,9 @@ import { UserMenu } from "./UserMenu";
 export const Header = () => {
   return (
     <header
-      className={cn("flex h-14.25 shrink-0 items-center gap-3 border-b border-border bg-bg px-pad")}
+      className={cn(
+        "flex h-14.25 shrink-0 items-center gap-3 border-b border-border bg-panel px-pad",
+      )}
     >
       <Breadcrumbs />
       <div className={cn("flex flex-1 justify-center")}>

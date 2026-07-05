@@ -13,12 +13,11 @@ export const Sidebar = () => {
     <aside
       className={cn(
         "relative z-10 flex h-screen shrink-0 flex-col",
-        "border-r border-border bg-bg",
+        "border-r border-border bg-panel",
         "transition-[width] duration-300 ease-in-out",
       )}
       style={{ width: collapsed ? 64 : 220 }}
     >
-      {/* Edge pill — straddles the right border; aside overflow:visible lets it escape */}
       <button
         type="button"
         onClick={toggleSidebar}
@@ -61,10 +60,6 @@ export const Sidebar = () => {
             <span className={cn("relative z-10 flex w-10 shrink-0 items-center justify-center")}>
               <Icon className="h-4.5 w-4.5" />
             </span>
-            {/* Constant-width label (shrink-0) — never changes its layout box, so the
-                clip can't plateau-then-snap. The rail's own overflow-x-hidden (nav) plus
-                this row's overflow-hidden clip it uniformly as the width animates; it
-                only fades + glides a few px toward the icon. */}
             <span
               className={cn(
                 "shrink-0 whitespace-nowrap transition-[opacity,translate] duration-300 ease-in-out",
@@ -78,10 +73,6 @@ export const Sidebar = () => {
       </nav>
 
       <div className={cn("shrink-0 overflow-x-hidden border-t border-border")}>
-        {/* The footer user block is a logout shortcut (the full account menu lives in
-            the header). Whole row is the button; the LogOut icon on the right is the
-            affordance. Same collapse recipe as the nav rows: fixed icon slot + labels
-            that glide/fade, so it stays smooth. */}
         <button
           type="button"
           onClick={() => logout.mutate()}
@@ -103,8 +94,6 @@ export const Sidebar = () => {
               {initials}
             </div>
           </span>
-          {/* Constant-width (shrink-0) identity — clipped by the footer's
-              overflow-x-hidden, fades + glides rather than reflow-snaps. */}
           <div
             className={cn(
               "shrink-0 whitespace-nowrap transition-[opacity,translate] duration-300 ease-in-out",
@@ -118,8 +107,6 @@ export const Sidebar = () => {
               {user?.roles.join(", ")}
             </div>
           </div>
-          {/* Logout icon on the right — same glide/fade recipe as the nav trailing
-              elements so collapse/expand stays smooth. */}
           <LogOut
             className={cn(
               "ml-auto h-4 w-4 shrink-0 text-text-3 transition-[opacity,translate] duration-300 ease-in-out",
