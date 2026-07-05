@@ -4,13 +4,11 @@ import { type ReactNode, useRef } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-import { CommandList } from "./command-list";
-import { DEFAULT_EMPTY_MESSAGE, DEFAULT_PLACEHOLDER } from "./command-menu.constants";
+import { CommandList } from "./CommandList";
+import { DEFAULT_EMPTY_MESSAGE, DEFAULT_PLACEHOLDER } from "./constants";
 import { useCommandList } from "./use-command-list";
 
-import type { CommandMenuProps } from "./command-menu.types";
-
-export type { CommandItem, CommandMenuProps } from "./command-menu.types";
+import type { CommandMenuProps } from "./types";
 
 const SHORTCUT_HINTS: { keys: ReactNode[]; label: string }[] = [
   { keys: ["↑", "↓"], label: "navigate" },

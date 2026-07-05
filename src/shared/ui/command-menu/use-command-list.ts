@@ -6,9 +6,9 @@ import {
   useState,
 } from "react";
 
-import { orderCommandItems } from "./command-menu.utils";
+import { orderCommandItems } from "./utils";
 
-import type { CommandItem } from "./command-menu.types";
+import type { CommandItem } from "./types";
 
 type UseCommandListParams = {
   items: CommandItem[];

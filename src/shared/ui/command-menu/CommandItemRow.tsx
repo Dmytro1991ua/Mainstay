@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 
-import type { CommandItem } from "./command-menu.types";
+import type { CommandItem } from "./types";
 
 type CommandItemRowProps = {
   item: CommandItem;

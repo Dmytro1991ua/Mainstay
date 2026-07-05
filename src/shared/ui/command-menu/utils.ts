@@ -1,4 +1,4 @@
-import type { CommandItem } from "./command-menu.types";
+import type { CommandItem } from "./types";
 
 const normalize = (value: string) => value.toLowerCase().trim();
 

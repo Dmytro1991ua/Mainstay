@@ -1,6 +1,6 @@
-import { CommandItemRow } from "./command-menu-item";
+import { CommandItemRow } from "./CommandItemRow";
 
-import type { CommandItem } from "./command-menu.types";
+import type { CommandItem } from "./types";
 import type { RefObject } from "react";
 
 type CommandListProps = {
