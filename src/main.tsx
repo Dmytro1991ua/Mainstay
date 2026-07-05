@@ -19,10 +19,21 @@ declare module "@tanstack/react-router" {
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element #root not found");
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </StrictMode>,
-);
+async function bootstrap() {
+  // Local dev has no backend in-repo, so an MSW mock serves /api/v1 (auth +
+  // inventory) — enabled in dev by default, opt out with VITE_ENABLE_MOCKS=false.
+  if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS !== "false") {
+    const { worker } = await import("./mocks/browser");
+    await worker.start({ onUnhandledRequest: "bypass" });
+  }
+
+  createRoot(rootElement!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>,
+  );
+}
+
+void bootstrap();
