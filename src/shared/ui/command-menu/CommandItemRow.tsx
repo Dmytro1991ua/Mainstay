@@ -1,5 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 
+import { commandOptionId } from "./constants";
+
 import type { CommandItem } from "./types";
 
 type CommandItemRowProps = {
@@ -18,6 +20,9 @@ export function CommandItemRow({ item, index, active, onSelect, onHover }: Comma
   return (
     <button
       type="button"
+      role="option"
+      id={commandOptionId(index)}
+      aria-selected={active}
       data-index={index}
       onMouseMove={onHover}
       onClick={onSelect}

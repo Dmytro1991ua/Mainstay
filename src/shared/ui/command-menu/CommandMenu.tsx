@@ -5,7 +5,12 @@ import { type ReactNode, useRef } from "react";
 import { cn } from "@/shared/lib/utils";
 
 import { CommandList } from "./CommandList";
-import { DEFAULT_EMPTY_MESSAGE, DEFAULT_PLACEHOLDER } from "./constants";
+import {
+  COMMAND_LISTBOX_ID,
+  commandOptionId,
+  DEFAULT_EMPTY_MESSAGE,
+  DEFAULT_PLACEHOLDER,
+} from "./constants";
 import { useCommandList } from "./use-command-list";
 
 import type { CommandMenuProps } from "./types";
@@ -81,6 +86,15 @@ export function CommandMenu({
               className="h-12 w-full bg-transparent text-sm text-text outline-none placeholder:text-text-3"
               autoComplete="off"
               spellCheck={false}
+              // Combobox pattern: the input keeps focus while ArrowUp/Down move a virtual
+              // cursor; aria-activedescendant points AT screen readers at the active option
+              // so it's announced without focus ever leaving the field.
+              role="combobox"
+              aria-label={placeholder}
+              aria-expanded={true}
+              aria-controls={COMMAND_LISTBOX_ID}
+              aria-autocomplete="list"
+              aria-activedescendant={rendered.length ? commandOptionId(activeIndex) : undefined}
             />
           </div>
 
