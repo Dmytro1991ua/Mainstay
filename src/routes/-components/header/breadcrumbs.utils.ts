@@ -27,6 +27,7 @@ export const getBreadcrumbs = (pathname: string): Crumb[] => {
     let accum = "";
     for (const segment of pathname.split("/").filter(Boolean)) {
       accum += `/${segment}`;
+      if (accum === "/dashboard") continue; // already the implicit root crumb; don't duplicate it
       crumbs.push({
         label: ROUTE_LABELS[accum] ?? prettifySegment(segment),
         to: KNOWN_PATHS.has(accum) ? (accum as AppPath) : undefined,

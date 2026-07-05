@@ -3,8 +3,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
-import { CommandMenuProvider } from "./-components/command-menu/command-menu-provider";
 import { CommandMenu } from "./-components/command-menu/CommandMenu";
+import { CommandMenuProvider } from "./-components/command-menu/provider";
 import { Header } from "./-components/header/Header";
 import { Sidebar } from "./-components/sidebar/Sidebar";
 

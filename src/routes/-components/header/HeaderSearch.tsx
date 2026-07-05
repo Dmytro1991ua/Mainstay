@@ -3,8 +3,8 @@ import { Search } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { shortcutLabel } from "@/shared/utils";
 
-import { useCommandMenu } from "../command-menu/command-menu-provider";
-import { COMMAND_MENU_KEY } from "../command-menu/command-menu.constants";
+import { COMMAND_MENU_KEY } from "../command-menu/constants";
+import { useCommandMenu } from "../command-menu/provider";
 
 /**
  * The header's search affordance — a full-width button styled like an input that

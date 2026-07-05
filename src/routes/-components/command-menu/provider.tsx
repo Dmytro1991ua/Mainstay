@@ -2,7 +2,7 @@ import { createContext, use, useCallback, useMemo, useState } from "react";
 
 import { useHotkey } from "@/shared/hooks/use-hotkey";
 
-import { COMMAND_MENU_KEY } from "./command-menu.constants";
+import { COMMAND_MENU_KEY } from "./constants";
 
 type CommandMenuContextValue = {
   open: boolean;

@@ -9,7 +9,7 @@ import type { CommandItem } from "@/shared/ui/command-menu";
 
 import { getVisibleNavItems } from "../nav-config";
 
-import { COMMAND_GROUP } from "./command-menu.constants";
+import { COMMAND_GROUP } from "./constants";
 
 /**
  * Assembles the ⌘K palette's searchable set from the same role-filtered nav
