@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-
 import { useTablePrefsStore } from "@/shared/stores/table-prefs-store";
 
 import type { ColumnSizingState, OnChangeFn, VisibilityState } from "@tanstack/react-table";
@@ -20,24 +18,15 @@ export function useTablePrefs(tableId: string | undefined) {
   const columnVisibility = prefs?.columnVisibility ?? EMPTY_VISIBILITY;
   const columnSizing = prefs?.columnSizing ?? EMPTY_SIZING;
 
-  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = useCallback(
-    (updater) => {
-      if (!tableId) return;
-      setColumnVisibility(
-        tableId,
-        typeof updater === "function" ? updater(columnVisibility) : updater,
-      );
-    },
-    [tableId, columnVisibility, setColumnVisibility],
-  );
+  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (updater) => {
+    if (!tableId) return;
+    setColumnVisibility(tableId, typeof updater === "function" ? updater(columnVisibility) : updater);
+  };
 
-  const onColumnSizingChange: OnChangeFn<ColumnSizingState> = useCallback(
-    (updater) => {
-      if (!tableId) return;
-      setColumnSizing(tableId, typeof updater === "function" ? updater(columnSizing) : updater);
-    },
-    [tableId, columnSizing, setColumnSizing],
-  );
+  const onColumnSizingChange: OnChangeFn<ColumnSizingState> = (updater) => {
+    if (!tableId) return;
+    setColumnSizing(tableId, typeof updater === "function" ? updater(columnSizing) : updater);
+  };
 
   return { columnVisibility, columnSizing, onColumnVisibilityChange, onColumnSizingChange };
 }

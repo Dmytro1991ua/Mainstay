@@ -1,5 +1,5 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { cn } from "@/shared/lib/utils";
@@ -111,15 +111,14 @@ export function BaseTable<TRow>({
   const prefs = useTablePrefs(tableId);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const memoData = useMemo(() => data, [data]);
-  const tableColumns = useMemo(
-    () => (enableSelection ? [createSelectColumn<TRow>(), ...columns] : columns),
-    [columns, enableSelection],
-  );
+  // No manual memoization: the project runs the React Compiler, which memoizes
+  // these derivations automatically. (`data` is passed straight through; the
+  // select column is prepended inline.)
+  const tableColumns = enableSelection ? [createSelectColumn<TRow>(), ...columns] : columns;
 
   // eslint-disable-next-line react-hooks/incompatible-library -- useReactTable's returned functions are intentionally non-memoized; expected TanStack Table usage.
   const table = useReactTable({
-    data: memoData,
+    data,
     columns: tableColumns,
     state: {
       sorting,
