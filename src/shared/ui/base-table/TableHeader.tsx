@@ -1,6 +1,5 @@
 import { flexRender } from "@tanstack/react-table";
 
-import { cn } from "@/shared/lib/utils";
 import { TableHead, TableHeader as TableHeaderPrimitive, TableRow } from "@/shared/ui/table";
 
 import { ColumnResizer } from "./ColumnResizer";
@@ -13,9 +12,11 @@ type BaseTableHeaderProps<TRow> = {
 };
 
 /**
- * Renders the sticky header. Each sortable header is click-to-sort (delegated to
- * TanStack's toggle handler) with a hover-revealed sort arrow, and carries a
- * ColumnResizer grip on its right edge. Widths come from `column.getSize()`.
+ * Renders the sticky header. Sortable headers are a real <button> (keyboard-
+ * operable — Enter/Space toggle sort, focusable in tab order) carrying a
+ * hover-revealed sort arrow; `aria-sort` on the cell announces the current
+ * direction. Each header also has a ColumnResizer grip on its right edge.
+ * Widths come from `column.getSize()`.
  */
 export function BaseTableHeader<TRow>({ headerGroups }: BaseTableHeaderProps<TRow>) {
   return (
@@ -24,6 +25,9 @@ export function BaseTableHeader<TRow>({ headerGroups }: BaseTableHeaderProps<TRo
         <TableRow key={group.id} className="hover:bg-transparent">
           {group.headers.map((header) => {
             const canSort = header.column.getCanSort();
+            const label = header.isPlaceholder
+              ? null
+              : flexRender(header.column.columnDef.header, header.getContext());
             return (
               <TableHead
                 key={header.id}
@@ -35,14 +39,19 @@ export function BaseTableHeader<TRow>({ headerGroups }: BaseTableHeaderProps<TRo
                       ? "descending"
                       : undefined
                 }
-                className={cn("group/th", canSort && "cursor-pointer select-none")}
-                onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                className="group/th"
               >
-                {header.isPlaceholder ? null : (
-                  <span className="flex items-center gap-1.5">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {canSort && <SortArrow direction={header.column.getIsSorted()} />}
-                  </span>
+                {canSort ? (
+                  <button
+                    type="button"
+                    onClick={header.column.getToggleSortingHandler()}
+                    className="flex items-center gap-1.5 rounded-sm outline-none select-none focus-visible:ring-2 focus-visible:ring-accent"
+                  >
+                    {label}
+                    <SortArrow direction={header.column.getIsSorted()} />
+                  </button>
+                ) : (
+                  <span className="flex items-center gap-1.5">{label}</span>
                 )}
                 <ColumnResizer header={header} />
               </TableHead>

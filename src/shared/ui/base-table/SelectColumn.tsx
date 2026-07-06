@@ -17,7 +17,7 @@ export function createSelectColumn<TRow>(): ColumnDef<TRow> {
     enableResizing: false,
     header: ({ table }) => (
       <Checkbox
-        aria-label="Select all rows"
+        aria-label="Select all loaded rows"
         checked={
           table.getIsAllPageRowsSelected()
             ? true

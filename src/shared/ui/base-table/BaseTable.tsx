@@ -213,11 +213,11 @@ export function BaseTable<TRow>({
             </div>
           }
         >
-          <Table style={{ width: table.getTotalSize() }} className="min-w-full">
+          <Table style={{ width: table.getTotalSize() }} className="min-w-full table-fixed">
             <BaseTableHeader headerGroups={table.getHeaderGroups()} />
             <BaseTableBody
               rows={rows}
-              columnCount={tableColumns.length}
+              columnCount={table.getVisibleLeafColumns().length}
               loading={loading}
               error={error}
               emptyMessage={emptyMessage}
