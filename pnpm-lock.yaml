@@ -23,6 +23,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@types/react-csv':
+        specifier: ^1.1.10
+        version: 1.1.10
       axios:
         specifier: ^1.18.1
         version: 1.18.1(supports-color@10.2.2)
@@ -44,6 +47,9 @@ importers:
       react:
         specifier: ^19.2.7
         version: 19.2.7
+      react-csv:
+        specifier: ^2.2.2
+        version: 2.2.2
       react-dom:
         specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
@@ -1540,6 +1546,9 @@ packages:
 
   '@types/node@26.0.1':
     resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
+
+  '@types/react-csv@1.1.10':
+    resolution: {integrity: sha512-PESAyASL7Nfi/IyBR3ufd8qZkyoS+7jOylKmJxRZUZLFASLo4NZaRsJ8rNP8pCcbIziADyWBbLPD1nPddhsL4g==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -3185,6 +3194,9 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
+
+  react-csv@2.2.2:
+    resolution: {integrity: sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw==}
 
   react-dom@19.2.7:
     resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
@@ -5375,6 +5387,10 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/react-csv@1.1.10':
+    dependencies:
+      '@types/react': 19.2.17
+
   '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
       '@types/react': 19.2.17
@@ -7154,6 +7170,8 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
+
+  react-csv@2.2.2: {}
 
   react-dom@19.2.7(react@19.2.7):
     dependencies:

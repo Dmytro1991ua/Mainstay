@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const InventoryPage = () => {
-  return <p className="text-sm text-text-2">Inventory — coming soon.</p>;
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-semibold text-text">Inventory</h1>
+    </div>
+  );
 };
 
 export const Route = createFileRoute("/_app/inventory")({

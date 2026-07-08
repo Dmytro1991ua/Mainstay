@@ -19,6 +19,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ["react-csv"],
+    rolldownOptions: {
+      moduleTypes: {
+        ".jsx": "jsx",
+      },
+    },
+  },
   server: {
     proxy: {
       "/api": {
