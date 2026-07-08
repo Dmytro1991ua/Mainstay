@@ -45,6 +45,18 @@ export function DropdownMenuItem({
   );
 }
 
+export function DropdownMenuLabel({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn(
+        "px-2.5 py-1.5 text-xs font-medium text-text-3 uppercase tracking-wide",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
 export function DropdownMenuSeparator({
   className,
   ...props

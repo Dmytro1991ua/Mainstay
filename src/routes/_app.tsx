@@ -14,7 +14,7 @@ const AppLayout = () => (
       <Sidebar />
       <div className={cn("flex min-w-0 flex-1 flex-col")}>
         <Header />
-        <main className={cn("flex-1 p-pad bg-bg")}>
+        <main className={cn("flex-1 p-pad bg-accent-soft")}>
           <Outlet />
         </main>
       </div>
