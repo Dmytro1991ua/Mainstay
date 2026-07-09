@@ -1,4 +1,5 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 
 import { bootstrapAuth } from "@/features/auth";
 import { useThemeAttributes } from "@/shared/hooks/use-theme-attributes";
@@ -10,7 +11,12 @@ const RootPending = () => (
 
 const RootComponent = () => {
   useThemeAttributes();
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Toaster position="top-right" gap={8} />
+    </>
+  );
 };
 
 export const Route = createRootRoute({
