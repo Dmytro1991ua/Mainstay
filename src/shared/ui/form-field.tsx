@@ -1,39 +1,65 @@
 import { type FieldError as RHFFieldError, type UseFormRegisterReturn } from "react-hook-form";
 
-import { Field, FieldLabel } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+
+import type * as React from "react";
 
 type FormFieldProps = {
-  id: string;
   label: string;
+  id?: string;
+  error?: RHFFieldError | string;
+  /** Render any custom control (Select, Checkbox, etc.) instead of the default Input */
+  children?: React.ReactNode;
+  // Input-specific — ignored when children is provided
   type?: string;
-  autoComplete?: string;
   placeholder?: string;
-  error?: RHFFieldError;
-  registration: UseFormRegisterReturn;
+  inputClassName?: string;
+  autoComplete?: string;
+  // Controlled mode
+  value?: string;
+  onChange?: (value: string) => void;
+  // RHF mode
+  registration?: UseFormRegisterReturn;
 };
 
 export const FormField = ({
-  id,
   label,
-  type,
-  autoComplete,
-  placeholder,
+  id,
   error,
+  children,
+  type,
+  placeholder,
+  inputClassName,
+  autoComplete,
+  value,
+  onChange,
   registration,
-}: FormFieldProps) => (
-  <div className="relative pb-5">
-    <Field data-invalid={Boolean(error)}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <Input
-        id={id}
-        type={type}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        aria-invalid={Boolean(error)}
-        {...registration}
-      />
-    </Field>
-    <span className="absolute bottom-0 left-0 text-sm text-destructive">{error?.message}</span>
-  </div>
-);
+}: FormFieldProps) => {
+  const errorMessage = typeof error === "string" ? error : error?.message;
+
+  const inputProps = registration
+    ? { ...registration }
+    : {
+        value,
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value),
+      };
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      {children ?? (
+        <Input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          className={inputClassName}
+          autoComplete={autoComplete}
+          aria-invalid={!!error}
+          {...inputProps}
+        />
+      )}
+      {errorMessage && <p className="text-xs text-red">{errorMessage}</p>}
+    </div>
+  );
+};

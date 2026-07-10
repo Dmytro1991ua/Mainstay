@@ -112,9 +112,11 @@ type ToastOptions = {
 };
 
 function show(type: ToastType, title: string, opts?: ToastOptions): string | number {
+  const options: { duration: number; id?: string | number } = { duration: opts?.duration ?? 4000 };
+  if (opts?.id !== undefined) options.id = opts.id;
   return sonnerToast.custom(
     (id) => <ToastCard id={id} type={type} title={title} description={opts?.description} />,
-    { duration: opts?.duration ?? 4000, id: opts?.id },
+    options,
   );
 }
 
