@@ -2,6 +2,7 @@ import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 import { cn } from "@/shared/lib/utils";
 
+import type { LucideIcon } from "lucide-react";
 import type * as React from "react";
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
@@ -66,5 +67,54 @@ export function DropdownMenuSeparator({
       className={cn("-mx-1.5 my-1 h-px bg-border", className)}
       {...props}
     />
+  );
+}
+
+// ─── ActionMenu ───────────────────────────────────────────────────────────────
+
+type ActionMenuItem =
+  | {
+      label: string;
+      icon?: LucideIcon;
+      onClick: () => void;
+      disabled?: boolean;
+      variant?: "default" | "destructive";
+    }
+  | { separator: true };
+
+type ActionMenuProps = {
+  trigger: React.ReactNode;
+  items: ActionMenuItem[];
+  align?: "start" | "center" | "end";
+};
+
+export function ActionMenu({ trigger, items, align = "end" }: ActionMenuProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuContent align={align}>
+        {items.map((item, i) => {
+          if ("separator" in item) {
+            return <DropdownMenuSeparator key={i} />;
+          }
+          const Icon = item.icon;
+          return (
+            <DropdownMenuItem
+              key={item.label}
+              disabled={item.disabled}
+              onClick={item.onClick}
+              className={
+                item.variant === "destructive"
+                  ? "text-red focus:bg-red-soft focus:text-red [&_svg]:text-red"
+                  : undefined
+              }
+            >
+              {Icon && <Icon />}
+              {item.label}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

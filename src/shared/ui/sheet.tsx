@@ -140,3 +140,29 @@ export function SheetCloseButton({ className, ...props }: React.ComponentProps<"
     </SheetPrimitive.Close>
   );
 }
+
+// ─── FormSheet ────────────────────────────────────────────────────────────────
+
+type FormSheetProps = {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  footer: React.ReactNode;
+  side?: SheetSide;
+};
+
+export function FormSheet({ open, onClose, title, children, footer, side }: FormSheetProps) {
+  return (
+    <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent side={side}>
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+          <SheetCloseButton />
+        </SheetHeader>
+        <SheetBody>{children}</SheetBody>
+        <SheetFooter>{footer}</SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
