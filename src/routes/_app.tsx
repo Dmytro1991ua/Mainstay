@@ -10,11 +10,16 @@ import { Sidebar } from "./-components/sidebar/Sidebar";
 
 const AppLayout = () => (
   <CommandMenuProvider>
-    <div className={cn("flex min-h-screen")}>
+    <div className={cn("flex h-screen overflow-hidden")}>
       <Sidebar />
-      <div className={cn("flex min-w-0 flex-1 flex-col")}>
+      <div className={cn("flex min-w-0 flex-1 flex-col overflow-hidden")}>
         <Header />
-        <main className={cn("flex-1 p-pad bg-accent-soft")}>
+        <main
+          className={cn("flex flex-col flex-1 overflow-hidden p-pad")}
+          style={{
+            background: "linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg) 65%)",
+          }}
+        >
           <Outlet />
         </main>
       </div>
