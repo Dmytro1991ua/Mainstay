@@ -6,6 +6,7 @@
 :root,
 [data-theme="light"] {
   --bg: #fafafa;
+  --bg-gradient-start: #e7edfd;
   --panel: #ffffff;
   --panel-2: #f4f4f5;
   --panel-3: #fafafa;
@@ -22,12 +23,15 @@
   --red: #dc2626;
   --red-soft: #fef2f2;
   --red-border: #fbd8d8;
+  --row-red: #fff9f9;
   --amber: #b45309;
   --amber-soft: #fef6e7;
   --amber-border: #fae3b0;
+  --row-amber: #fffcf4;
   --green: #15803d;
   --green-soft: #ecfdf3;
   --green-border: #c6e9cf;
+  --row-green: #f8fffb;
   --purple: #7c3aed;
   --purple-soft: #f4ecff;
   --purple-border: #e4d6fb;
@@ -38,6 +42,7 @@
 
 [data-theme="dark"] {
   --bg: #09090b;
+  --bg-gradient-start: #10192a;
   --panel: #141417;
   --panel-2: #1d1d21;
   --panel-3: #161619;
@@ -54,12 +59,15 @@
   --red: #f87171;
   --red-soft: rgba(248, 113, 113, 0.13);
   --red-border: rgba(248, 113, 113, 0.28);
+  --row-red: rgba(248, 113, 113, 0.04);
   --amber: #fbbf24;
   --amber-soft: rgba(251, 191, 36, 0.12);
   --amber-border: rgba(251, 191, 36, 0.26);
+  --row-amber: rgba(251, 191, 36, 0.04);
   --green: #4ade80;
   --green-soft: rgba(74, 222, 128, 0.12);
   --green-border: rgba(74, 222, 128, 0.26);
+  --row-green: rgba(74, 222, 128, 0.04);
   --purple: #a78bfa;
   --purple-soft: rgba(167, 139, 250, 0.16);
   --purple-border: rgba(167, 139, 250, 0.3);
@@ -72,33 +80,39 @@
   --accent-hover: #4338ca;
   --accent-soft: #eef0ff;
   --accent-border: #d9ddfb;
+  --bg-gradient-start: #e8eafb;
 }
 [data-accent="violet"] {
   --accent: #7c3aed;
   --accent-hover: #6d28d9;
   --accent-soft: #f4ecff;
   --accent-border: #e4d6fb;
+  --bg-gradient-start: #eee6fb;
 }
 [data-accent="emerald"] {
   --accent: #059669;
   --accent-hover: #047857;
   --accent-soft: #e7f8f0;
   --accent-border: #c4ecd8;
+  --bg-gradient-start: #dcf2e7;
 }
 [data-theme="dark"][data-accent="indigo"] {
   --accent: #818cf8;
   --accent-soft: rgba(129, 140, 248, 0.16);
   --accent-border: rgba(129, 140, 248, 0.3);
+  --bg-gradient-start: #191a2a;
 }
 [data-theme="dark"][data-accent="violet"] {
   --accent: #a78bfa;
   --accent-soft: rgba(167, 139, 250, 0.16);
   --accent-border: rgba(167, 139, 250, 0.3);
+  --bg-gradient-start: #1e1a2a;
 }
 [data-theme="dark"][data-accent="emerald"] {
   --accent: #34d399;
   --accent-soft: rgba(52, 211, 153, 0.16);
   --accent-border: rgba(52, 211, 153, 0.3);
+  --bg-gradient-start: #0f231d;
 }
 
 [data-density="compact"] {

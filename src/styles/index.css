@@ -26,12 +26,15 @@
   --color-red: var(--red);
   --color-red-soft: var(--red-soft);
   --color-red-border: var(--red-border);
+  --color-row-red: var(--row-red);
   --color-amber: var(--amber);
   --color-amber-soft: var(--amber-soft);
   --color-amber-border: var(--amber-border);
+  --color-row-amber: var(--row-amber);
   --color-green: var(--green);
   --color-green-soft: var(--green-soft);
   --color-green-border: var(--green-border);
+  --color-row-green: var(--row-green);
   --color-purple: var(--purple);
   --color-purple-soft: var(--purple-soft);
   --color-purple-border: var(--purple-border);
@@ -75,7 +78,7 @@ body {
 
 body {
   font-size: 16px;
-  background: var(--bg);
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg) 65%);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

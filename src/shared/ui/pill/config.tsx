@@ -14,27 +14,27 @@ type PillConfig = {
 
 export const PILL_CONFIG: Record<PillStatus, PillConfig> = {
   [PillStatus.InStock]: {
-    className: "bg-green-soft text-green",
+    className: "bg-green-soft text-green border border-green-border",
     dotClassName: "bg-green",
   },
   [PillStatus.LowStock]: {
-    className: "bg-amber-soft text-amber",
+    className: "bg-amber-soft text-amber border border-amber-border",
     dotClassName: "bg-amber",
   },
   [PillStatus.OutOfStock]: {
-    className: "bg-red-soft text-red",
+    className: "bg-red-soft text-red border border-red-border",
     dotClassName: "bg-red",
   },
   [PillStatus.Open]: {
-    className: "bg-accent-soft text-accent",
+    className: "bg-accent-soft text-accent border border-accent-border",
     dotClassName: "bg-accent",
   },
   [PillStatus.InProgress]: {
-    className: "bg-purple-soft text-purple",
+    className: "bg-purple-soft text-purple border border-purple-border",
     dotClassName: "bg-purple",
   },
   [PillStatus.Done]: {
-    className: "bg-green-soft text-green",
+    className: "bg-green-soft text-green border border-green-border",
     dotClassName: "bg-green",
   },
 };
