@@ -13,14 +13,20 @@ type DataTableFiltersProps = {
   filterConfig: FilterConfig[];
   activeFilters: ActiveFilters;
   onFiltersChange: (filters: ActiveFilters) => void;
+  disabled?: boolean;
 };
 
 export const DataTableFilters = ({
   filterConfig,
   activeFilters,
   onFiltersChange,
+  disabled,
 }: DataTableFiltersProps) => {
   const [openFilterId, setOpenFilterId] = useState<string | null>(null);
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) setOpenFilterId(null);
+  };
 
   const total = totalSelectedCount(activeFilters);
 
@@ -35,22 +41,25 @@ export const DataTableFilters = ({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white"
-        >
-          <Filter className="h-3.5 w-3.5" />
-          Filters
-          {total > 0 && (
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-semibold text-accent">
-              {total}
-            </span>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
+    <DropdownMenu onOpenChange={handleOpenChange}>
+      <span className={disabled ? "cursor-not-allowed" : undefined}>
+        <DropdownMenuTrigger asChild disabled={disabled}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={disabled}
+            className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white disabled:opacity-40"
+          >
+            <Filter className="h-3.5 w-3.5" />
+            Filters
+            {total > 0 && (
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-semibold text-accent">
+                {total}
+              </span>
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+      </span>
       <DropdownMenuContent
         align="start"
         className="w-60 p-0"

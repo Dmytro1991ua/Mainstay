@@ -1,9 +1,8 @@
-import { useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { useRef } from "react";
 
-import { DataTableBody } from "./DataTableBody";
-import { DataTableFetchRows } from "./DataTableFetchRows";
-import { DataTableHeader } from "./DataTableHeader";
+import { useScrolled } from "@/shared/hooks/use-scrolled";
+
+import { DataTableContent } from "./DataTableContent";
 import { DataTableToolbar } from "./DataTableToolbar";
 import { useFiltersInTable } from "./hooks/use-filters-in-table";
 import { useSearchInTable } from "./hooks/use-search-in-table";
@@ -19,7 +18,6 @@ export const DataTable = <TData,>({
   isError,
   hasNextPage,
   fetchNextPage,
-  isFetchingNextPage,
   searchPlaceholder,
   filterConfig,
   exportFilename,
@@ -34,16 +32,19 @@ export const DataTable = <TData,>({
   tableState,
   onSetTableState,
   onSelectionChange,
-  maxHeight = "600px",
+  maxHeight,
   enableRowSelection = false,
   enableColumnVisibility = true,
   enableColumnResizing = true,
   enableSorting = true,
 }: DataTableProps<TData>) => {
-  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isScrolled = useScrolled(scrollRef);
 
   const { search, setSearch } = useSearchInTable({ tableState, onSetTableState });
   const { activeFilters, setFilters } = useFiltersInTable({ tableState, onSetTableState });
+
+  const scrollContainerId = `${tableId}-scroll`;
 
   const { table } = useTableState({
     columns,
@@ -58,10 +59,11 @@ export const DataTable = <TData,>({
     onSelectionChange,
   });
 
-  const colCount = table.getVisibleLeafColumns().length;
+  const rows = table.getRowModel().rows;
+  const isDisabled = isError || (!isPending && rows.length === 0);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-1 flex-col min-h-0">
       <DataTableToolbar
         table={table}
         search={search}
@@ -73,36 +75,32 @@ export const DataTable = <TData,>({
         exportFilename={exportFilename}
         enableColumnVisibility={enableColumnVisibility}
         actions={actions}
+        disabled={isDisabled}
       />
 
       <div
-        ref={setScrollContainer}
-        className="overflow-auto rounded-lg border border-border"
-        style={{ maxHeight }}
+        ref={scrollRef}
+        id={scrollContainerId}
+        className="flex flex-col flex-1 min-h-0 overflow-auto rounded-lg border border-border"
+        style={maxHeight ? { maxHeight } : undefined}
       >
-        <InfiniteScroll
-          dataLength={data.length}
-          next={fetchNextPage ?? (() => {})}
-          hasMore={hasNextPage ?? false}
-          loader={<DataTableFetchRows colCount={colCount} rowCount={3} />}
-          scrollableTarget={scrollContainer}
-        >
-          <table className="w-full min-w-max border-collapse text-sm">
-            <DataTableHeader table={table} enableColumnResizing={enableColumnResizing} />
-            <DataTableBody
-              table={table}
-              isPending={isPending}
-              isError={isError}
-              emptyState={emptyState}
-              errorState={errorState}
-              onRowClick={onRowClick}
-              getRowHighlightInfo={getRowHighlightInfo}
-              isRowDisabled={isRowDisabled}
-              rowTooltipMessage={rowTooltipMessage}
-            />
-          </table>
-          {isFetchingNextPage && <DataTableFetchRows colCount={colCount} border="top" />}
-        </InfiniteScroll>
+        <DataTableContent
+          table={table}
+          data={data}
+          isPending={isPending}
+          isError={isError}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          scrollContainerId={scrollContainerId}
+          enableColumnResizing={enableColumnResizing}
+          isScrolled={isScrolled}
+          emptyState={emptyState}
+          errorState={errorState}
+          onRowClick={onRowClick}
+          getRowHighlightInfo={getRowHighlightInfo}
+          isRowDisabled={isRowDisabled}
+          rowTooltipMessage={rowTooltipMessage}
+        />
       </div>
     </div>
   );

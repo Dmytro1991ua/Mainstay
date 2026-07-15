@@ -21,6 +21,7 @@ type DataTableToolbarProps<TData> = {
   exportFilename?: string;
   enableColumnVisibility?: boolean;
   actions?: ReactNode;
+  disabled?: boolean;
 };
 
 export const DataTableToolbar = <TData,>({
@@ -34,6 +35,7 @@ export const DataTableToolbar = <TData,>({
   exportFilename,
   enableColumnVisibility = true,
   actions,
+  disabled,
 }: DataTableToolbarProps<TData>) => {
   return (
     <div className="flex items-center justify-between gap-3 pb-3">
@@ -52,12 +54,13 @@ export const DataTableToolbar = <TData,>({
             filterConfig={filterConfig}
             activeFilters={activeFilters}
             onFiltersChange={onFiltersChange}
+            disabled={disabled}
           />
         )}
       </div>
       <div className="flex items-center gap-2">
         {actions}
-        {enableColumnVisibility && <ColumnVisibilityMenu table={table} />}
+        {enableColumnVisibility && <ColumnVisibilityMenu table={table} disabled={disabled} />}
         {exportFilename && <ExportButton table={table} filename={exportFilename} />}
       </div>
     </div>
