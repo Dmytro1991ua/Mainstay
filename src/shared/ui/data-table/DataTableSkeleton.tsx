@@ -5,7 +5,7 @@ type DataTableSkeletonProps = {
   rowCount?: number;
 };
 
-export const DataTableSkeleton = ({ colCount, rowCount = 8 }: DataTableSkeletonProps) => (
+export const DataTableSkeleton = ({ colCount, rowCount = 20 }: DataTableSkeletonProps) => (
   <tbody>
     {Array.from({ length: rowCount }, (_, i) => `skeleton-row-${i}`).map((rowKey) => (
       <tr key={rowKey} className="border-b border-border">

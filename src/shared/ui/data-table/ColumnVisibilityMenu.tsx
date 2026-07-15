@@ -15,18 +15,27 @@ import {
 
 import { columnLabel } from "./utils";
 
-export const ColumnVisibilityMenu = <TData,>({ table }: { table: Table<TData> }) => (
+export const ColumnVisibilityMenu = <TData,>({
+  table,
+  disabled,
+}: {
+  table: Table<TData>;
+  disabled?: boolean;
+}) => (
   <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button
-        variant="outline"
-        size="sm"
-        className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white"
-      >
-        <SlidersHorizontal className="size-3" />
-        Columns
-      </Button>
-    </DropdownMenuTrigger>
+    <span className={disabled ? "cursor-not-allowed" : undefined}>
+      <DropdownMenuTrigger asChild disabled={disabled}>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white disabled:opacity-40"
+        >
+          <SlidersHorizontal className="size-3" />
+          Columns
+        </Button>
+      </DropdownMenuTrigger>
+    </span>
     <DropdownMenuContent align="end" className="w-44">
       <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
       <DropdownMenuSeparator />

@@ -11,6 +11,7 @@ const MIN_COL_SIZE = 40;
 type DataTableHeaderProps<TData> = {
   table: Table<TData>;
   enableColumnResizing?: boolean;
+  isScrolled?: boolean;
 };
 
 const SortIcon = ({ sorted }: { sorted: false | "asc" | "desc" }) => {
@@ -23,8 +24,11 @@ const makeResizeKeyHandler =
   <TData,>(header: Header<TData, unknown>, table: Table<TData>) =>
   (e: KeyboardEvent) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+
     e.preventDefault();
+
     const delta = e.key === "ArrowLeft" ? -10 : 10;
+
     table.setColumnSizing((prev) => ({
       ...prev,
       [header.column.id]: Math.max(MIN_COL_SIZE, header.column.getSize() + delta),
@@ -32,6 +36,7 @@ const makeResizeKeyHandler =
   };
 
 const HeaderCellContent = <TData,>({ header }: { header: Header<TData, unknown> }) => {
+  "use no memo";
   if (header.isPlaceholder) return null;
 
   const canSort = header.column.getCanSort();
@@ -56,44 +61,49 @@ const HeaderCellContent = <TData,>({ header }: { header: Header<TData, unknown> 
 export const DataTableHeader = <TData,>({
   table,
   enableColumnResizing,
-}: DataTableHeaderProps<TData>) => (
-  <thead>
-    {table.getHeaderGroups().map((headerGroup) => (
-      <tr key={headerGroup.id}>
-        {headerGroup.headers.map((header) => {
-          const canResize = enableColumnResizing && header.column.getCanResize();
+  isScrolled,
+}: DataTableHeaderProps<TData>) => {
+  "use no memo";
+  return (
+    <thead>
+      {table.getHeaderGroups().map((headerGroup) => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map((header) => {
+            const canResize = enableColumnResizing && header.column.getCanResize();
 
-          return (
-            <th
-              key={header.id}
-              colSpan={header.colSpan}
-              style={{ width: header.getSize() }}
-              className={cn(
-                "relative border-b border-border bg-panel-2 py-2.5 text-xs font-medium tracking-wide text-text-3 uppercase",
-                (header.column.columnDef.meta as { headerClassName?: string } | undefined)
-                  ?.headerClassName ?? "px-3 text-left",
-              )}
-            >
-              <HeaderCellContent header={header} />
+            return (
+              <th
+                key={header.id}
+                colSpan={header.colSpan}
+                style={{ width: header.getSize() }}
+                className={cn(
+                  "sticky top-0 z-10 border-b border-border bg-panel-2 py-2.5 text-xs font-medium tracking-wide text-text-3",
+                  isScrolled && "shadow-[0_4px_6px_-2px_rgb(0_0_0/0.08)]",
+                  (header.column.columnDef.meta as { headerClassName?: string } | undefined)
+                    ?.headerClassName ?? "px-3 text-left",
+                )}
+              >
+                <HeaderCellContent header={header} />
 
-              {canResize && (
-                <button
-                  type="button"
-                  aria-label={`Resize ${columnLabel(header.column)} column`}
-                  onMouseDown={header.getResizeHandler()}
-                  onTouchStart={header.getResizeHandler()}
-                  onKeyDown={makeResizeKeyHandler(header, table)}
-                  className={cn(
-                    "absolute top-0 right-0 h-full w-1 cursor-col-resize touch-none select-none outline-none",
-                    "hover:bg-accent/40 focus-visible:bg-accent/40",
-                    header.column.getIsResizing() && "bg-accent",
-                  )}
-                />
-              )}
-            </th>
-          );
-        })}
-      </tr>
-    ))}
-  </thead>
-);
+                {canResize && (
+                  <button
+                    type="button"
+                    aria-label={`Resize ${columnLabel(header.column)} column`}
+                    onMouseDown={header.getResizeHandler()}
+                    onTouchStart={header.getResizeHandler()}
+                    onKeyDown={makeResizeKeyHandler(header, table)}
+                    className={cn(
+                      "absolute top-0 right-0 h-full w-1 cursor-col-resize touch-none select-none outline-none",
+                      "hover:bg-accent/40 focus-visible:bg-accent/40",
+                      header.column.getIsResizing() && "bg-accent",
+                    )}
+                  />
+                )}
+              </th>
+            );
+          })}
+        </tr>
+      ))}
+    </thead>
+  );
+};
