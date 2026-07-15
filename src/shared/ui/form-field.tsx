@@ -16,6 +16,7 @@ type FormFieldProps = {
   placeholder?: string;
   inputClassName?: string;
   autoComplete?: string;
+  disabled?: boolean;
   // Controlled mode
   value?: string;
   onChange?: (value: string) => void;
@@ -32,6 +33,7 @@ export const FormField = ({
   placeholder,
   inputClassName,
   autoComplete,
+  disabled,
   value,
   onChange,
   registration,
@@ -56,6 +58,7 @@ export const FormField = ({
           className={inputClassName}
           autoComplete={autoComplete}
           aria-invalid={!!error}
+          disabled={disabled}
           {...inputProps}
         />
       )}

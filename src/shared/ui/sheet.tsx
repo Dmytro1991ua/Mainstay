@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Dialog as SheetPrimitive } from "radix-ui";
 
 import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
 
 import type * as React from "react";
 
@@ -140,6 +141,26 @@ export function SheetCloseButton({ className, ...props }: React.ComponentProps<"
     </SheetPrimitive.Close>
   );
 }
+
+// ─── FormSheetFooter ──────────────────────────────────────────────────────────
+
+type FormSheetFooterProps = {
+  onSave: (e?: React.BaseSyntheticEvent) => void | Promise<void>;
+  isSaving: boolean;
+  saveLabel: string;
+};
+
+export const FormSheetFooter = ({ onSave, isSaving, saveLabel }: FormSheetFooterProps) => (
+  <>
+    <div className="flex-1" />
+    <SheetClose asChild>
+      <Button variant="outline">Cancel</Button>
+    </SheetClose>
+    <Button onClick={onSave} disabled={isSaving}>
+      {isSaving ? "Saving…" : saveLabel}
+    </Button>
+  </>
+);
 
 // ─── FormSheet ────────────────────────────────────────────────────────────────
 
