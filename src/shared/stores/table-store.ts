@@ -25,6 +25,9 @@ export const useTableStore = create<TablePersistedState>()(
       setRowSelection: (tableId, state) =>
         set((s) => ({ rowSelection: { ...s.rowSelection, [tableId]: state } })),
     }),
-    { name: "mainstay-tables" },
+    {
+      name: "mainstay-tables",
+      partialize: (s) => ({ columnVisibility: s.columnVisibility, columnSizing: s.columnSizing }),
+    },
   ),
 );
