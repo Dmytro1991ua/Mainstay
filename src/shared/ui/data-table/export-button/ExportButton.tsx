@@ -10,26 +10,28 @@ import type { Table } from "@tanstack/react-table";
 type ExportButtonProps<T> = {
   table: Table<T>;
   filename: string;
+  disabled?: boolean;
 };
 
-export const ExportButton = <T,>({ table, filename }: ExportButtonProps<T>) => {
-  const isDisabled = table.getCoreRowModel().rows.length === 0;
+export const ExportButton = <T,>({ table, filename, disabled }: ExportButtonProps<T>) => {
   const csvString = buildCSVString(
     getDataToExport(table.getVisibleLeafColumns(), table.getCoreRowModel()),
   );
   const exportFilename = buildExportFilename(filename, new Date());
 
-  if (isDisabled) {
+  if (disabled) {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        className="gap-1.5 border-accent bg-accent/40 text-white"
-        disabled
-      >
-        <Download className="size-3.5" />
-        Export
-      </Button>
+      <span className="cursor-not-allowed">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-1.5 border-accent bg-accent/40 text-white"
+          disabled
+        >
+          <Download className="size-3.5" />
+          Export
+        </Button>
+      </span>
     );
   }
 
