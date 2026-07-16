@@ -29,10 +29,10 @@ export const ColumnVisibilityMenu = <TData,>({
           variant="outline"
           size="sm"
           disabled={disabled}
-          className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white disabled:opacity-40"
+          className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white dark:border-accent dark:bg-accent dark:hover:bg-accent/90 dark:aria-expanded:bg-accent disabled:opacity-40"
         >
           <SlidersHorizontal className="size-3" />
-          Columns
+          Customize Columns
         </Button>
       </DropdownMenuTrigger>
     </span>

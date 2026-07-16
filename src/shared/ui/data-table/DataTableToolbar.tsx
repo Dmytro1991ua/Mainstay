@@ -38,25 +38,24 @@ export const DataTableToolbar = <TData,>({
   disabled,
 }: DataTableToolbarProps<TData>) => {
   return (
-    <div className="flex items-center justify-between gap-3 pb-3">
-      <div className="flex flex-1 items-center gap-2">
-        <div className="relative max-w-sm flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-text-3" />
-          <Input
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={searchPlaceholder}
-            className="pl-9"
-          />
-        </div>
-        {filterConfig && filterConfig.length > 0 && (
-          <DataTableFilters
-            filterConfig={filterConfig}
-            activeFilters={activeFilters}
-            onFiltersChange={onFiltersChange}
-            disabled={disabled}
-          />
-        )}
+    <div className="flex items-center gap-3 pb-3">
+      {filterConfig && filterConfig.length > 0 && (
+        <DataTableFilters
+          filterConfig={filterConfig}
+          activeFilters={activeFilters}
+          onFiltersChange={onFiltersChange}
+          disabled={disabled}
+        />
+      )}
+      <div className="relative flex-1">
+        <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-text-3" />
+        <Input
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder={searchPlaceholder}
+          className="pl-9"
+          disabled={disabled}
+        />
       </div>
       <div className="flex items-center gap-2">
         {actions}

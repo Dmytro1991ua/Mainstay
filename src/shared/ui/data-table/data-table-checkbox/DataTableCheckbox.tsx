@@ -7,18 +7,20 @@ type DataTableCheckboxProps<T> = {
 };
 
 export const DataTableCheckbox = <T,>({ table }: DataTableCheckboxProps<T>) => {
+  "use no memo";
   let checked: boolean | "indeterminate" = false;
 
   if (table.getIsAllPageRowsSelected()) checked = true;
   else if (table.getIsSomePageRowsSelected()) checked = "indeterminate";
 
   return (
-    <div className="flex w-full items-center justify-center">
-      <Checkbox
-        checked={checked}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all rows"
-      />
-    </div>
+    <Checkbox
+      checked={checked}
+      onClick={(e) => {
+        e.stopPropagation();
+        table.toggleAllPageRowsSelected(checked !== true);
+      }}
+      aria-label="Select all rows"
+    />
   );
 };

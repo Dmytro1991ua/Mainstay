@@ -48,7 +48,7 @@ export const DataTableFilters = ({
             variant="outline"
             size="sm"
             disabled={disabled}
-            className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white disabled:opacity-40"
+            className="gap-1.5 border-accent bg-accent text-white hover:bg-accent/90 hover:text-white aria-expanded:bg-accent aria-expanded:text-white dark:border-accent dark:bg-accent dark:hover:bg-accent/90 dark:aria-expanded:bg-accent disabled:opacity-40"
           >
             <Filter className="h-3.5 w-3.5" />
             Filters
