@@ -1,3 +1,5 @@
+import { PageShell } from "@/shared/ui/page-shell";
+
 import { useDashboard } from "../hooks/use-dashboard";
 
 import { DASHBOARD_WIDGETS_CONFIG } from "./configs";
@@ -9,7 +11,7 @@ export const DashboardPage = () => {
   const data = useDashboard();
 
   return (
-    <div className="flex flex-col gap-6">
+    <PageShell title="Dashboard" subtitle="Overview of your maintenance operations" variant="plain">
       {data.isLoading ? <SkeletonStatsGrid /> : <StatsGrid stats={data.stats} />}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {DASHBOARD_WIDGETS_CONFIG.map(({ key, title, skeleton, render }) => (
@@ -18,6 +20,6 @@ export const DashboardPage = () => {
           </WidgetSection>
         ))}
       </div>
-    </div>
+    </PageShell>
   );
 };
