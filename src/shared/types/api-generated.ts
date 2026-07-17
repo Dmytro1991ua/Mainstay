@@ -204,6 +204,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/inventory/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Return the complete list of valid inventory category values. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Array of category enum values */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["InventoryCategoriesResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/inventory": {
         parameters: {
             query?: never;
@@ -211,16 +247,17 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description List inventory items. Supports pagination, search, sorting, and `lowStock=true` to filter items below their minimum stock level. */
+        /** @description List inventory items. Supports pagination, search, sorting, `category` filter, and `status` filter (`IN_STOCK`, `LOW_STOCK`, `OUT_OF_STOCK`). */
         get: {
             parameters: {
                 query?: {
                     page?: number;
                     limit?: number;
-                    sortBy?: "name" | "quantity" | "createdAt";
+                    sortBy?: "name" | "quantity" | "category" | "createdAt";
                     sortOrder?: "asc" | "desc";
                     search?: string;
-                    lowStock?: string;
+                    category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+                    status?: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
                 };
                 header?: never;
                 path?: never;
@@ -1183,6 +1220,11 @@ export interface components {
             /** @example Password123 */
             password: string;
         };
+        InventoryCategoriesResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: ("ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS")[];
+        };
         InventoryListResponse: {
             /** @enum {boolean} */
             success: true;
@@ -1199,6 +1241,8 @@ export interface components {
             id: string;
             name: string;
             serialNumber: string;
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
             quantity: number;
             minStockLevel: number;
             /** Format: date-time */
@@ -1216,6 +1260,8 @@ export interface components {
             name: string;
             /** @example SN-00123 */
             serialNumber: string;
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
             /** @example 12 */
             quantity: number | null;
             /** @example 5 */
@@ -1224,6 +1270,8 @@ export interface components {
         UpdateInventoryItemInput: {
             /** @example Cordless Drill (18V) */
             name?: string;
+            /** @enum {string} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
             /** @example 8 */
             quantity?: number | null;
             /** @example 5 */
