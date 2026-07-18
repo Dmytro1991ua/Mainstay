@@ -37,6 +37,7 @@ export const DataTable = <TData,>({
   enableColumnVisibility = true,
   enableColumnResizing = true,
   enableSorting = true,
+  hideSearch = false,
 }: DataTableProps<TData>) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrolled = useScrolled(scrollRef);
@@ -76,6 +77,7 @@ export const DataTable = <TData,>({
         enableColumnVisibility={enableColumnVisibility}
         actions={actions}
         disabled={isDisabled}
+        hideSearch={hideSearch}
       />
 
       <div

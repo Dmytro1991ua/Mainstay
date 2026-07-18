@@ -22,6 +22,7 @@ type DataTableToolbarProps<TData> = {
   enableColumnVisibility?: boolean;
   actions?: ReactNode;
   disabled?: boolean;
+  hideSearch?: boolean;
 };
 
 export const DataTableToolbar = <TData,>({
@@ -36,6 +37,7 @@ export const DataTableToolbar = <TData,>({
   enableColumnVisibility = true,
   actions,
   disabled,
+  hideSearch = false,
 }: DataTableToolbarProps<TData>) => {
   return (
     <div className="flex items-center gap-3 pb-3">
@@ -47,16 +49,18 @@ export const DataTableToolbar = <TData,>({
           disabled={disabled}
         />
       )}
-      <div className="relative flex-1">
-        <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-text-3" />
-        <Input
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder={searchPlaceholder}
-          className="pl-9"
-          disabled={disabled}
-        />
-      </div>
+      {!hideSearch && (
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-text-3" />
+          <Input
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={searchPlaceholder}
+            className="pl-9"
+            disabled={disabled}
+          />
+        </div>
+      )}
       <div className="flex items-center gap-2">
         {actions}
         {enableColumnVisibility && <ColumnVisibilityMenu table={table} disabled={disabled} />}

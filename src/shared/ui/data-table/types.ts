@@ -73,4 +73,5 @@ export type DataTableProps<TData> = {
   enableColumnVisibility?: boolean;
   enableColumnResizing?: boolean;
   enableSorting?: boolean;
+  hideSearch?: boolean;
 };
