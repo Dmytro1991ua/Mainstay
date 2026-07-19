@@ -60,8 +60,7 @@ export const DataTable = <TData,>({
     onSelectionChange,
   });
 
-  const rows = table.getRowModel().rows;
-  const isDisabled = isError || (!isPending && rows.length === 0);
+  const isDisabled = isPending || isError;
 
   return (
     <div className="flex flex-1 flex-col min-h-0">
