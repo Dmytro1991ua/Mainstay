@@ -64,7 +64,9 @@ export const DataTableToolbar = <TData,>({
       <div className="flex items-center gap-2">
         {actions}
         {enableColumnVisibility && <ColumnVisibilityMenu table={table} disabled={disabled} />}
-        {exportFilename && <ExportButton table={table} filename={exportFilename} />}
+        {exportFilename && (
+          <ExportButton table={table} filename={exportFilename} disabled={disabled} />
+        )}
       </div>
     </div>
   );
