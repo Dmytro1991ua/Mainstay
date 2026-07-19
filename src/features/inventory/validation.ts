@@ -4,15 +4,15 @@ export const FORM_DEFAULTS: InventoryFormValues = {
   name: "",
   serialNumber: "",
   category: "",
-  quantity: "",
-  minStockLevel: "",
+  quantity: "0",
+  minStockLevel: "0",
 };
 
 const numericField = z
   .string()
+  .min(1, "This field is required")
   .refine(
-    (v) =>
-      v === "" || (Number.isFinite(Number(v)) && Number.isInteger(Number(v)) && Number(v) >= 0),
+    (v) => Number.isFinite(Number(v)) && Number.isInteger(Number(v)) && Number(v) >= 0,
     "Must be a whole number (0 or more)",
   );
 

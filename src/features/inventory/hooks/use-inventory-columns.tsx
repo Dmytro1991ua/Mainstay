@@ -99,6 +99,7 @@ export const useInventoryColumns = ({
             header: "",
             enableSorting: false,
             enableResizing: false,
+            enableHiding: false,
             size: canManage && canDelete ? 80 : 48,
             cell: ({ row }) => (
               <RowActions
