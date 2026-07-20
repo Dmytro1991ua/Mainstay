@@ -1,5 +1,6 @@
 import { type FieldError as RHFFieldError, type UseFormRegisterReturn } from "react-hook-form";
 
+import { cn } from "@/shared/lib/utils";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 
@@ -48,8 +49,10 @@ export const FormField = ({
       };
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
+    <div className="relative flex flex-col gap-1.5 pb-4">
+      <Label htmlFor={id} className={cn(errorMessage && "text-red")}>
+        {label}
+      </Label>
       {children ?? (
         <Input
           id={id}
@@ -62,7 +65,9 @@ export const FormField = ({
           {...inputProps}
         />
       )}
-      {errorMessage && <p className="text-xs text-red">{errorMessage}</p>}
+      {errorMessage && (
+        <p className="absolute bottom-0 left-0 text-xs leading-none text-red">{errorMessage}</p>
+      )}
     </div>
   );
 };
