@@ -1,9 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const TasksPage = () => {
-  return <p className="text-sm text-text-2">Tasks — coming soon.</p>;
+import { TasksPage } from "@/features/tasks";
+import { validateTableSearch } from "@/shared/ui/data-table";
+import type { OnSetTableState } from "@/shared/ui/data-table";
+
+const TasksRoute = () => {
+  const navigate = Route.useNavigate();
+  const tableState = Route.useSearch();
+
+  const onSetTableState: OnSetTableState = (updater) => {
+    navigate({ search: updater });
+  };
+
+  return <TasksPage tableState={tableState} onSetTableState={onSetTableState} />;
 };
 
 export const Route = createFileRoute("/_app/tasks")({
-  component: TasksPage,
+  validateSearch: validateTableSearch,
+  component: TasksRoute,
 });

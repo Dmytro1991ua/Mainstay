@@ -13,6 +13,8 @@ export type TaskListParams = {
   sortOrder?: "asc" | "desc";
   status?: TaskStatus;
   assignedTo?: string;
+  search?: string;
+  overdue?: boolean;
 };
 
 export const fetchTasks = async (params: TaskListParams) => {

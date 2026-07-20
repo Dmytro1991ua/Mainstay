@@ -24,4 +24,10 @@ export const TASK_FILTER_CONFIG: FilterConfig[] = [
       { label: "Done", value: "DONE" },
     ],
   },
+  {
+    id: "overdue",
+    label: "Overdue",
+    type: "single",
+    options: [{ label: "Overdue only", value: "true" }],
+  },
 ];
