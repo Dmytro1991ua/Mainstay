@@ -15,8 +15,10 @@ export const formatDueDate = (dueDate: string | null): string => {
 export const buildTaskParams = (tableState: TableUrlState): TaskListParams => {
   const [activeSort] = tableState.sorting ?? [];
   return {
+    search: tableState.search || undefined,
     status: tableState.filters?.status?.[0] as TaskListParams["status"],
     assignedTo: tableState.filters?.assignedTo?.[0],
+    overdue: tableState.filters?.overdue?.[0] === "true" ? true : undefined,
     sortBy: (activeSort?.id as TaskListParams["sortBy"]) ?? "createdAt",
     sortOrder: activeSort?.desc ? "desc" : "asc",
     limit: 25,

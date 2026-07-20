@@ -1,2 +1,2 @@
 export { Pill } from "./Pill";
-export { PillStatus } from "./config";
+export { PILL_CONFIG, PillStatus } from "./config";

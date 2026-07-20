@@ -47,7 +47,7 @@ export const DataTableBody = <TData,>({
             getRowHighlightInfo?.(row.original).isHighlighted &&
               getRowHighlightInfo(row.original).highlightStyles,
             onRowClick &&
-              "cursor-pointer hover:bg-panel-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+              "cursor-pointer hover:bg-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
             row.getIsSelected() && "bg-accent/5",
             isRowDisabled?.(row.original) && "cursor-not-allowed opacity-40",
           )}
