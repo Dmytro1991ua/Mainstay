@@ -1,9 +1,12 @@
-import { AlertTriangle, Bell, ClipboardList, Clock, Package } from "lucide-react";
+import { AlertTriangle, ClipboardList, Clock, Package, PackageX } from "lucide-react";
 
 import type { ChartConfig } from "@/shared/ui/chart";
 
-import { SkeletonChart, SkeletonWidget } from "./DashboardSkeletons";
+import { SkeletonChart, SkeletonCategoryBreakdown, SkeletonWidget } from "./DashboardSkeletons";
+import { DueThisWeekList } from "./DueThisWeekList";
+import { InventoryCategoryBreakdown } from "./InventoryCategoryBreakdown";
 import { LowStockList } from "./LowStockList";
+import { OverdueTasksList } from "./OverdueTasksList";
 import { RecentNotifications } from "./RecentNotifications";
 import { RecentTasks } from "./RecentTasks";
 import { TaskStatusChart } from "./TaskStatusChart";
@@ -12,14 +15,16 @@ import type { DashboardWidgetConfig, StatCardVariant } from "./types";
 import type { Notification, Task } from "../api/dashboard-api";
 import type { LucideIcon } from "lucide-react";
 
-type StatsKey = "totalItems" | "lowStockCount" | "activeTasks" | "unreadNotifications";
+type StatsKey = "totalItems" | "lowStockCount" | "outOfStockCount" | "activeTasks" | "overdueCount";
+
+export type Stats = Record<StatsKey, number> & { totalTasks: number };
 
 type StatCardDef = {
   key: StatsKey;
   label: string;
   icon: LucideIcon;
   variant?: (value: number) => StatCardVariant;
-  subtext?: (value: number) => string | undefined;
+  subtext?: (value: number, stats: Stats) => string | undefined;
 };
 
 export const STATS_CARDS_CONFIG: StatCardDef[] = [
@@ -28,21 +33,29 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     key: "lowStockCount",
     label: "Low Stock",
     icon: AlertTriangle,
-    variant: (value) => (value > 0 ? "amber" : "default"),
+    variant: (value) => (value > 0 ? "red" : "default"),
     subtext: (value) => (value > 0 ? "Need reordering" : "All stocked"),
+  },
+  {
+    key: "outOfStockCount",
+    label: "Out of Stock",
+    icon: PackageX,
+    variant: (value) => (value > 0 ? "red" : "default"),
+    subtext: (value) => (value > 0 ? "Zero units remaining" : "All items have stock"),
   },
   {
     key: "activeTasks",
     label: "Active Tasks",
     icon: ClipboardList,
     variant: (value) => (value > 0 ? "accent" : "default"),
+    subtext: (_, stats) => (stats.totalTasks > 0 ? `of ${stats.totalTasks} total` : undefined),
   },
   {
-    key: "unreadNotifications",
-    label: "Unread Alerts",
-    icon: Bell,
+    key: "overdueCount",
+    label: "Overdue Tasks",
+    icon: Clock,
     variant: (value) => (value > 0 ? "red" : "default"),
-    subtext: (value) => (value === 0 ? "All caught up" : undefined),
+    subtext: (value) => (value > 0 ? "Past due date" : "All on track"),
   },
 ];
 
@@ -51,29 +64,54 @@ export const DASHBOARD_WIDGETS_CONFIG: DashboardWidgetConfig[] = [
     key: "task-breakdown",
     title: "Task Breakdown",
     skeleton: <SkeletonChart />,
+    viewAllTo: "/tasks",
     render: ({ taskStatusData }) => <TaskStatusChart data={taskStatusData} />,
   },
   {
     key: "low-stock",
     title: "Low Stock Items",
     skeleton: <SkeletonWidget />,
-    render: ({ lowStockItems, stats }) => (
-      <LowStockList items={lowStockItems} total={stats.lowStockCount} />
-    ),
+    viewAllTo: "/inventory",
+    render: ({ lowStockItems }) => <LowStockList items={lowStockItems} />,
   },
   {
     key: "recent-tasks",
     title: "Recent Tasks",
     skeleton: <SkeletonWidget />,
+    viewAllTo: "/tasks",
     render: ({ recentTasks }) => <RecentTasks tasks={recentTasks} />,
   },
   {
     key: "unread-alerts",
     title: "Unread Alerts",
     skeleton: <SkeletonWidget />,
+    viewAllTo: "/notifications",
+    badge: ({ unreadCount }) => (unreadCount > 0 ? unreadCount : undefined),
     render: ({ recentNotifications }) => (
       <RecentNotifications notifications={recentNotifications} />
     ),
+  },
+  {
+    key: "overdue-tasks",
+    title: "Overdue Maintenance",
+    skeleton: <SkeletonWidget />,
+    viewAllTo: "/tasks",
+    render: ({ overdueTasks }) => <OverdueTasksList tasks={overdueTasks} />,
+  },
+  {
+    key: "due-this-week",
+    title: "Due This Week",
+    skeleton: <SkeletonWidget />,
+    viewAllTo: "/tasks",
+    render: ({ dueThisWeekTasks }) => <DueThisWeekList tasks={dueThisWeekTasks} />,
+  },
+  {
+    key: "inventory-by-category",
+    title: "Inventory by Category",
+    skeleton: <SkeletonCategoryBreakdown />,
+    fullWidth: true,
+    viewAllTo: "/inventory",
+    render: ({ categoryBreakdown }) => <InventoryCategoryBreakdown breakdown={categoryBreakdown} />,
   },
 ];
 

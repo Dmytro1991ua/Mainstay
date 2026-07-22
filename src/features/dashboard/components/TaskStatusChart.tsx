@@ -56,7 +56,7 @@ export const TaskStatusChart = ({ data }: TaskStatusChartProps) => {
   }));
 
   return (
-    <div>
+    <div className="my-auto">
       <ChartContainer config={TASK_CHART_CONFIG} className="mx-auto aspect-square max-h-45">
         <PieChart>
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
@@ -97,6 +97,9 @@ export const TaskStatusChart = ({ data }: TaskStatusChartProps) => {
           );
         })}
       </div>
+      <p className="mt-3 text-center text-[11px] text-text-3">
+        {Math.round((data.done / total) * 100)}% completion rate
+      </p>
     </div>
   );
 };

@@ -10,6 +10,9 @@ export type DashboardWidgetConfig = {
   key: string;
   title: string;
   skeleton: ReactNode;
+  fullWidth?: boolean;
+  viewAllTo?: string;
+  badge?: (data: DashboardData) => number | undefined;
   render: (data: DashboardData) => ReactNode;
 };
 

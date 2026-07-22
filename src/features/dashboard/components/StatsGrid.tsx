@@ -1,15 +1,10 @@
 import { STATS_CARDS_CONFIG } from "./configs";
 import { StatCard } from "./StatCard";
 
-type Stats = {
-  totalItems: number;
-  lowStockCount: number;
-  activeTasks: number;
-  unreadNotifications: number;
-};
+import type { Stats } from "./configs";
 
 export const StatsGrid = ({ stats }: { stats: Stats }) => (
-  <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
     {STATS_CARDS_CONFIG.map(({ key, label, icon, variant, subtext }) => {
       const value = stats[key];
       return (
@@ -19,7 +14,7 @@ export const StatsGrid = ({ stats }: { stats: Stats }) => (
           value={value}
           icon={icon}
           variant={variant?.(value)}
-          subtext={subtext?.(value)}
+          subtext={subtext?.(value, stats)}
         />
       );
     })}
