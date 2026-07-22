@@ -240,6 +240,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/inventory/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Aggregate inventory counts grouped by category. Returns totals for inStock, lowStock, and outOfStock across all categories and per category. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Inventory stats */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["InventoryStatsResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/inventory": {
         parameters: {
             query?: never;
@@ -425,6 +461,66 @@ export interface paths {
             };
             responses: {
                 /** @description Item updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["InventoryItemResponse"];
+                    };
+                };
+                /** @description Insufficient permissions */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Item not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/inventory/{id}/restock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Increment an inventory item's quantity by the given amount. Requires ADMIN or MANAGER role. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["RestockInventoryItemInput"];
+                };
+            };
+            responses: {
+                /** @description Item restocked — updated item returned */
                 200: {
                     headers: {
                         [name: string]: unknown;
@@ -672,7 +768,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description List tasks. Filterable by status and assignee. */
+        /** @description List tasks. Supports search (title + description), `status`, `assignedTo`, `overdue=true`, and `dueDateFrom`/`dueDateTo` date range filters. */
         get: {
             parameters: {
                 query?: {
@@ -680,8 +776,12 @@ export interface paths {
                     limit?: number;
                     sortBy?: "createdAt" | "status" | "title";
                     sortOrder?: "asc" | "desc";
+                    search?: string;
                     status?: "OPEN" | "IN_PROGRESS" | "DONE";
                     assignedTo?: string;
+                    overdue?: string;
+                    dueDateFrom?: string | null;
+                    dueDateTo?: string | null;
                 };
                 header?: never;
                 path?: never;
@@ -1225,6 +1325,66 @@ export interface components {
             success: true;
             data: ("ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS")[];
         };
+        InventoryStatsResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                total: number;
+                inStock: number;
+                lowStock: number;
+                outOfStock: number;
+                byCategory: {
+                    ELECTRICAL?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    PLUMBING?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    HVAC?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    TOOLS?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    FASTENERS?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    CHEMICALS?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    SAFETY?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                    BUILDING_MATERIALS?: {
+                        total: number;
+                        inStock: number;
+                        lowStock: number;
+                        outOfStock: number;
+                    };
+                };
+            };
+        };
         InventoryListResponse: {
             /** @enum {boolean} */
             success: true;
@@ -1266,6 +1426,10 @@ export interface components {
             quantity: number | null;
             /** @example 5 */
             minStockLevel: number | null;
+        };
+        RestockInventoryItemInput: {
+            /** @example 50 */
+            quantityToAdd: number;
         };
         UpdateInventoryItemInput: {
             /** @example Cordless Drill (18V) */

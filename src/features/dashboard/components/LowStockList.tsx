@@ -7,12 +7,7 @@ import { LowStockRow } from "./LowStockRow";
 
 import type { InventoryItem } from "../api/dashboard-api";
 
-type LowStockListProps = {
-  items: InventoryItem[];
-  total: number;
-};
-
-export const LowStockList = ({ items, total }: LowStockListProps) => {
+export const LowStockList = ({ items }: { items: InventoryItem[] }) => {
   if (items.length === 0) {
     return (
       <EmptyState
@@ -31,11 +26,6 @@ export const LowStockList = ({ items, total }: LowStockListProps) => {
           <LowStockRow key={item.id} item={item} />
         ))}
       </div>
-      {total > items.length && (
-        <p className={cn("mt-3 text-center text-[12px] text-text-3")}>
-          +{total - items.length} more items below minimum stock
-        </p>
-      )}
     </div>
   );
 };

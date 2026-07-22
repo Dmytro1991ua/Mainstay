@@ -1,3 +1,6 @@
+import { endOfWeek, startOfWeek } from "date-fns";
+import { sortBy } from "lodash";
+
 import { axiosInstance } from "@/shared/lib/api-client";
 import type { components } from "@/shared/types/api-generated";
 
@@ -11,33 +14,59 @@ type NotificationsListResponse = components["schemas"]["NotificationsListRespons
 type TasksListResponse = components["schemas"]["TasksListResponse"];
 type UnreadCountResponse = components["schemas"]["UnreadCountResponse"];
 
-export const getInventoryTotal = async () => {
-  const { data } = await axiosInstance.get<InventoryListResponse>("/inventory", {
-    params: { limit: 1 },
-  });
+export type InventoryCategory = components["schemas"]["InventoryItem"]["category"];
+export type InventoryStats = components["schemas"]["InventoryStatsResponse"]["data"];
+export type CategoryStatsEntry = Omit<InventoryStats, "byCategory">;
 
+const WIDGET_LIST_LIMIT = 25;
+
+const fetchTotal = async (url: string, params?: Record<string, unknown>): Promise<number> => {
+  const { data } = await axiosInstance.get<InventoryListResponse | TasksListResponse>(url, {
+    params: { ...params, limit: 1 },
+  });
   return data.meta.total;
 };
 
+export const getInventoryStats = async (): Promise<InventoryStats> => {
+  const { data } =
+    await axiosInstance.get<components["schemas"]["InventoryStatsResponse"]>("/inventory/stats");
+  return data.data;
+};
+
+export const getTasksCount = (status: TaskStatus) => fetchTotal("/tasks", { status });
+
+export const getOverdueTasksCount = () => fetchTotal("/tasks", { overdue: true });
+
 export const getLowStockItems = async () => {
   const { data } = await axiosInstance.get<InventoryListResponse>("/inventory", {
-    params: { lowStock: "true", limit: 10, sortBy: "quantity", sortOrder: "asc" },
+    params: { status: "LOW_STOCK", limit: WIDGET_LIST_LIMIT, sortBy: "quantity", sortOrder: "asc" },
   });
 
   return { items: data.data, total: data.meta.total };
 };
 
-export const getTasksCount = async (status: TaskStatus) => {
+export const getOverdueTasks = async (): Promise<Task[]> => {
   const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
-    params: { status, limit: 1 },
+    params: { overdue: true, limit: WIDGET_LIST_LIMIT },
   });
+  return data.data;
+};
 
-  return data.meta.total;
+export const getDueThisWeekTasks = async (): Promise<Task[]> => {
+  const now = new Date();
+  const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
+    params: {
+      dueDateFrom: startOfWeek(now, { weekStartsOn: 1 }).toISOString(),
+      dueDateTo: endOfWeek(now, { weekStartsOn: 1 }).toISOString(),
+      limit: WIDGET_LIST_LIMIT,
+    },
+  });
+  return sortBy(data.data, (task) => (task.dueDate ? new Date(task.dueDate).getTime() : Infinity));
 };
 
 export const getRecentTasks = async () => {
   const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
-    params: { limit: 8, sortBy: "createdAt", sortOrder: "desc" },
+    params: { limit: WIDGET_LIST_LIMIT, sortBy: "createdAt", sortOrder: "desc" },
   });
 
   return data.data;
@@ -51,7 +80,7 @@ export const getUnreadNotificationsCount = async () => {
 
 export const getRecentNotifications = async () => {
   const { data } = await axiosInstance.get<NotificationsListResponse>("/notifications", {
-    params: { isRead: "false", limit: 5 },
+    params: { isRead: "false", limit: WIDGET_LIST_LIMIT },
   });
 
   return data.data;
