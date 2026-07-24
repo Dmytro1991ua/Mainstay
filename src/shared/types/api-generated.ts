@@ -558,13 +558,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description List the authenticated user's notifications. Filterable by read status, always sorted newest first. */
+        /** @description List the authenticated user's notifications. Filterable by `isRead` and `type` (`LOW_STOCK`, `OUT_OF_STOCK`, `TASK_OVERDUE`), always sorted newest first. */
         get: {
             parameters: {
                 query?: {
                     page?: number;
                     limit?: number;
                     isRead?: string;
+                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE";
                 };
                 header?: never;
                 path?: never;
@@ -1456,7 +1457,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            type: "LOW_STOCK" | "TASK_OVERDUE";
+            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE";
             /** @example Low stock: "Cordless Drill" has 2 units (min: 5). */
             message: string;
             isRead: boolean;
