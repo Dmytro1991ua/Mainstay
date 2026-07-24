@@ -12,7 +12,7 @@ import { RecentTasks } from "./RecentTasks";
 import { TaskStatusChart } from "./TaskStatusChart";
 
 import type { DashboardWidgetConfig, StatCardVariant } from "./types";
-import type { Notification, Task } from "../api/dashboard-api";
+import type { Task } from "../api/dashboard-api";
 import type { LucideIcon } from "lucide-react";
 
 type StatsKey = "totalItems" | "lowStockCount" | "outOfStockCount" | "activeTasks" | "overdueCount";
@@ -125,17 +125,6 @@ export const STATUS_CLASS_CONFIG: Record<Task["status"], string> = {
   OPEN: "bg-accent-soft text-accent",
   IN_PROGRESS: "bg-amber-soft text-amber",
   DONE: "bg-green-soft text-green",
-};
-
-type NotificationTypeDef = {
-  icon: LucideIcon;
-  iconClass: string;
-  bgClass: string;
-};
-
-export const NOTIFICATION_TYPE_CONFIG: Record<Notification["type"], NotificationTypeDef> = {
-  LOW_STOCK: { icon: AlertTriangle, iconClass: "text-amber", bgClass: "bg-amber-soft" },
-  TASK_OVERDUE: { icon: Clock, iconClass: "text-red", bgClass: "bg-red-soft" },
 };
 
 export const STAT_CARD_VARIANT_CONFIG: Record<

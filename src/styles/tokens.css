@@ -24,6 +24,10 @@
   --red-soft: #fef2f2;
   --red-border: #fbd8d8;
   --row-red: #fff9f9;
+  --orange: #ea580c;
+  --orange-soft: #fff7ed;
+  --orange-border: #fed7aa;
+  --row-orange: #fffaf6;
   --amber: #b45309;
   --amber-soft: #fef6e7;
   --amber-border: #fae3b0;
@@ -60,6 +64,10 @@
   --red-soft: rgba(248, 113, 113, 0.13);
   --red-border: rgba(248, 113, 113, 0.28);
   --row-red: rgba(248, 113, 113, 0.04);
+  --orange: #fb923c;
+  --orange-soft: rgba(251, 146, 60, 0.13);
+  --orange-border: rgba(251, 146, 60, 0.28);
+  --row-orange: rgba(251, 146, 60, 0.04);
   --amber: #fbbf24;
   --amber-soft: rgba(251, 191, 36, 0.12);
   --amber-border: rgba(251, 191, 36, 0.26);

@@ -1,10 +1,9 @@
 import { Bell } from "lucide-react";
 
+import { NOTIFICATION_TYPE_CONFIG } from "@/shared/lib/notification-config";
 import { cn } from "@/shared/lib/utils";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { formatTimeAgo } from "@/shared/utils/formatters";
-
-import { NOTIFICATION_TYPE_CONFIG } from "./configs";
 
 import type { Notification } from "../api/dashboard-api";
 
