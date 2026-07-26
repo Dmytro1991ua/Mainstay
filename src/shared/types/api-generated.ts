@@ -204,6 +204,73 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/accept-invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Accept an invite and create your account. The invite token (from the email link) pre-assigns your role. Supply your chosen username and password. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["AcceptInviteInput"];
+                };
+            };
+            responses: {
+                /** @description Account created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RegisterResponse"];
+                    };
+                };
+                /** @description Invite expired or already used */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Invite not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Username already taken */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/inventory/categories": {
         parameters: {
             query?: never;
@@ -985,6 +1052,7 @@ export interface paths {
                     page?: number;
                     limit?: number;
                     role?: "ADMIN" | "MANAGER" | "TECHNICIAN";
+                    status?: "ACTIVE" | "INACTIVE";
                     sortBy?: "createdAt" | "userName" | "email";
                     sortOrder?: "asc" | "desc";
                 };
@@ -1265,6 +1333,232 @@ export interface paths {
         };
         trace?: never;
     };
+    "/users/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Send an invite email to a new user. ADMIN only. The recipient receives a link to set their username and password. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["InviteUserInput"];
+                };
+            };
+            responses: {
+                /** @description Invite created and email sent */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["InviteResponse"];
+                    };
+                };
+                /** @description ADMIN role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Email already registered */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/pending-invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List invites that have been sent but not yet accepted. ADMIN only. Includes an `isExpired` flag for invites past their 48-hour window. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List of pending invites */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PendingInvitesResponse"];
+                    };
+                };
+                /** @description ADMIN role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/invites/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Cancel a pending invite that has not yet been accepted. ADMIN only. Returns 400 if the invite was already accepted. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Invite cancelled */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Invite already accepted */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description ADMIN role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Invite not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Activate or deactivate a user account. ADMIN only. An admin cannot change their own status. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateUserStatusInput"];
+                };
+            };
+            responses: {
+                /** @description Status updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UserResponse"];
+                    };
+                };
+                /** @description ADMIN role required, or attempting to change own status */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description User not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1318,6 +1612,17 @@ export interface components {
              * @example john@example.com
              */
             email: string;
+            /** @example Password123 */
+            password: string;
+        };
+        AcceptInviteInput: {
+            /**
+             * Format: uuid
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            token: string;
+            /** @example janedoe */
+            userName: string;
             /** @example Password123 */
             password: string;
         };
@@ -1579,6 +1884,11 @@ export interface components {
             /** @example john@example.com */
             email: string;
             roles: ("ADMIN" | "MANAGER" | "TECHNICIAN")[];
+            /**
+             * @example ACTIVE
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE";
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -1605,6 +1915,55 @@ export interface components {
              *     ]
              */
             roles: ("ADMIN" | "MANAGER" | "TECHNICIAN")[];
+        };
+        InviteResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: uuid */
+                id: string;
+                email: string;
+                /** @enum {string} */
+                role: "MANAGER" | "TECHNICIAN";
+                /** Format: date-time */
+                expiresAt: string;
+            };
+        };
+        InviteUserInput: {
+            /**
+             * Format: email
+             * @example jane@example.com
+             */
+            email: string;
+            /**
+             * @example TECHNICIAN
+             * @enum {string}
+             */
+            role: "MANAGER" | "TECHNICIAN";
+        };
+        PendingInvitesResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["PendingInvite"][];
+        };
+        PendingInvite: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            /** @enum {string} */
+            role: "ADMIN" | "MANAGER" | "TECHNICIAN";
+            /** Format: date-time */
+            expiresAt: string;
+            isExpired: boolean;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        UpdateUserStatusInput: {
+            /**
+             * @example INACTIVE
+             * @enum {string}
+             */
+            status: "ACTIVE" | "INACTIVE";
         };
     };
     responses: never;

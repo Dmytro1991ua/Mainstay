@@ -18,6 +18,12 @@ const TIME_STEPS: TimeStep[] = [
 
 export const formatShortDate = (iso: string) => format(new Date(iso), "MMM d");
 
+export const formatUserName = (userName: string): string =>
+  userName
+    .split("_")
+    .map((part) => (part ? part[0].toUpperCase() + part.slice(1) : ""))
+    .join(" ");
+
 export const getInitials = (name: string): string => {
   const words = name.trim().split(/\s+/);
   return words.length > 1
