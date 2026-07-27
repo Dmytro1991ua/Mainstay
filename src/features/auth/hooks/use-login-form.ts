@@ -30,6 +30,10 @@ export const useLoginForm = () => {
     });
   });
 
+  const fillDemo = (email: string, password: string) => {
+    form.reset({ email, password });
+  };
+
   return {
     register,
     onSubmit,
@@ -38,5 +42,6 @@ export const useLoginForm = () => {
     isPending: login.isPending,
     isError: login.isError,
     error: login.error,
+    fillDemo,
   };
 };

@@ -38,3 +38,12 @@ export const getCurrentUser = async () => {
 
   return data.data;
 };
+
+export const acceptInvite = async (input: components["schemas"]["AcceptInviteInput"]) => {
+  const { data } = await axiosInstance.post<components["schemas"]["UserResponse"]>(
+    "/auth/accept-invite",
+    input,
+  );
+
+  return data.data;
+};
