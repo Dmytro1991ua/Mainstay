@@ -6,6 +6,8 @@ import { useAuthStore } from "@/shared/stores/auth-store";
 import { BrandLogo } from "@/shared/ui/brand-logo";
 import { ThemeToggleCycle } from "@/shared/ui/theme-toggle-cycle";
 
+import type { ReactNode } from "react";
+
 const FEATURES = [
   "Live low-stock alerts with reorder thresholds",
   "Overdue maintenance, surfaced before it fails",
@@ -14,10 +16,12 @@ const FEATURES = [
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export const AuthLayout = () => {
+type AuthLayoutProps = { children?: ReactNode; skipAuthRedirect?: boolean };
+
+export const AuthLayout = ({ children, skipAuthRedirect = false }: AuthLayoutProps = {}) => {
   const status = useAuthStore((s) => s.status);
 
-  if (status === "authenticated") return <Navigate to="/dashboard" />;
+  if (!skipAuthRedirect && status === "authenticated") return <Navigate to="/dashboard" />;
 
   return (
     <main className={cn("flex min-h-screen")}>
@@ -107,9 +111,7 @@ export const AuthLayout = () => {
         <div className={cn("absolute top-6 right-6")}>
           <ThemeToggleCycle />
         </div>
-        <div className={cn("w-full max-w-[384px]")}>
-          <Outlet />
-        </div>
+        <div className={cn("w-full max-w-[384px]")}>{children ?? <Outlet />}</div>
       </section>
     </main>
   );
