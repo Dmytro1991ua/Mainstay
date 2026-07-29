@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
 import { useFormState } from "@/shared/hooks/use-form-state";
+import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { useAuthStore } from "@/shared/stores/auth-store";
 import { toast } from "@/shared/ui/toast";
 
@@ -56,8 +57,8 @@ export const useTaskForm = () => {
       });
       toast.success("Task created", { description: `"${values.title}" was added.` });
       closeSheet();
-    } catch {
-      toast.error("Failed to create task");
+    } catch (error) {
+      toast.error("Failed to create task", { description: getApiErrorMessage(error) });
     }
   };
 
@@ -72,8 +73,8 @@ export const useTaskForm = () => {
       await updateMutation.mutateAsync({ id, data: update });
       toast.success("Task updated", { description: `"${values.title}" was saved.` });
       closeSheet();
-    } catch {
-      toast.error("Failed to update task");
+    } catch (error) {
+      toast.error("Failed to update task", { description: getApiErrorMessage(error) });
     }
   };
 

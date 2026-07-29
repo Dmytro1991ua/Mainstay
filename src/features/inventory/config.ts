@@ -1,4 +1,5 @@
 import type { FilterConfig } from "@/shared/ui/data-table";
+import { PillStatus } from "@/shared/ui/pill";
 
 import type { InventoryFormValues } from "./validation";
 
@@ -33,6 +34,12 @@ export const INVENTORY_FORM_FIELDS: InventoryFieldConfig[] = [
   { name: "quantity", label: "Quantity", type: "number", placeholder: "0" },
   { name: "minStockLevel", label: "Min stock level", type: "number", placeholder: "0" },
 ];
+
+export const ROW_HIGHLIGHT: Partial<Record<PillStatus, string>> = {
+  [PillStatus.InStock]: "bg-row-green",
+  [PillStatus.LowStock]: "bg-row-amber",
+  [PillStatus.OutOfStock]: "bg-row-red",
+};
 
 export const INVENTORY_FILTER_CONFIG: FilterConfig[] = [
   {

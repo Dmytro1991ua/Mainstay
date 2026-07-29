@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { PILL_CONFIG } from "@/shared/ui/pill";
 import { toast } from "@/shared/ui/toast";
 
@@ -25,10 +26,10 @@ export const useInlineStatus = (task: Task) => {
       await mutateAsync({ id: task.id, data: { status: newStatus as TaskStatus } });
 
       setOptimistic(null);
-    } catch {
+    } catch (error) {
       setOptimistic(null);
 
-      toast.error("Failed to update status");
+      toast.error("Failed to update status", { description: getApiErrorMessage(error) });
     }
   };
 
