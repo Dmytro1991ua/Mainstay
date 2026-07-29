@@ -78,10 +78,10 @@ export const TasksTable = ({ tableState, onSetTableState }: TasksTableProps) => 
         fetchNextPage={fetchNextPage}
         isFetchingNextPage={isFetchingNextPage}
         filterConfig={filterConfig}
-        enableRowSelection={false}
+        enableRowSelection
         actions={
           canManage ? (
-            <Button onClick={openAdd}>
+            <Button onClick={openAdd} disabled={isError}>
               <Plus />
               New task
             </Button>

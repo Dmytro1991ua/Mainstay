@@ -1,4 +1,6 @@
 import { cn } from "@/shared/lib/utils";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { DataTableCheckbox } from "@/shared/ui/data-table/data-table-checkbox";
 import { Pill } from "@/shared/ui/pill";
 import { RowActions } from "@/shared/ui/row-actions";
 
@@ -29,6 +31,23 @@ export const useTaskColumns = ({
   const showActions = canManage || canDelete || isTechnician;
 
   return [
+    {
+      id: "select",
+      header: ({ table }) => <DataTableCheckbox table={table} />,
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onClick={(e) => {
+            e.stopPropagation();
+            row.toggleSelected(!row.getIsSelected());
+          }}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableResizing: false,
+      size: 40,
+    },
     {
       id: "title",
       accessorKey: "title",

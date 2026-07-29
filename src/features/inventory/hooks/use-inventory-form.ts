@@ -3,6 +3,7 @@ import { toNumber as _toNumber } from "lodash";
 import { useState } from "react";
 
 import { useFormState } from "@/shared/hooks/use-form-state";
+import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
 import { getApiErrorStatus } from "../utils";
@@ -29,6 +30,7 @@ export const useInventoryForm = () => {
 
   const openAdd = () => {
     form.reset(FORM_DEFAULTS);
+
     setSheetMode({ type: "add" });
   };
 
@@ -52,7 +54,9 @@ export const useInventoryForm = () => {
         quantity: _toNumber(values.quantity),
         minStockLevel: _toNumber(values.minStockLevel),
       });
+
       toast.success("Item added", { description: `"${values.name}" was added to inventory.` });
+
       closeSheet();
     } catch (err) {
       if (getApiErrorStatus(err) === 409) {
@@ -60,7 +64,7 @@ export const useInventoryForm = () => {
           description: "Use a unique serial number for this item.",
         });
       } else {
-        toast.error("Failed to add item");
+        toast.error("Failed to add item", { description: getApiErrorMessage(err) });
       }
     }
   };
@@ -81,7 +85,7 @@ export const useInventoryForm = () => {
 
       closeSheet();
     } catch (e) {
-      toast.error("Failed to update item", { description: (e as Error).message });
+      toast.error("Failed to update item", { description: getApiErrorMessage(e) });
     }
   };
 

@@ -1,7 +1,9 @@
-import type { TableUrlState } from "@/shared/ui/data-table";
+import type { RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
 import { PillStatus } from "@/shared/ui/pill";
 
-import type { InventoryCategory, InventoryListParams } from "./api/inventory.api";
+import { ROW_HIGHLIGHT } from "./config";
+
+import type { InventoryItem, InventoryCategory, InventoryListParams } from "./api/inventory.api";
 
 // cspell:ignore HVAC
 const ACRONYMS: Record<string, string> = { HVAC: "HVAC" };
@@ -18,6 +20,11 @@ export const getInventoryStatus = (quantity: number, minStockLevel: number): Pil
   if (quantity < minStockLevel) return PillStatus.LowStock;
 
   return PillStatus.InStock;
+};
+
+export const getInventoryRowHighlight = (row: InventoryItem): RowHighlightInfo => {
+  const status = getInventoryStatus(row.quantity, row.minStockLevel);
+  return { isHighlighted: true, highlightStyles: ROW_HIGHLIGHT[status] ?? "" };
 };
 
 export const getApiErrorStatus = (err: unknown): number | undefined =>

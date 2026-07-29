@@ -2,31 +2,17 @@ import { AlertTriangle, Package, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { DataTable } from "@/shared/ui/data-table";
-import type { OnSetTableState, RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
+import type { OnSetTableState, TableUrlState } from "@/shared/ui/data-table";
 import { EmptyState } from "@/shared/ui/empty-state";
-import { PillStatus } from "@/shared/ui/pill";
 
 import { useInventoryColumns } from "../hooks/use-inventory-columns";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { useInventoryDelete } from "../hooks/use-inventory-delete";
 import { useInventoryForm } from "../hooks/use-inventory-form";
-import { getInventoryStatus } from "../utils";
+import { getInventoryRowHighlight } from "../utils";
 
 import { InventoryDeleteDialog } from "./InventoryDeleteDialog";
 import { InventoryFormSheet } from "./InventoryFormSheet";
-
-import type { InventoryItem } from "../api/inventory.api";
-
-const ROW_HIGHLIGHT: Partial<Record<PillStatus, string>> = {
-  [PillStatus.InStock]: "bg-row-green",
-  [PillStatus.LowStock]: "bg-row-amber",
-  [PillStatus.OutOfStock]: "bg-row-red",
-};
-
-const getInventoryRowHighlight = (row: InventoryItem): RowHighlightInfo => {
-  const status = getInventoryStatus(row.quantity, row.minStockLevel);
-  return { isHighlighted: true, highlightStyles: ROW_HIGHLIGHT[status] ?? "" };
-};
 
 type InventoryTableProps = {
   tableState: TableUrlState;
@@ -73,7 +59,7 @@ export const InventoryTable = ({ tableState, onSetTableState }: InventoryTablePr
         getRowHighlightInfo={getInventoryRowHighlight}
         actions={
           canManage ? (
-            <Button onClick={openAdd}>
+            <Button onClick={openAdd} disabled={isError}>
               <Plus />
               Add item
             </Button>
