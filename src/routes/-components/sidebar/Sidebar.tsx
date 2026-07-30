@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronLeft, LogOut } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import { Avatar } from "@/shared/ui/avatar";
 import { BrandLogo } from "@/shared/ui/brand-logo";
 
 import { useSidebar } from "./use-sidebar";
@@ -85,14 +86,7 @@ export const Sidebar = () => {
           )}
         >
           <span className={cn("relative z-10 flex w-10 shrink-0 items-center justify-center")}>
-            <div
-              className={cn(
-                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
-                "bg-accent-soft text-xs font-semibold text-accent",
-              )}
-            >
-              {initials}
-            </div>
+            <Avatar initials={initials} className="size-7" />
           </span>
           <div
             className={cn(

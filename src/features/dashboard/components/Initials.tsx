@@ -1,10 +1,10 @@
+import { Avatar } from "@/shared/ui/avatar";
 import { getInitials } from "@/shared/utils";
 
 export const Initials = ({ name }: { name: string }) => (
-  <span
+  <Avatar
+    initials={getInitials(name).toUpperCase()}
     title={name}
-    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-semibold uppercase text-white"
-  >
-    {getInitials(name)}
-  </span>
+    className="size-7 bg-accent text-[10px] text-white"
+  />
 );

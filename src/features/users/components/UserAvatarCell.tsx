@@ -1,3 +1,4 @@
+import { Avatar } from "@/shared/ui/avatar";
 import { formatUserName, getInitials } from "@/shared/utils";
 
 type UserAvatarCellProps = {
@@ -13,9 +14,7 @@ export const UserAvatarCell = ({ userName, email, isMe }: UserAvatarCellProps) =
 
   return (
     <div className="flex items-center gap-2.75">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[12px] font-semibold text-accent">
-        {initials}
-      </span>
+      <Avatar initials={initials} className="size-8 text-[12px]" />
       <div className="flex items-center gap-1.5">
         {userName ? (
           <span className="text-[13.5px] font-medium text-text">{formatUserName(userName)}</span>

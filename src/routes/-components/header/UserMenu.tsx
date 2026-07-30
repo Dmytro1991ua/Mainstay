@@ -4,6 +4,7 @@ import { ChevronDown, LogOut, Settings } from "lucide-react";
 import { useLogout } from "@/features/auth";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
+import { Avatar } from "@/shared/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,10 +30,8 @@ export const UserMenu = () => {
             "aria-expanded:bg-panel-2",
           )}
         >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent">
-            {initials}
-          </span>
-          <span className="hidden max-w-[120px] truncate text-[13px] font-medium text-text sm:block">
+          <Avatar initials={initials} className="size-7" />
+          <span className="hidden max-w-30 truncate text-[13px] font-medium text-text sm:block">
             {user?.userName}
           </span>
           <ChevronDown className="h-4 w-4 shrink-0 text-text-3" />

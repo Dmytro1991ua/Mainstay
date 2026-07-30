@@ -36,6 +36,7 @@
     "react-csv": "^2.2.2",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.7",
+    "react-dropzone": "^19.1.1",
     "react-hook-form": "^7.80.0",
     "react-infinite-scroll-component": "^7.2.1",
     "recharts": "3.8.0",
