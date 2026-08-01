@@ -10,22 +10,31 @@ export const useSingleImageUpload = (uploadFn?: UploadFn) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const onFileUpload = async (files: File[]) => {
+    setIsUploading(true);
+
+    let file: File | undefined;
+
     try {
-      setIsUploading(true);
-
-      const file = await handleImageDrop({
-        files,
-        onSetPreviewImage: setPreviewImage,
-      });
-
-      if (!file || !uploadFn) return;
-
-      await uploadFn(file);
+      file = await handleImageDrop({ files, onSetPreviewImage: setPreviewImage });
     } catch (error) {
       setPreviewImage(null);
       toast.error("Upload failed", {
         description: error instanceof Error ? error.message : "Failed to process image",
       });
+      setIsUploading(false);
+      return;
+    }
+
+    if (!file || !uploadFn) {
+      setIsUploading(false);
+      return;
+    }
+
+    try {
+      await uploadFn(file);
+    } catch {
+      // Upload errors are toasted by the caller's onError — just clear the preview.
+      setPreviewImage(null);
     } finally {
       setIsUploading(false);
     }
