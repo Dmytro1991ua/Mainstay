@@ -10,6 +10,7 @@ type FormFieldProps = {
   label: string;
   id?: string;
   error?: RHFFieldError | string;
+  hint?: string;
   /** Render any custom control (Select, Checkbox, etc.) instead of the default Input */
   children?: React.ReactNode;
   // Input-specific — ignored when children is provided
@@ -29,6 +30,7 @@ export const FormField = ({
   label,
   id,
   error,
+  hint,
   children,
   type,
   placeholder,
@@ -67,6 +69,9 @@ export const FormField = ({
       )}
       {errorMessage && (
         <p className="absolute bottom-0 left-0 text-xs leading-none text-red">{errorMessage}</p>
+      )}
+      {!errorMessage && hint && (
+        <p className="absolute bottom-0 left-0 text-xs leading-none text-text-3">{hint}</p>
       )}
     </div>
   );
