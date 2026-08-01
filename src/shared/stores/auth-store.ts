@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 import type { components } from "@/shared/types/api-generated";
 
-type User = components["schemas"]["User"];
+// avatarUrl is returned by the server but not yet in the generated OpenAPI spec —
+// augmented here until the spec is updated and types are regenerated.
+export type User = components["schemas"]["User"] & { avatarUrl?: string | null };
 type AuthStatus = "pending" | "authenticated" | "unauthenticated";
 
 interface AuthState {
@@ -11,6 +13,7 @@ interface AuthState {
   user: User | null;
   setSession: (accessToken: string, user: User) => void;
   setAccessToken: (accessToken: string) => void;
+  updateUser: (patch: Partial<User>) => void;
   clearSession: () => void;
 }
 
@@ -25,5 +28,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   setSession: (accessToken, user) => set({ status: "authenticated", accessToken, user }),
   setAccessToken: (accessToken) => set({ accessToken }),
+  updateUser: (patch) => set((s) => ({ user: s.user ? { ...s.user, ...patch } : null })),
   clearSession: () => set({ status: "unauthenticated", accessToken: null, user: null }),
 }));
