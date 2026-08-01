@@ -4,8 +4,8 @@ import { Button } from "./button";
 
 type FormSubmitProps = {
   isPending: boolean;
-  isError: boolean;
-  error: unknown;
+  isError?: boolean;
+  error?: unknown;
   label: string;
   pendingLabel: string;
 };
