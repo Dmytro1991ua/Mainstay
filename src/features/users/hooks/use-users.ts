@@ -4,6 +4,7 @@ import { useAuthStore } from "@/shared/stores/auth-store";
 import type { TableUrlState } from "@/shared/ui/data-table";
 
 import { getPendingInvites, getUsers } from "../api/users-api";
+import { USERS_REFETCH_INTERVAL } from "../config";
 
 import type { PendingInvite, User, UserRole } from "../api/users-api";
 import type { DisplayStatus } from "../config";
@@ -53,12 +54,14 @@ export const useUsersData = (tableState: TableUrlState) => {
     getNextPageParam: (lastPage) =>
       lastPage.meta.page < lastPage.meta.pages ? lastPage.meta.page + 1 : undefined,
     enabled: canFetch,
+    refetchInterval: USERS_REFETCH_INTERVAL,
   });
 
   const invitesQuery = useQuery({
     queryKey: INVITES_KEY,
     queryFn: getPendingInvites,
     enabled: isAdmin,
+    refetchInterval: USERS_REFETCH_INTERVAL,
   });
 
   const userRows: UserTableRow[] = (usersQuery.data?.pages ?? [])
@@ -85,6 +88,7 @@ export const useUsersData = (tableState: TableUrlState) => {
   const allRows: UserTableRow[] = [...userRows, ...inviteRows];
 
   const search = tableState.search?.toLowerCase() ?? "";
+
   const rows = allRows.filter((row) => {
     if (statusFilter && row.displayStatus !== statusFilter) return false;
 
