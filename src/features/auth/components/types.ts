@@ -4,4 +4,5 @@ export type FieldConfig<T> = {
   type?: string;
   autoComplete?: string;
   placeholder?: string;
+  hint?: string;
 };

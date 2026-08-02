@@ -26,7 +26,13 @@ export const LOGIN_FORM_FIELDS: FieldConfig<LoginFormValues>[] = [
 ];
 
 export const ACCEPT_INVITE_FIELDS: FieldConfig<AcceptInviteFormValues>[] = [
-  { name: "userName", label: "Username", autoComplete: "username", placeholder: "e.g. johndoe" },
+  {
+    name: "userName",
+    label: "Username",
+    autoComplete: "username",
+    placeholder: "e.g. alex_smith",
+    hint: "Letters, numbers, and underscores only. Displayed as e.g. Alex Smith.",
+  },
   {
     name: "password",
     label: "Password",
