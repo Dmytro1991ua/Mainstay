@@ -8,7 +8,8 @@ import { BrandLogo } from "@/shared/ui/brand-logo";
 import { useSidebar } from "./use-sidebar";
 
 export const Sidebar = () => {
-  const { collapsed, toggleSidebar, visibleItems, user, initials, logout } = useSidebar();
+  const { collapsed, toggleSidebar, visibleItems, user, displayName, initials, logout } =
+    useSidebar();
 
   return (
     <aside
@@ -86,7 +87,7 @@ export const Sidebar = () => {
           )}
         >
           <span className={cn("relative z-10 flex w-10 shrink-0 items-center justify-center")}>
-            <Avatar initials={initials} className="size-7" />
+            <Avatar initials={initials} src={user?.avatarUrl ?? undefined} className="size-7" />
           </span>
           <div
             className={cn(
@@ -95,7 +96,7 @@ export const Sidebar = () => {
             )}
           >
             <div className={cn("text-[13px] font-semibold leading-tight text-text")}>
-              {user?.userName}
+              {displayName}
             </div>
             <div className={cn("text-[11px] leading-tight text-text-3")}>
               {user?.roles.join(", ")}

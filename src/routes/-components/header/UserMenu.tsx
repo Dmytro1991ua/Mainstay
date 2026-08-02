@@ -12,12 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
+import { formatUserName } from "@/shared/utils";
 
 export const UserMenu = () => {
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
 
-  const initials = user?.userName.slice(0, 2).toUpperCase() ?? "";
+  const displayName = user ? formatUserName(user.userName) : "";
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   return (
     <DropdownMenu>
@@ -30,9 +32,9 @@ export const UserMenu = () => {
             "aria-expanded:bg-panel-2",
           )}
         >
-          <Avatar initials={initials} className="size-7" />
+          <Avatar initials={initials} src={user?.avatarUrl ?? undefined} className="size-7" />
           <span className="hidden max-w-30 truncate text-[13px] font-medium text-text sm:block">
-            {user?.userName}
+            {displayName}
           </span>
           <ChevronDown className="h-4 w-4 shrink-0 text-text-3" />
         </button>
@@ -40,7 +42,7 @@ export const UserMenu = () => {
 
       <DropdownMenuContent align="end">
         <div className="px-2.5 py-1.5">
-          <div className="truncate text-[13px] font-semibold text-text">{user?.userName}</div>
+          <div className="truncate text-[13px] font-semibold text-text">{displayName}</div>
           <div className="truncate text-[11px] text-text-3">{user?.roles.join(", ")}</div>
         </div>
         <DropdownMenuSeparator />
