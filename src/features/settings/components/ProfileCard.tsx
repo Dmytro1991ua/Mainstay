@@ -2,25 +2,32 @@ import { useAuthStore } from "@/shared/stores/auth-store";
 import { formatUserName, getInitials } from "@/shared/utils";
 
 import { ROLE_LABEL } from "../config";
+import { useUploadAvatar } from "../hooks/use-upload-avatar";
 
 import { AvatarDropzone } from "./AvatarDropzone";
 import { SettingCard } from "./SettingCard";
 
 export const ProfileCard = () => {
   const user = useAuthStore((s) => s.user);
+  const uploadAvatar = useUploadAvatar();
 
   if (!user) return null;
 
   const displayName = formatUserName(user.userName);
   const initials = getInitials(displayName);
-
   const role = user.roles[0];
 
   return (
     <SettingCard>
       <h3 className="mb-4 text-[14px] font-semibold">Profile</h3>
       <div className="flex items-center gap-3.5">
-        <AvatarDropzone initials={initials} />
+        <AvatarDropzone
+          initials={initials}
+          currentAvatar={user.avatarUrl}
+          onUpload={async (file) => {
+            await uploadAvatar.mutateAsync(file);
+          }}
+        />
         <div>
           <div className="text-[15px] font-semibold">{displayName}</div>
           <div className="text-[13px] text-text-2">{user.email}</div>
