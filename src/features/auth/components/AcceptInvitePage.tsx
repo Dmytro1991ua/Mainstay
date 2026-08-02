@@ -47,6 +47,7 @@ export const AcceptInvitePage = ({ token }: AcceptInvitePageProps) => {
               type={field.type}
               autoComplete={field.autoComplete}
               placeholder={field.placeholder}
+              hint={field.hint}
               registration={register(field.name)}
               error={errors[field.name]}
             />
