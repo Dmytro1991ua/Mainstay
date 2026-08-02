@@ -2,6 +2,8 @@ import type { FilterConfig } from "@/shared/ui/data-table";
 
 import type { UserRole } from "./api/users-api";
 
+export const USERS_REFETCH_INTERVAL = 30_000;
+
 export type DisplayStatus = "ACTIVE" | "INACTIVE" | "PENDING";
 
 export const ROLE_BADGE_CONFIG: Record<UserRole, { label: string; classes: string }> = {
