@@ -5,8 +5,10 @@ import { DEMO_ACCOUNT_NOTICE } from "../config";
 
 import { AppearanceCard } from "./AppearanceCard";
 import { ChangePasswordCard } from "./ChangePasswordCard";
+import { DeleteAccountCard } from "./DeleteAccountCard";
 import { ProfileCard } from "./ProfileCard";
 import { ProfileEditCard } from "./ProfileEditCard";
+import { SignOutAllDevicesCard } from "./SignOutAllDevicesCard";
 import { SignOutCard } from "./SignOutCard";
 
 export const SettingsPage = () => {
@@ -29,6 +31,8 @@ export const SettingsPage = () => {
         <ChangePasswordCard />
         <AppearanceCard />
         <SignOutCard />
+        <SignOutAllDevicesCard />
+        <DeleteAccountCard />
       </div>
     </div>
   );

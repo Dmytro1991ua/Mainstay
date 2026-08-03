@@ -9,16 +9,18 @@ import { useTaskColumns } from "../hooks/use-task-columns";
 import { useTaskDelete } from "../hooks/use-task-delete";
 import { useTaskForm } from "../hooks/use-task-form";
 import { useTasksData } from "../hooks/use-tasks-data";
+import { isTaskOverdue } from "../utils";
 
 import { TaskDeleteDialog } from "./TaskDeleteDialog";
 import { TaskFormSheet } from "./TaskFormSheet";
 
 import type { Task } from "../api/tasks.api";
 
-const getTaskRowHighlight = (task: Task): RowHighlightInfo => ({
-  isHighlighted: task.status === "DONE",
-  highlightStyles: "bg-row-green",
-});
+const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
+  if (task.status === "DONE") return { isHighlighted: true, highlightStyles: "bg-row-green" };
+  if (isTaskOverdue(task)) return { isHighlighted: true, highlightStyles: "bg-row-amber" };
+  return { isHighlighted: false, highlightStyles: "" };
+};
 
 type TasksTableProps = {
   tableState: TableUrlState;
