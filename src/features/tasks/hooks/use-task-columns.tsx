@@ -86,12 +86,12 @@ export const useTaskColumns = ({
       cell: ({ row }) => {
         const overdue = isTaskOverdue(row.original);
         return (
-          <div className="flex flex-col gap-0.5">
-            <span className={cn("text-sm", overdue ? "font-medium text-red" : "text-text-2")}>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className={cn("text-sm", overdue ? "font-medium text-amber" : "text-text-2")}>
               {formatDueDate(row.original.dueDate)}
             </span>
             {overdue && (
-              <span className="inline-block rounded-md border border-red-border bg-red-soft px-1.5 py-px text-[11px] font-semibold text-red">
+              <span className="shrink-0 rounded-md border border-amber-border bg-amber-soft px-1.5 py-px text-[11px] font-semibold text-amber">
                 Overdue
               </span>
             )}

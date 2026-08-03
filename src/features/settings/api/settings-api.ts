@@ -35,3 +35,11 @@ export const updateProfile = async (
 
   return data.data as User;
 };
+
+export const signOutAllDevices = async (): Promise<void> => {
+  await axiosInstance.delete("/users/me/sessions");
+};
+
+export const deleteAccount = async (): Promise<void> => {
+  await axiosInstance.delete("/users/me");
+};
