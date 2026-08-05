@@ -1,7 +1,9 @@
 export { AcceptInvitePage } from "./components/AcceptInvitePage";
+export { ForgotPasswordPage } from "./components/ForgotPasswordPage";
 export { LoginForm } from "./components/LoginForm";
 export { LoginPage } from "./components/LoginPage";
 export { RegisterForm } from "./components/RegisterForm";
 export { RegisterPage } from "./components/RegisterPage";
+export { ResetPasswordPage } from "./components/ResetPasswordPage";
 export { bootstrapAuth } from "./hooks/use-bootstrap-auth";
 export { useLogout } from "./hooks/use-logout";

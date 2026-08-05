@@ -1,5 +1,11 @@
 import type { FieldConfig } from "./types";
-import type { AcceptInviteFormValues, LoginFormValues, RegisterFormValues } from "../types/schemas";
+import type {
+  AcceptInviteFormValues,
+  ForgotPasswordFormValues,
+  LoginFormValues,
+  RegisterFormValues,
+  ResetPasswordFormValues,
+} from "../types/schemas";
 
 const demoPass = import.meta.env.VITE_DEMO_PASS ?? "";
 
@@ -71,5 +77,32 @@ export const REGISTER_FORM_FIELDS: FieldConfig<RegisterFormValues>[] = [
     type: "password",
     autoComplete: "new-password",
     placeholder: "Confirm new password",
+  },
+];
+
+export const FORGOT_PASSWORD_FIELDS: FieldConfig<ForgotPasswordFormValues>[] = [
+  {
+    name: "email",
+    label: "Work Email",
+    type: "email",
+    autoComplete: "email",
+    placeholder: "you@company.com",
+  },
+];
+
+export const RESET_PASSWORD_FIELDS: FieldConfig<ResetPasswordFormValues>[] = [
+  {
+    name: "newPassword",
+    label: "New Password",
+    type: "password",
+    autoComplete: "new-password",
+    placeholder: "Min. 8 chars, 1 uppercase, 1 number",
+  },
+  {
+    name: "confirmPassword",
+    label: "Confirm password",
+    type: "password",
+    autoComplete: "new-password",
+    placeholder: "Repeat new password",
   },
 ];
