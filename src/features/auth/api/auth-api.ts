@@ -47,3 +47,14 @@ export const acceptInvite = async (input: components["schemas"]["AcceptInviteInp
 
   return data.data;
 };
+
+export const forgotPassword = async (input: { email: string }): Promise<void> => {
+  await axiosInstance.post("/auth/forgot-password", input);
+};
+
+export const resetPassword = async (input: {
+  token: string;
+  newPassword: string;
+}): Promise<void> => {
+  await axiosInstance.post("/auth/reset-password", input);
+};

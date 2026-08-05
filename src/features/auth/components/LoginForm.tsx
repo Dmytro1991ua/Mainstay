@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { cn } from "@/shared/lib/utils";
 import { Alert } from "@/shared/ui/alert";
@@ -36,6 +38,14 @@ export const LoginForm = () => {
               registration={register(field.name)}
             />
           ))}
+          <div className="-mt-1 flex justify-end">
+            <Link
+              to="/forgot-password"
+              className="text-[12.5px] text-text-3 transition-colors hover:text-accent"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <FormSubmit isPending={isPending} label="Sign in" pendingLabel="Signing in…" />
         </FieldGroup>
         <div className="mt-4 flex flex-col gap-2">
