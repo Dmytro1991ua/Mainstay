@@ -9,10 +9,12 @@ import { useInventoryColumns } from "../hooks/use-inventory-columns";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { useInventoryDelete } from "../hooks/use-inventory-delete";
 import { useInventoryForm } from "../hooks/use-inventory-form";
+import { useInventoryRestock } from "../hooks/use-inventory-restock";
 import { getInventoryRowHighlight } from "../utils";
 
 import { InventoryDeleteDialog } from "./InventoryDeleteDialog";
 import { InventoryFormSheet } from "./InventoryFormSheet";
+import { RestockDialog } from "./RestockDialog";
 
 type InventoryTableProps = {
   tableState: TableUrlState;
@@ -35,11 +37,21 @@ export const InventoryTable = ({ tableState, onSetTableState }: InventoryTablePr
   const { openEdit, openAdd, form, isSaving, handleSave, sheetMode, closeSheet } =
     useInventoryForm();
   const { isDeleting, openDelete, deleteTarget, handleDelete, closeDelete } = useInventoryDelete();
+  const {
+    restockTarget,
+    quantityToAdd,
+    setQuantityToAdd,
+    openRestock,
+    closeRestock,
+    handleRestock,
+    isRestocking,
+  } = useInventoryRestock();
   const columns = useInventoryColumns({
     canManage,
     canDelete,
     onEdit: openEdit,
     onDelete: openDelete,
+    onRestock: openRestock,
   });
 
   return (
@@ -104,6 +116,14 @@ export const InventoryTable = ({ tableState, onSetTableState }: InventoryTablePr
         onConfirm={handleDelete}
         onClose={closeDelete}
         isDeleting={isDeleting}
+      />
+      <RestockDialog
+        target={restockTarget}
+        quantityToAdd={quantityToAdd}
+        onQuantityChange={setQuantityToAdd}
+        onConfirm={handleRestock}
+        onClose={closeRestock}
+        isRestocking={isRestocking}
       />
     </>
   );

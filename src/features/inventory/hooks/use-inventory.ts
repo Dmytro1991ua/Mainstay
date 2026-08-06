@@ -7,6 +7,7 @@ import {
   deleteInventoryItem,
   fetchInventory,
   fetchInventoryCategories,
+  restockInventoryItem,
   updateInventoryItem,
   type InventoryItem,
   type InventoryListParams,
@@ -33,3 +34,8 @@ export const useUpdateInventory = () =>
   );
 
 export const useDeleteInventory = () => useMutation(INVENTORY_KEY, deleteInventoryItem);
+
+export const useRestockInventory = () =>
+  useMutation(INVENTORY_KEY, ({ id, quantityToAdd }: { id: string; quantityToAdd: number }) =>
+    restockInventoryItem(id, quantityToAdd),
+  );

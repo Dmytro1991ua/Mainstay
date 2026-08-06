@@ -21,6 +21,7 @@ export const SignOutAllDevicesCard = () => {
           <div className="text-[12px] text-text-3">Revoke all active sessions everywhere</div>
         </div>
         <button
+          type="button"
           onClick={() => setOpen(true)}
           disabled={isDemo || mutation.isPending}
           className="flex h-9 items-center gap-1.5 rounded-[9px] border border-red-border bg-red-soft px-3.5 text-[13px] font-semibold text-red transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
