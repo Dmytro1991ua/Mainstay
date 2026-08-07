@@ -1,6 +1,6 @@
 import { Checkbox } from "@/shared/ui/checkbox";
 import { DataTableCheckbox } from "@/shared/ui/data-table/data-table-checkbox";
-import { Pill } from "@/shared/ui/pill";
+import { Pill, PillStatus } from "@/shared/ui/pill";
 import { RowActions } from "@/shared/ui/row-actions";
 
 import { formatCategoryLabel, getInventoryStatus } from "../utils";
@@ -13,6 +13,7 @@ type UseInventoryColumnsOptions = {
   canDelete: boolean;
   onEdit: (item: InventoryItem) => void;
   onDelete: (item: InventoryItem) => void;
+  onRestock: (item: InventoryItem) => void;
 };
 
 export const useInventoryColumns = ({
@@ -20,6 +21,7 @@ export const useInventoryColumns = ({
   canDelete,
   onEdit,
   onDelete,
+  onRestock,
 }: UseInventoryColumnsOptions): ColumnDef<InventoryItem>[] => {
   return [
     {
@@ -100,14 +102,22 @@ export const useInventoryColumns = ({
             enableSorting: false,
             enableResizing: false,
             enableHiding: false,
-            size: canManage && canDelete ? 80 : 48,
-            cell: ({ row }) => (
-              <RowActions
-                label={row.original.name}
-                onEdit={canManage ? () => onEdit(row.original) : undefined}
-                onDelete={canDelete ? () => onDelete(row.original) : undefined}
-              />
-            ),
+            size: canManage && canDelete ? 112 : 48,
+            cell: ({ row }) => {
+              const item = row.original;
+              const status = getInventoryStatus(item.quantity, item.minStockLevel);
+              const needsRestock =
+                status === PillStatus.LowStock || status === PillStatus.OutOfStock;
+
+              return (
+                <RowActions
+                  label={item.name}
+                  onEdit={canManage ? () => onEdit(item) : undefined}
+                  onRestock={canManage && needsRestock ? () => onRestock(item) : undefined}
+                  onDelete={canDelete ? () => onDelete(item) : undefined}
+                />
+              );
+            },
           },
         ] satisfies ColumnDef<InventoryItem>[])
       : []),

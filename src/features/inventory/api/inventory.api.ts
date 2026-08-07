@@ -56,3 +56,12 @@ export const updateInventoryItem = async (id: string, data: UpdateInventoryItemI
 export const deleteInventoryItem = async (id: string) => {
   await axiosInstance.delete(`/inventory/${id}`);
 };
+
+export const restockInventoryItem = async (id: string, quantityToAdd: number) => {
+  const res = await axiosInstance.patch<components["schemas"]["InventoryItemResponse"]>(
+    `/inventory/${id}/restock`,
+    { quantityToAdd },
+  );
+
+  return res.data.data;
+};
