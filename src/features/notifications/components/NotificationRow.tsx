@@ -1,8 +1,9 @@
-import { Trash2 } from "lucide-react";
+import { ChevronRight, Trash2 } from "lucide-react";
 
-import { NOTIFICATION_TYPE_CONFIG } from "@/shared/lib/notification-config";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/utils";
+
+import { useNotificationRow } from "../hooks/use-notification-row";
 
 import type { Notification } from "../api/notifications-api";
 
@@ -13,33 +14,27 @@ type Props = {
 };
 
 export const NotificationRow = ({ notification, onMarkRead, onDelete }: Props) => {
-  const {
-    icon: Icon,
-    iconClass,
-    bgClass,
-    label,
-    unreadRowBg,
-    unreadBorderClass,
-  } = NOTIFICATION_TYPE_CONFIG[notification.type];
+  const { typeConfig, nav, isInteractive, handleClick, handleDelete } = useNotificationRow({
+    notification,
+    onMarkRead,
+    onDelete,
+  });
 
-  const handleMarkRead = () => {
-    if (!notification.isRead) onMarkRead(notification.id);
-  };
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete(notification.id);
-  };
+  const { icon: Icon, iconClass, bgClass, label, unreadRowBg, unreadBorderClass } = typeConfig;
 
   return (
     <div
-      role={!notification.isRead ? "button" : undefined}
-      tabIndex={!notification.isRead ? 0 : undefined}
-      onClick={handleMarkRead}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleMarkRead()}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      onClick={isInteractive ? handleClick : undefined}
+      onKeyDown={
+        isInteractive ? (e) => (e.key === "Enter" || e.key === " ") && handleClick() : undefined
+      }
       className={cn(
         "group flex items-start gap-3 border-b border-border border-l-2 border-l-transparent px-4 py-3.5 last:border-b-0 transition-colors",
-        !notification.isRead && cn("cursor-pointer", unreadRowBg, unreadBorderClass),
+        isInteractive && "cursor-pointer",
+        !notification.isRead && cn(unreadRowBg, unreadBorderClass),
+        nav && "hover:bg-panel-2",
       )}
     >
       <span
@@ -63,6 +58,7 @@ export const NotificationRow = ({ notification, onMarkRead, onDelete }: Props) =
       </div>
       <div className="mt-1 flex shrink-0 items-center gap-1.5">
         {!notification.isRead && <span className="block h-2 w-2 rounded-full bg-accent" />}
+        {nav && <ChevronRight className="invisible size-3.5 text-text-3 group-hover:visible" />}
         <button
           type="button"
           onClick={handleDelete}
