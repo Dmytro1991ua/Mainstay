@@ -7,15 +7,18 @@ import { buildTaskParams } from "../utils";
 import { useTasksQuery } from "./use-tasks";
 import { useUsersList } from "./use-users-list";
 
-export const useTasksData = (tableState: TableUrlState) => {
+export const useTasksData = (tableState: TableUrlState, myTasksOnly = false) => {
   const user = useAuthStore((s) => s.user);
 
   const canManage = user?.roles.some((r) => r === "ADMIN" || r === "MANAGER") ?? false;
   const canDelete = user?.roles.includes("ADMIN") ?? false;
   const isTechnician = !canManage && (user?.roles.includes("TECHNICIAN") ?? false);
 
+  const baseParams = buildTaskParams(tableState);
+  const queryParams = myTasksOnly && user?.id ? { ...baseParams, assignedTo: user.id } : baseParams;
+
   const { data, isLoading, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useTasksQuery(buildTaskParams(tableState));
+    useTasksQuery(queryParams);
 
   const { data: usersData } = useUsersList();
   const users = usersData?.pages.flatMap((p) => p.data) ?? [];
@@ -32,7 +35,9 @@ export const useTasksData = (tableState: TableUrlState) => {
         ]
       : [];
 
-  const filterConfig: FilterConfig[] = [...TASK_FILTER_CONFIG, ...assigneeFilter];
+  const filterConfig: FilterConfig[] = myTasksOnly
+    ? TASK_FILTER_CONFIG
+    : [...TASK_FILTER_CONFIG, ...assigneeFilter];
   const tasks = data?.pages.flatMap((p) => p.data) ?? [];
 
   return {

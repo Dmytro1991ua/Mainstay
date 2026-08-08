@@ -25,9 +25,14 @@ const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
 type TasksTableProps = {
   tableState: TableUrlState;
   onSetTableState: OnSetTableState;
+  myTasksOnly?: boolean;
 };
 
-export const TasksTable = ({ tableState, onSetTableState }: TasksTableProps) => {
+export const TasksTable = ({
+  tableState,
+  onSetTableState,
+  myTasksOnly = false,
+}: TasksTableProps) => {
   const {
     tasks,
     isLoading,
@@ -41,7 +46,7 @@ export const TasksTable = ({ tableState, onSetTableState }: TasksTableProps) => 
     fetchNextPage,
     isFetchingNextPage,
     filterConfig,
-  } = useTasksData(tableState);
+  } = useTasksData(tableState, myTasksOnly);
 
   const {
     openEdit,

@@ -7,6 +7,8 @@ type PageShellProps = {
   subtitle?: string;
   /** Optional banner rendered between the title and the content card (use Alert). */
   alert?: React.ReactNode;
+  /** Optional controls rendered between the alert and the content card (e.g. tab switchers). */
+  toolbar?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   /**
@@ -21,6 +23,7 @@ export const PageShell = ({
   title,
   subtitle,
   alert,
+  toolbar,
   children,
   className,
   variant = "card",
@@ -31,6 +34,7 @@ export const PageShell = ({
       {subtitle && <p className="mt-0.5 text-[13px] text-text-2">{subtitle}</p>}
     </div>
     {alert}
+    {toolbar}
     {variant === "card" ? (
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-card">
         {children}
