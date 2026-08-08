@@ -47,10 +47,15 @@ export const RecentTasks = ({ tasks }: { tasks: Task[] }) => {
                 <span
                   className={cn(
                     "text-[12px] tabular-nums",
-                    overdue ? "font-medium text-red" : "text-text-3",
+                    overdue ? "font-medium text-amber" : "text-text-3",
                   )}
                 >
                   {formatShortDate(task.dueDate)}
+                </span>
+              )}
+              {overdue && (
+                <span className="rounded-md bg-amber-soft px-1.5 py-0.5 text-[11px] font-medium text-amber">
+                  Overdue
                 </span>
               )}
               <span

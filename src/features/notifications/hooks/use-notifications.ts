@@ -4,6 +4,7 @@ import { useInfiniteQueryList } from "@/shared/hooks/use-crud";
 import type { PaginatedResponse } from "@/shared/hooks/use-crud";
 
 import {
+  deleteNotification,
   getNotifications,
   markAllNotificationsRead,
   markNotificationRead,
@@ -86,6 +87,34 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
     onSettled: invalidate,
   });
 
+  const remove = useMutation({
+    mutationFn: deleteNotification,
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: [QUERY_KEY] });
+      const prev = queryClient.getQueriesData({ queryKey: [QUERY_KEY] });
+
+      queryClient.setQueriesData<InfiniteData<PaginatedResponse<Notification>>>(
+        { queryKey: [QUERY_KEY] },
+        (old) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.filter((n) => n.id !== id),
+            })),
+          };
+        },
+      );
+      return { prev };
+    },
+    onError: (_, __, ctx) => {
+      ctx?.prev.forEach(([key, data]) => queryClient.setQueryData(key, data));
+    },
+    onSettled: invalidate,
+  });
+
   return {
     notifications,
     isLoading: query.isPending,
@@ -94,5 +123,6 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
     isFetchingNextPage: query.isFetchingNextPage,
     markRead: markRead.mutate,
     markAll: markAll.mutate,
+    deleteNotification: remove.mutate,
   };
 };
