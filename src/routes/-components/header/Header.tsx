@@ -3,6 +3,7 @@ import { ThemeToggleCycle } from "@/shared/ui/theme-toggle-cycle";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { HeaderSearch } from "./HeaderSearch";
+import { NotificationBell } from "./NotificationBell";
 import { UserMenu } from "./UserMenu";
 
 export const Header = () => {
@@ -17,6 +18,7 @@ export const Header = () => {
         <HeaderSearch />
       </div>
       <ThemeToggleCycle />
+      <NotificationBell />
       <UserMenu />
     </header>
   );

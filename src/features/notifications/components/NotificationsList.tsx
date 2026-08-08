@@ -1,7 +1,8 @@
-import { Bell } from "lucide-react";
+import { Bell, Trash2 } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { cn } from "@/shared/lib/utils";
+import { ConfirmDialog } from "@/shared/ui/dialog";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 import { FILTER_TABS, SKEL_KEYS } from "../config";
@@ -21,6 +22,9 @@ export const NotificationsList = () => {
     fetchNextPage,
     markRead,
     markAll,
+    deleteTarget,
+    setDeleteTarget,
+    handleDeleteConfirm,
     unreadCount,
   } = useNotificationsList();
 
@@ -58,7 +62,12 @@ export const NotificationsList = () => {
           style={{ overflow: "visible" }}
         >
           {notifications.map((n) => (
-            <NotificationRow key={n.id} notification={n} onMarkRead={markRead} />
+            <NotificationRow
+              key={n.id}
+              notification={n}
+              onMarkRead={markRead}
+              onDelete={setDeleteTarget}
+            />
           ))}
         </InfiniteScroll>
       </div>
@@ -72,6 +81,7 @@ export const NotificationsList = () => {
           {FILTER_TABS.map(({ key, label }) => (
             <button
               key={key}
+              type="button"
               onClick={() => setActiveTab(key)}
               className={cn(
                 "rounded-[7px] px-3 py-1.5 text-[12.5px] font-medium transition-colors",
@@ -86,6 +96,7 @@ export const NotificationsList = () => {
         </div>
         <div className="flex-1" />
         <button
+          type="button"
           onClick={() => markAll()}
           disabled={unreadCount === 0}
           className="h-8.5 rounded-[9px] border border-accent bg-accent px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-soft hover:text-accent disabled:pointer-events-none disabled:opacity-40"
@@ -93,8 +104,17 @@ export const NotificationsList = () => {
           Mark All Read
         </button>
       </div>
-
       {renderContent()}
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Delete notification"
+        description="This notification will be permanently removed."
+        icon={<Trash2 className="size-5 text-red" />}
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={handleDeleteConfirm}
+        onClose={() => setDeleteTarget(null)}
+      />
     </>
   );
 };

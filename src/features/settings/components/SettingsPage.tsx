@@ -1,5 +1,6 @@
 import { useIsDemoAccount } from "@/shared/hooks/use-is-demo-account";
 import { Alert } from "@/shared/ui/alert";
+import { PageShell } from "@/shared/ui/page-shell";
 
 import { DEMO_ACCOUNT_NOTICE } from "../config";
 
@@ -15,14 +16,18 @@ export const SettingsPage = () => {
   const isDemo = useIsDemoAccount();
 
   return (
-    <div>
-      <h1 className="mb-1 text-2xl font-semibold tracking-tight">Settings</h1>
-      <p className="mb-6 text-sm text-text-2">Manage your account and workspace preferences.</p>
-      {isDemo && (
-        <div className="mx-auto mb-4 max-w-275">
-          <Alert variant="info">{DEMO_ACCOUNT_NOTICE}</Alert>
-        </div>
-      )}
+    <PageShell
+      title="Settings"
+      subtitle="Manage your account and workspace preferences."
+      variant="plain"
+      alert={
+        isDemo ? (
+          <div className="mx-auto max-w-275">
+            <Alert variant="info">{DEMO_ACCOUNT_NOTICE}</Alert>
+          </div>
+        ) : null
+      }
+    >
       <div className="mx-auto grid max-w-275 grid-cols-1 gap-4 md:grid-cols-2">
         <div className="md:col-span-2">
           <ProfileCard />
@@ -34,6 +39,6 @@ export const SettingsPage = () => {
         <SignOutAllDevicesCard />
         <DeleteAccountCard />
       </div>
-    </div>
+    </PageShell>
   );
 };

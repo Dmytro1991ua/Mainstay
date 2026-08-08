@@ -34,3 +34,7 @@ export const markNotificationRead = async (id: string): Promise<void> => {
 export const markAllNotificationsRead = async (): Promise<void> => {
   await axiosInstance.patch("/notifications/read-all");
 };
+
+export const deleteNotification = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/notifications/${id}`);
+};
