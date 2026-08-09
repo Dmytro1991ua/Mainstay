@@ -5,4 +5,5 @@ export const TECHNICIAN_TASK_NOTICE = "You can only update status on tasks assig
 export const TASK_TABS: { key: TaskTab; label: string }[] = [
   { key: "all", label: "All Tasks" },
   { key: "mine", label: "My Tasks" },
+  { key: "overdue", label: "Overdue" },
 ];

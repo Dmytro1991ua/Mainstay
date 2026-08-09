@@ -1,5 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 
+import { useAuthStore } from "@/shared/stores/auth-store";
+
 import {
   getDueThisWeekTasks,
   getInventoryStats,
@@ -15,6 +17,12 @@ import {
 const STALE = 60_000;
 
 export const useDashboard = () => {
+  const user = useAuthStore((s) => s.user);
+  const isTechnician =
+    (user?.roles.includes("TECHNICIAN") ?? false) &&
+    !user?.roles.some((r) => r === "ADMIN" || r === "MANAGER");
+  const userId = isTechnician ? user?.id : undefined;
+
   const [
     inventoryStats,
     lowStock,
@@ -29,26 +37,36 @@ export const useDashboard = () => {
     dueThisWeekTasks,
   ] = useQueries({
     queries: [
-      { queryKey: ["dashboard", "inventoryStats"], queryFn: getInventoryStats, staleTime: STALE },
-      { queryKey: ["dashboard", "lowStock"], queryFn: getLowStockItems, staleTime: STALE },
       {
-        queryKey: ["dashboard", "tasksOpen"],
-        queryFn: () => getTasksCount("OPEN"),
+        queryKey: ["dashboard", "inventoryStats"],
+        queryFn: getInventoryStats,
+        staleTime: STALE,
+        enabled: !isTechnician,
+      },
+      {
+        queryKey: ["dashboard", "lowStock"],
+        queryFn: getLowStockItems,
+        staleTime: STALE,
+        enabled: !isTechnician,
+      },
+      {
+        queryKey: ["dashboard", "tasksOpen", userId],
+        queryFn: () => getTasksCount("OPEN", userId),
         staleTime: STALE,
       },
       {
-        queryKey: ["dashboard", "tasksInProgress"],
-        queryFn: () => getTasksCount("IN_PROGRESS"),
+        queryKey: ["dashboard", "tasksInProgress", userId],
+        queryFn: () => getTasksCount("IN_PROGRESS", userId),
         staleTime: STALE,
       },
       {
-        queryKey: ["dashboard", "tasksDone"],
-        queryFn: () => getTasksCount("DONE"),
+        queryKey: ["dashboard", "tasksDone", userId],
+        queryFn: () => getTasksCount("DONE", userId),
         staleTime: STALE,
       },
       {
-        queryKey: ["dashboard", "overdueCount"],
-        queryFn: getOverdueTasksCount,
+        queryKey: ["dashboard", "overdueCount", userId],
+        queryFn: () => getOverdueTasksCount(userId),
         staleTime: STALE,
       },
       {
@@ -56,24 +74,32 @@ export const useDashboard = () => {
         queryFn: getUnreadNotificationsCount,
         staleTime: STALE,
       },
-      { queryKey: ["dashboard", "recentTasks"], queryFn: getRecentTasks, staleTime: STALE },
+      {
+        queryKey: ["dashboard", "recentTasks", userId],
+        queryFn: () => getRecentTasks(userId),
+        staleTime: STALE,
+      },
       {
         queryKey: ["dashboard", "recentNotifications"],
         queryFn: getRecentNotifications,
         staleTime: STALE,
       },
-      { queryKey: ["dashboard", "overdueTasks"], queryFn: getOverdueTasks, staleTime: STALE },
       {
-        queryKey: ["dashboard", "dueThisWeek"],
-        queryFn: getDueThisWeekTasks,
+        queryKey: ["dashboard", "overdueTasks", userId],
+        queryFn: () => getOverdueTasks(userId),
+        staleTime: STALE,
+      },
+      {
+        queryKey: ["dashboard", "dueThisWeek", userId],
+        queryFn: () => getDueThisWeekTasks(userId),
         staleTime: STALE,
       },
     ],
   });
 
+  const inventoryIsLoading = !isTechnician && (inventoryStats.isPending || lowStock.isPending);
   const isLoading =
-    inventoryStats.isPending ||
-    lowStock.isPending ||
+    inventoryIsLoading ||
     openCount.isPending ||
     inProgressCount.isPending ||
     doneCount.isPending ||
@@ -90,6 +116,7 @@ export const useDashboard = () => {
 
   return {
     isLoading,
+    isTechnician,
     stats: {
       totalItems: inventoryStats.data?.total ?? 0,
       lowStockCount: inventoryStats.data?.lowStock ?? 0,

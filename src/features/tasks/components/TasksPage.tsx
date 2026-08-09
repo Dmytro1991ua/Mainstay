@@ -19,7 +19,7 @@ export const TasksPage = ({ tableState, onSetTableState }: TasksPageProps) => {
   const isTech =
     roles.includes("TECHNICIAN") && !roles.some((r) => r === "ADMIN" || r === "MANAGER");
 
-  const { activeTab, handleTabChange, myTasksOnly } = useTasksTab(onSetTableState, isTech);
+  const { activeTab, handleTabChange } = useTasksTab(onSetTableState, isTech);
 
   const tabControl = (
     <div className="inline-flex shrink-0 gap-0.5 rounded-[10px] border border-border-2 bg-panel p-1">
@@ -56,11 +56,7 @@ export const TasksPage = ({ tableState, onSetTableState }: TasksPageProps) => {
         )
       }
     >
-      <TasksTable
-        tableState={tableState}
-        onSetTableState={onSetTableState}
-        myTasksOnly={myTasksOnly}
-      />
+      <TasksTable tableState={tableState} onSetTableState={onSetTableState} activeTab={activeTab} />
     </PageShell>
   );
 };

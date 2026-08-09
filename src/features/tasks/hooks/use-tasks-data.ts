@@ -7,7 +7,10 @@ import { buildTaskParams } from "../utils";
 import { useTasksQuery } from "./use-tasks";
 import { useUsersList } from "./use-users-list";
 
-export const useTasksData = (tableState: TableUrlState, myTasksOnly = false) => {
+export const useTasksData = (
+  tableState: TableUrlState,
+  activeTab: import("./use-tasks-tab").TaskTab = "all",
+) => {
   const user = useAuthStore((s) => s.user);
 
   const canManage = user?.roles.some((r) => r === "ADMIN" || r === "MANAGER") ?? false;
@@ -15,7 +18,11 @@ export const useTasksData = (tableState: TableUrlState, myTasksOnly = false) => 
   const isTechnician = !canManage && (user?.roles.includes("TECHNICIAN") ?? false);
 
   const baseParams = buildTaskParams(tableState);
-  const queryParams = myTasksOnly && user?.id ? { ...baseParams, assignedTo: user.id } : baseParams;
+  const queryParams = {
+    ...baseParams,
+    ...(activeTab === "mine" && user?.id ? { assignedTo: user.id } : {}),
+    ...(activeTab === "overdue" ? { overdue: true as const } : {}),
+  };
 
   const { data, isLoading, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useTasksQuery(queryParams);
@@ -35,9 +42,15 @@ export const useTasksData = (tableState: TableUrlState, myTasksOnly = false) => 
         ]
       : [];
 
-  const filterConfig: FilterConfig[] = myTasksOnly
-    ? TASK_FILTER_CONFIG
-    : [...TASK_FILTER_CONFIG, ...assigneeFilter];
+  const baseFilters =
+    activeTab === "overdue"
+      ? TASK_FILTER_CONFIG.filter((f) => f.id !== "overdue")
+      : TASK_FILTER_CONFIG;
+
+  const filterConfig: FilterConfig[] =
+    activeTab !== "mine" && canManage && users.length > 0
+      ? [...baseFilters, ...assigneeFilter]
+      : baseFilters;
   const tasks = data?.pages.flatMap((p) => p.data) ?? [];
 
   return {

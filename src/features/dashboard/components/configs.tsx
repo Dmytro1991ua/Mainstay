@@ -23,16 +23,18 @@ type StatCardDef = {
   key: StatsKey;
   label: string;
   icon: LucideIcon;
+  technicianHidden?: true;
   variant?: (value: number) => StatCardVariant;
   subtext?: (value: number, stats: Stats) => string | undefined;
 };
 
 export const STATS_CARDS_CONFIG: StatCardDef[] = [
-  { key: "totalItems", label: "Inventory Items", icon: Package },
+  { key: "totalItems", label: "Inventory Items", icon: Package, technicianHidden: true },
   {
     key: "lowStockCount",
     label: "Low Stock",
     icon: AlertTriangle,
+    technicianHidden: true,
     variant: (value) => (value > 0 ? "red" : "default"),
     subtext: (value) => (value > 0 ? "Need reordering" : "All stocked"),
   },
@@ -40,6 +42,7 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     key: "outOfStockCount",
     label: "Out of Stock",
     icon: PackageX,
+    technicianHidden: true,
     variant: (value) => (value > 0 ? "red" : "default"),
     subtext: (value) => (value > 0 ? "Zero units remaining" : "All items have stock"),
   },
@@ -72,6 +75,7 @@ export const DASHBOARD_WIDGETS_CONFIG: DashboardWidgetConfig[] = [
     title: "Low Stock Items",
     skeleton: <SkeletonWidget />,
     viewAllTo: "/inventory",
+    technicianHidden: true,
     render: ({ lowStockItems }) => <LowStockList items={lowStockItems} />,
   },
   {
@@ -111,6 +115,7 @@ export const DASHBOARD_WIDGETS_CONFIG: DashboardWidgetConfig[] = [
     skeleton: <SkeletonCategoryBreakdown />,
     fullWidth: true,
     viewAllTo: "/inventory",
+    technicianHidden: true,
     render: ({ categoryBreakdown }) => <InventoryCategoryBreakdown breakdown={categoryBreakdown} />,
   },
 ];
