@@ -1,8 +1,8 @@
 import { AlertTriangle, ClipboardList, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
-import { DataTable } from "@/shared/ui/data-table";
 import type { OnSetTableState, RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
+import { DataTable } from "@/shared/ui/data-table";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 import { useTaskColumns } from "../hooks/use-task-columns";
@@ -14,25 +14,22 @@ import { isTaskOverdue } from "../utils";
 import { TaskDeleteDialog } from "./TaskDeleteDialog";
 import { TaskFormSheet } from "./TaskFormSheet";
 
-import type { Task } from "../api/tasks.api";
-
 const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
   if (task.status === "DONE") return { isHighlighted: true, highlightStyles: "bg-row-green" };
   if (isTaskOverdue(task)) return { isHighlighted: true, highlightStyles: "bg-row-amber" };
   return { isHighlighted: false, highlightStyles: "" };
 };
 
+import type { Task } from "../api/tasks.api";
+import type { TaskTab } from "../hooks/use-tasks-tab";
+
 type TasksTableProps = {
   tableState: TableUrlState;
   onSetTableState: OnSetTableState;
-  myTasksOnly?: boolean;
+  activeTab?: TaskTab;
 };
 
-export const TasksTable = ({
-  tableState,
-  onSetTableState,
-  myTasksOnly = false,
-}: TasksTableProps) => {
+export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: TasksTableProps) => {
   const {
     tasks,
     isLoading,
@@ -46,7 +43,7 @@ export const TasksTable = ({
     fetchNextPage,
     isFetchingNextPage,
     filterConfig,
-  } = useTasksData(tableState, myTasksOnly);
+  } = useTasksData(tableState, activeTab);
 
   const {
     openEdit,

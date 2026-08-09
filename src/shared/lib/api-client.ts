@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 
+import { queryClient } from "@/shared/lib/query-client";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
 declare module "axios" {
@@ -58,6 +59,7 @@ axiosInstance.interceptors.response.use(undefined, async (error: AxiosError) => 
     return axiosInstance.request(config);
   } catch (refreshError) {
     useAuthStore.getState().clearSession();
+    queryClient.clear();
 
     throw refreshError;
   }

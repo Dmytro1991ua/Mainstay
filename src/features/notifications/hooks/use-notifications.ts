@@ -9,37 +9,13 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from "../api/notifications-api";
+import { DASHBOARD_INVALIDATION_KEYS, NOTIFICATIONS_QUERY_KEY } from "../constants";
+import { applyOptimistic } from "../utils";
 
 import type { Notification, NotificationsParams } from "../api/notifications-api";
 import type { InfiniteData } from "@tanstack/react-query";
 
-const QUERY_KEY = "notifications";
-
-const DASHBOARD_KEYS = [
-  ["dashboard", "unreadCount"],
-  ["dashboard", "recentNotifications"],
-] as const;
-
 export type UseNotificationsOptions = Omit<NotificationsParams, "page">;
-
-const applyOptimistic = (
-  queryClient: ReturnType<typeof useQueryClient>,
-  updater: (n: Notification) => Notification,
-) => {
-  queryClient.setQueriesData<InfiniteData<PaginatedResponse<Notification>>>(
-    { queryKey: [QUERY_KEY] },
-    (old) => {
-      if (!old) return old;
-      return {
-        ...old,
-        pages: old.pages.map((page) => ({
-          ...page,
-          data: page.data.map(updater),
-        })),
-      };
-    },
-  );
-};
 
 export const useNotifications = (params: UseNotificationsOptions = {}) => {
   const queryClient = useQueryClient();
@@ -47,7 +23,7 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
   const fullParams: NotificationsParams = { page: 1, ...params };
 
   const query = useInfiniteQueryList<Notification, NotificationsParams>(
-    QUERY_KEY,
+    NOTIFICATIONS_QUERY_KEY,
     fullParams,
     getNotifications,
   );
@@ -55,15 +31,15 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
   const notifications = query.data?.pages.flatMap((p) => p.data) ?? [];
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
-    DASHBOARD_KEYS.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
+    queryClient.invalidateQueries({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
+    DASHBOARD_INVALIDATION_KEYS.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
   };
 
   const markRead = useMutation({
     mutationFn: markNotificationRead,
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: [QUERY_KEY] });
-      const prev = queryClient.getQueriesData({ queryKey: [QUERY_KEY] });
+      await queryClient.cancelQueries({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
+      const prev = queryClient.getQueriesData({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
       applyOptimistic(queryClient, (n) => (n.id === id ? { ...n, isRead: true } : n));
       return { prev };
     },
@@ -76,8 +52,8 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
   const markAll = useMutation({
     mutationFn: markAllNotificationsRead,
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: [QUERY_KEY] });
-      const prev = queryClient.getQueriesData({ queryKey: [QUERY_KEY] });
+      await queryClient.cancelQueries({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
+      const prev = queryClient.getQueriesData({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
       applyOptimistic(queryClient, (n) => ({ ...n, isRead: true }));
       return { prev };
     },
@@ -90,11 +66,11 @@ export const useNotifications = (params: UseNotificationsOptions = {}) => {
   const remove = useMutation({
     mutationFn: deleteNotification,
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: [QUERY_KEY] });
-      const prev = queryClient.getQueriesData({ queryKey: [QUERY_KEY] });
+      await queryClient.cancelQueries({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
+      const prev = queryClient.getQueriesData({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
 
       queryClient.setQueriesData<InfiniteData<PaginatedResponse<Notification>>>(
-        { queryKey: [QUERY_KEY] },
+        { queryKey: [NOTIFICATIONS_QUERY_KEY] },
         (old) => {
           if (!old) return old;
 

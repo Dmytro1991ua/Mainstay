@@ -12,6 +12,7 @@ export type DashboardWidgetConfig = {
   skeleton: ReactNode;
   fullWidth?: boolean;
   viewAllTo?: string;
+  technicianHidden?: true;
   badge?: (data: DashboardData) => number | undefined;
   render: (data: DashboardData) => ReactNode;
 };

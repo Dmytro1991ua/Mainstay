@@ -33,9 +33,11 @@ export const getInventoryStats = async (): Promise<InventoryStats> => {
   return data.data;
 };
 
-export const getTasksCount = (status: TaskStatus) => fetchTotal("/tasks", { status });
+export const getTasksCount = (status: TaskStatus, assignedTo?: string) =>
+  fetchTotal("/tasks", { status, ...(assignedTo ? { assignedTo } : {}) });
 
-export const getOverdueTasksCount = () => fetchTotal("/tasks", { overdue: true });
+export const getOverdueTasksCount = (assignedTo?: string) =>
+  fetchTotal("/tasks", { overdue: true, ...(assignedTo ? { assignedTo } : {}) });
 
 export const getLowStockItems = async () => {
   const { data } = await axiosInstance.get<InventoryListResponse>("/inventory", {
@@ -45,28 +47,34 @@ export const getLowStockItems = async () => {
   return { items: data.data, total: data.meta.total };
 };
 
-export const getOverdueTasks = async (): Promise<Task[]> => {
+export const getOverdueTasks = async (assignedTo?: string): Promise<Task[]> => {
   const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
-    params: { overdue: true, limit: WIDGET_LIST_LIMIT },
+    params: { overdue: true, limit: WIDGET_LIST_LIMIT, ...(assignedTo ? { assignedTo } : {}) },
   });
   return data.data;
 };
 
-export const getDueThisWeekTasks = async (): Promise<Task[]> => {
+export const getDueThisWeekTasks = async (assignedTo?: string): Promise<Task[]> => {
   const now = new Date();
   const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
     params: {
       dueDateFrom: startOfWeek(now, { weekStartsOn: 1 }).toISOString(),
       dueDateTo: endOfWeek(now, { weekStartsOn: 1 }).toISOString(),
       limit: WIDGET_LIST_LIMIT,
+      ...(assignedTo ? { assignedTo } : {}),
     },
   });
   return sortBy(data.data, (task) => (task.dueDate ? new Date(task.dueDate).getTime() : Infinity));
 };
 
-export const getRecentTasks = async () => {
+export const getRecentTasks = async (assignedTo?: string) => {
   const { data } = await axiosInstance.get<TasksListResponse>("/tasks", {
-    params: { limit: WIDGET_LIST_LIMIT, sortBy: "createdAt", sortOrder: "desc" },
+    params: {
+      limit: WIDGET_LIST_LIMIT,
+      sortBy: "createdAt",
+      sortOrder: "desc",
+      ...(assignedTo ? { assignedTo } : {}),
+    },
   });
 
   return data.data;

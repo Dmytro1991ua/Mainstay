@@ -14,7 +14,12 @@ export type Role = components["schemas"]["User"]["roles"][number];
 
 /** Every navigable app path. Kept as a literal union so `Link`/`navigate` stay type-checked. */
 export type AppPath =
-  "/dashboard" | "/inventory" | "/tasks" | "/notifications" | "/users" | "/settings";
+  | "/dashboard"
+  | "/inventory"
+  | "/tasks"
+  | "/notifications"
+  | "/users"
+  | "/settings";
 
 export type NavItem = {
   to: AppPath;
