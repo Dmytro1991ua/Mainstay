@@ -43,3 +43,26 @@ export const signOutAllDevices = async (): Promise<void> => {
 export const deleteAccount = async (): Promise<void> => {
   await axiosInstance.delete("/users/me");
 };
+
+export type NotificationPreferences = {
+  LOW_STOCK: boolean;
+  OUT_OF_STOCK: boolean;
+  TASK_OVERDUE: boolean;
+};
+
+export const getNotificationPreferences = async (): Promise<NotificationPreferences> => {
+  const { data } = await axiosInstance.get<{ success: true; data: NotificationPreferences }>(
+    "/users/me/notification-preferences",
+  );
+  return data.data;
+};
+
+export const updateNotificationPreferences = async (
+  preferences: Partial<NotificationPreferences>,
+): Promise<NotificationPreferences> => {
+  const { data } = await axiosInstance.patch<{ success: true; data: NotificationPreferences }>(
+    "/users/me/notification-preferences",
+    preferences,
+  );
+  return data.data;
+};
