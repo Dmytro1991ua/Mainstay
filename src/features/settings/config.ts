@@ -1,5 +1,6 @@
 import type { ThemePreference } from "@/shared/stores/ui-store";
 
+import type { NotificationPreferences } from "./api/settings-api";
 import type { ChangePasswordFormValues } from "./hooks/use-change-password";
 import type { ProfileFormValues } from "./hooks/use-update-profile";
 
@@ -61,3 +62,30 @@ export const ROLE_LABEL: Record<string, string> = {
   MANAGER: "Manager",
   TECHNICIAN: "Technician",
 };
+
+export type NotificationPreferenceConfig = {
+  key: keyof NotificationPreferences;
+  label: string;
+  description: string;
+  technicianHidden?: true;
+};
+
+export const NOTIFICATION_PREFERENCE_CONFIG: NotificationPreferenceConfig[] = [
+  {
+    key: "LOW_STOCK",
+    label: "Low Stock alerts",
+    description: "Notify when an item falls below its minimum stock level",
+    technicianHidden: true,
+  },
+  {
+    key: "OUT_OF_STOCK",
+    label: "Out of Stock alerts",
+    description: "Notify when an item reaches zero units",
+    technicianHidden: true,
+  },
+  {
+    key: "TASK_OVERDUE",
+    label: "Overdue task alerts",
+    description: "Notify when an assigned task passes its due date",
+  },
+];
