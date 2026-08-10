@@ -23,6 +23,8 @@ import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
+import { Route as AppTasksTaskIdRouteImport } from './routes/_app.tasks.$taskId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -92,6 +94,16 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppTasksRoute,
+} as any)
+const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
+  id: '/$taskId',
+  path: '/$taskId',
+  getParentRoute: () => AppTasksRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,13 +111,15 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof AppInventoryRoute
   '/notifications': typeof AppNotificationsRoute
   '/settings': typeof AppSettingsRoute
-  '/tasks': typeof AppTasksRoute
+  '/tasks': typeof AppTasksRouteWithChildren
   '/users': typeof AppUsersRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -113,13 +127,14 @@ export interface FileRoutesByTo {
   '/inventory': typeof AppInventoryRoute
   '/notifications': typeof AppNotificationsRoute
   '/settings': typeof AppSettingsRoute
-  '/tasks': typeof AppTasksRoute
   '/users': typeof AppUsersRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/tasks': typeof AppTasksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -130,13 +145,15 @@ export interface FileRoutesById {
   '/_app/inventory': typeof AppInventoryRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/settings': typeof AppSettingsRoute
-  '/_app/tasks': typeof AppTasksRoute
+  '/_app/tasks': typeof AppTasksRouteWithChildren
   '/_app/users': typeof AppUsersRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/_app/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,6 +170,8 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/tasks/$taskId'
+    | '/tasks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,13 +179,14 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/notifications'
     | '/settings'
-    | '/tasks'
     | '/users'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/tasks/$taskId'
+    | '/tasks'
   id:
     | '__root__'
     | '/'
@@ -183,6 +203,8 @@ export interface FileRouteTypes {
     | '/_auth/register'
     | '/_auth/reset-password'
     | '/auth/accept-invite'
+    | '/_app/tasks/$taskId'
+    | '/_app/tasks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -292,15 +314,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/tasks/': {
+      id: '/_app/tasks/'
+      path: '/'
+      fullPath: '/tasks/'
+      preLoaderRoute: typeof AppTasksIndexRouteImport
+      parentRoute: typeof AppTasksRoute
+    }
+    '/_app/tasks/$taskId': {
+      id: '/_app/tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/tasks/$taskId'
+      preLoaderRoute: typeof AppTasksTaskIdRouteImport
+      parentRoute: typeof AppTasksRoute
+    }
   }
 }
+
+interface AppTasksRouteChildren {
+  AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
+  AppTasksIndexRoute: typeof AppTasksIndexRoute
+}
+
+const AppTasksRouteChildren: AppTasksRouteChildren = {
+  AppTasksTaskIdRoute: AppTasksTaskIdRoute,
+  AppTasksIndexRoute: AppTasksIndexRoute,
+}
+
+const AppTasksRouteWithChildren = AppTasksRoute._addFileChildren(
+  AppTasksRouteChildren,
+)
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppTasksRoute: typeof AppTasksRoute
+  AppTasksRoute: typeof AppTasksRouteWithChildren
   AppUsersRoute: typeof AppUsersRoute
 }
 
@@ -309,7 +359,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventoryRoute: AppInventoryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppTasksRoute: AppTasksRoute,
+  AppTasksRoute: AppTasksRouteWithChildren,
   AppUsersRoute: AppUsersRoute,
 }
 

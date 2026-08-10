@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, ClipboardList, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -66,8 +67,10 @@ export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: T
     onDelete: openDelete,
   });
 
+  const navigate = useNavigate();
+
   const handleRowClick = (task: Task) => {
-    openEdit(task);
+    navigate({ to: "/tasks/$taskId", params: { taskId: task.id } });
   };
 
   return (
@@ -113,7 +116,7 @@ export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: T
           />
         }
         getRowHighlightInfo={getTaskRowHighlight}
-        onRowClick={canManage ? handleRowClick : undefined}
+        onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}
         onSetTableState={onSetTableState}

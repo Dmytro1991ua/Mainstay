@@ -8,11 +8,15 @@ export type Crumb = {
 
 const KNOWN_PATHS = new Set<string>(NAV_ITEMS.map((item) => item.to));
 
-/** Prettify an unknown segment (e.g. a future detail-page slug/id) for display. */
-const prettifySegment = (segment: string) =>
-  decodeURIComponent(segment)
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Prettify an unknown segment (e.g. a detail-page id or slug) for display. */
+const prettifySegment = (segment: string) => {
+  if (UUID_RE.test(segment)) return "Details";
+  return decodeURIComponent(segment)
     .replace(/[-_]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
+};
 
 /**
  * Build the crumb trail from a pathname. Dashboard is the implicit root, so it's
