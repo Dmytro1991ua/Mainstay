@@ -38,6 +38,11 @@ export const updateTask = async (id: string, data: UpdateTaskInput) => {
   return res.data.data;
 };
 
+export const getTask = async (id: string): Promise<Task> => {
+  const res = await axiosInstance.get<components["schemas"]["TaskResponse"]>(`/tasks/${id}`);
+  return res.data.data;
+};
+
 export const deleteTask = async (id: string) => {
   await axiosInstance.delete(`/tasks/${id}`);
 };
