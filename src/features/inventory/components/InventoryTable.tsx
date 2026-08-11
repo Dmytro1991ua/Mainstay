@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Package, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -16,12 +17,16 @@ import { InventoryDeleteDialog } from "./InventoryDeleteDialog";
 import { InventoryFormSheet } from "./InventoryFormSheet";
 import { RestockDialog } from "./RestockDialog";
 
+import type { InventoryItem } from "../api/inventory.api";
+
 type InventoryTableProps = {
   tableState: TableUrlState;
   onSetTableState: OnSetTableState;
 };
 
 export const InventoryTable = ({ tableState, onSetTableState }: InventoryTableProps) => {
+  const navigate = useNavigate();
+
   const {
     items,
     isLoading,
@@ -53,6 +58,10 @@ export const InventoryTable = ({ tableState, onSetTableState }: InventoryTablePr
     onDelete: openDelete,
     onRestock: openRestock,
   });
+
+  const handleRowClick = (item: InventoryItem) => {
+    navigate({ to: "/inventory/$itemId", params: { itemId: item.id } });
+  };
 
   return (
     <>
@@ -98,7 +107,7 @@ export const InventoryTable = ({ tableState, onSetTableState }: InventoryTablePr
             }
           />
         }
-        onRowClick={canManage ? openEdit : undefined}
+        onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}
         onSetTableState={onSetTableState}

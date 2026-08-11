@@ -24,7 +24,9 @@ import { Route as AppNotificationsRouteImport } from './routes/_app.notification
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
+import { Route as AppInventoryIndexRouteImport } from './routes/_app.inventory.index'
 import { Route as AppTasksTaskIdRouteImport } from './routes/_app.tasks.$taskId'
+import { Route as AppInventoryItemIdRouteImport } from './routes/_app.inventory.$itemId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -99,16 +101,26 @@ const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppTasksRoute,
 } as any)
+const AppInventoryIndexRoute = AppInventoryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppInventoryRoute,
+} as any)
 const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
   id: '/$taskId',
   path: '/$taskId',
   getParentRoute: () => AppTasksRoute,
 } as any)
+const AppInventoryItemIdRoute = AppInventoryItemIdRouteImport.update({
+  id: '/$itemId',
+  path: '/$itemId',
+  getParentRoute: () => AppInventoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
-  '/inventory': typeof AppInventoryRoute
+  '/inventory': typeof AppInventoryRouteWithChildren
   '/notifications': typeof AppNotificationsRoute
   '/settings': typeof AppSettingsRoute
   '/tasks': typeof AppTasksRouteWithChildren
@@ -118,13 +130,14 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/inventory/': typeof AppInventoryIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
-  '/inventory': typeof AppInventoryRoute
   '/notifications': typeof AppNotificationsRoute
   '/settings': typeof AppSettingsRoute
   '/users': typeof AppUsersRoute
@@ -133,7 +146,9 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/inventory': typeof AppInventoryIndexRoute
   '/tasks': typeof AppTasksIndexRoute
 }
 export interface FileRoutesById {
@@ -142,7 +157,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
-  '/_app/inventory': typeof AppInventoryRoute
+  '/_app/inventory': typeof AppInventoryRouteWithChildren
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tasks': typeof AppTasksRouteWithChildren
@@ -152,7 +167,9 @@ export interface FileRoutesById {
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/_app/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/_app/inventory/': typeof AppInventoryIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRouteTypes {
@@ -170,13 +187,14 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/inventory/$itemId'
     | '/tasks/$taskId'
+    | '/inventory/'
     | '/tasks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
-    | '/inventory'
     | '/notifications'
     | '/settings'
     | '/users'
@@ -185,7 +203,9 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/inventory/$itemId'
     | '/tasks/$taskId'
+    | '/inventory'
     | '/tasks'
   id:
     | '__root__'
@@ -203,7 +223,9 @@ export interface FileRouteTypes {
     | '/_auth/register'
     | '/_auth/reset-password'
     | '/auth/accept-invite'
+    | '/_app/inventory/$itemId'
     | '/_app/tasks/$taskId'
+    | '/_app/inventory/'
     | '/_app/tasks/'
   fileRoutesById: FileRoutesById
 }
@@ -321,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTasksIndexRouteImport
       parentRoute: typeof AppTasksRoute
     }
+    '/_app/inventory/': {
+      id: '/_app/inventory/'
+      path: '/'
+      fullPath: '/inventory/'
+      preLoaderRoute: typeof AppInventoryIndexRouteImport
+      parentRoute: typeof AppInventoryRoute
+    }
     '/_app/tasks/$taskId': {
       id: '/_app/tasks/$taskId'
       path: '/$taskId'
@@ -328,8 +357,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTasksTaskIdRouteImport
       parentRoute: typeof AppTasksRoute
     }
+    '/_app/inventory/$itemId': {
+      id: '/_app/inventory/$itemId'
+      path: '/$itemId'
+      fullPath: '/inventory/$itemId'
+      preLoaderRoute: typeof AppInventoryItemIdRouteImport
+      parentRoute: typeof AppInventoryRoute
+    }
   }
 }
+
+interface AppInventoryRouteChildren {
+  AppInventoryItemIdRoute: typeof AppInventoryItemIdRoute
+  AppInventoryIndexRoute: typeof AppInventoryIndexRoute
+}
+
+const AppInventoryRouteChildren: AppInventoryRouteChildren = {
+  AppInventoryItemIdRoute: AppInventoryItemIdRoute,
+  AppInventoryIndexRoute: AppInventoryIndexRoute,
+}
+
+const AppInventoryRouteWithChildren = AppInventoryRoute._addFileChildren(
+  AppInventoryRouteChildren,
+)
 
 interface AppTasksRouteChildren {
   AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
@@ -347,7 +397,7 @@ const AppTasksRouteWithChildren = AppTasksRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
-  AppInventoryRoute: typeof AppInventoryRoute
+  AppInventoryRoute: typeof AppInventoryRouteWithChildren
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTasksRoute: typeof AppTasksRouteWithChildren
@@ -356,7 +406,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
-  AppInventoryRoute: AppInventoryRoute,
+  AppInventoryRoute: AppInventoryRouteWithChildren,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTasksRoute: AppTasksRouteWithChildren,
