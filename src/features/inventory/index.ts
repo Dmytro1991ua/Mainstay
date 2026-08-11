@@ -1,5 +1,6 @@
 export { getInventoryStatus } from "./utils";
 export { InventoryPage } from "./components/InventoryPage";
+export { InventoryDetailPage } from "./components/InventoryDetailPage";
 export {
   useInventoryQuery,
   useCreateInventory,

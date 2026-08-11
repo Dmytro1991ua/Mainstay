@@ -45,8 +45,8 @@ export const useTaskDetail = (taskId: string) => {
     try {
       await _handleDelete();
       navigate({ to: "/tasks" });
-    } catch {
-      // error toast already shown by useTaskDelete
+    } catch (err) {
+      console.error("Delete failed:", err);
     }
   };
 
