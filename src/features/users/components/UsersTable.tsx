@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Plus, RotateCcw, Users } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -64,6 +65,8 @@ export const UsersTable = ({ tableState, onSetTableState }: UsersTableProps) => 
     isCancelling,
   } = useCancelInvite();
 
+  const navigate = useNavigate();
+
   const columns = useUserColumns({
     isAdmin,
     currentUserId,
@@ -74,12 +77,19 @@ export const UsersTable = ({ tableState, onSetTableState }: UsersTableProps) => 
     onCancelInvite: openCancel,
   });
 
+  const handleRowClick = (row: (typeof rows)[number]) => {
+    if (row.source === "user") {
+      navigate({ to: "/users/$userId", params: { userId: row.id } });
+    }
+  };
+
   return (
     <>
       <DataTable
         tableId="users"
         columns={columns}
         data={rows}
+        onRowClick={handleRowClick}
         isPending={isLoading}
         isError={isError}
         hasNextPage={hasNextPage}

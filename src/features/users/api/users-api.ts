@@ -13,6 +13,11 @@ export type UsersListParams = {
   sortOrder?: "asc" | "desc";
 };
 
+export const getUser = async (id: string): Promise<User> => {
+  const { data } = await axiosInstance.get<components["schemas"]["UserResponse"]>(`/users/${id}`);
+  return data.data;
+};
+
 export const getUsers = async (
   params: UsersListParams = {},
 ): Promise<components["schemas"]["UsersListResponse"]> => {
