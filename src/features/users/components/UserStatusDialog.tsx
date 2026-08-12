@@ -3,10 +3,10 @@ import { UserX } from "lucide-react";
 import { ConfirmDialog } from "@/shared/ui/dialog";
 import { formatUserName } from "@/shared/utils";
 
-import type { UserTableRow } from "../hooks/use-users";
+type UserStatusTarget = { userName: string | null; email: string };
 
 type UserStatusDialogProps = {
-  target: UserTableRow | null;
+  target: UserStatusTarget | null;
   onConfirm: () => Promise<void>;
   onClose: () => void;
   isUpdating: boolean;

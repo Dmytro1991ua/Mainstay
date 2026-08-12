@@ -21,6 +21,7 @@ export const RowActions = (props: RowActionsProps) => {
           <button
             key={prop}
             type="button"
+            title={`${verb} ${label}`}
             onClick={(e) => stop(e, onClick)}
             className={cn(BASE_BTN, hoverClass)}
           >
