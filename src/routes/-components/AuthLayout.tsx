@@ -21,7 +21,10 @@ type AuthLayoutProps = { children?: ReactNode; skipAuthRedirect?: boolean };
 export const AuthLayout = ({ children, skipAuthRedirect = false }: AuthLayoutProps = {}) => {
   const status = useAuthStore((s) => s.status);
 
-  if (!skipAuthRedirect && status === "authenticated") return <Navigate to="/dashboard" />;
+  const hasRedirectParam = new URLSearchParams(window.location.search).has("redirect");
+
+  if (!skipAuthRedirect && status === "authenticated" && !hasRedirectParam)
+    return <Navigate to="/dashboard" />;
 
   return (
     <main className={cn("flex min-h-screen")}>
