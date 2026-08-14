@@ -2,12 +2,13 @@ import { Controller } from "react-hook-form";
 
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
-import { InfiniteCombobox } from "@/shared/ui/combobox";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
 
 import { useUsersList } from "../hooks/use-users-list";
+
+import { AssigneeField } from "./AssigneeField";
 
 import type { SheetMode } from "../types";
 import type { TaskFormValues } from "../validation";
@@ -88,19 +89,18 @@ export const TaskFormSheet = ({
         <Controller
           name="assignedTo"
           control={control}
-          render={({ field: f }) => (
-            <FormField id="task-assignee" label="Assigned to" error={errors.assignedTo}>
-              <InfiniteCombobox
-                value={f.value ?? ""}
-                onValueChange={f.onChange}
-                options={assigneeOptions}
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                placeholder="Select assignee"
-                disabled={!canManage}
-              />
-            </FormField>
+          render={({ field }) => (
+            <AssigneeField
+              field={field}
+              error={errors.assignedTo}
+              sheetMode={sheetMode}
+              isAdd={isAdd}
+              options={assigneeOptions}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              canManage={canManage}
+            />
           )}
         />
         <ControlledDatePicker

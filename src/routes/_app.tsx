@@ -29,9 +29,9 @@ const AppLayout = () => (
 );
 
 export const Route = createFileRoute("/_app")({
-  beforeLoad: () => {
+  beforeLoad: ({ location }) => {
     if (useAuthStore.getState().status !== "authenticated") {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/login", search: { redirect: location.href } });
     }
   },
   component: AppLayout,

@@ -10,7 +10,7 @@ type FormFieldProps = {
   label: string;
   id?: string;
   error?: RHFFieldError | string;
-  hint?: string;
+  hint?: React.ReactNode;
   /** Render any custom control (Select, Checkbox, etc.) instead of the default Input */
   children?: React.ReactNode;
   // Input-specific — ignored when children is provided
