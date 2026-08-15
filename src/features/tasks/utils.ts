@@ -17,6 +17,7 @@ export const buildTaskParams = (tableState: TableUrlState): TaskListParams => {
   return {
     search: tableState.search || undefined,
     status: tableState.filters?.status?.[0] as TaskListParams["status"],
+    priority: tableState.filters?.priority?.[0] as TaskListParams["priority"],
     assignedTo: tableState.filters?.assignedTo?.[0],
     overdue: tableState.filters?.overdue?.[0] === "true" ? true : undefined,
     sortBy: (activeSort?.id as TaskListParams["sortBy"]) ?? "createdAt",

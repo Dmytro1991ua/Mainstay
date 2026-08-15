@@ -1861,6 +1861,8 @@ export interface components {
             description: string | null;
             /** @enum {string} */
             status: "OPEN" | "IN_PROGRESS" | "DONE";
+            /** @enum {string} */
+            priority: "LOW" | "MEDIUM" | "HIGH";
             /** Format: uuid */
             assignedTo: string | null;
             assignee: {
@@ -1896,6 +1898,8 @@ export interface components {
              * @example 2026-07-01T00:00:00.000Z
              */
             dueDate?: string | null;
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH";
         };
         UpdateTaskInput: {
             title?: string;
@@ -1909,6 +1913,8 @@ export interface components {
             assignedTo?: string | null;
             /** Format: date-time */
             dueDate?: string | null;
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH";
         };
         UsersListResponse: {
             /** @enum {boolean} */

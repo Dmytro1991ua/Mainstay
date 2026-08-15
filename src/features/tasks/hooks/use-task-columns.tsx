@@ -5,6 +5,7 @@ import { Pill } from "@/shared/ui/pill";
 import { RowActions } from "@/shared/ui/row-actions";
 
 import { InlineStatusSelect } from "../components/InlineStatusSelect";
+import { TaskPriorityBadge } from "../components/TaskPriorityBadge";
 import { TASK_STATUS_PILL } from "../config";
 import { formatDueDate, getUserInitials, isTaskOverdue } from "../utils";
 
@@ -57,6 +58,14 @@ export const useTaskColumns = ({
       cell: ({ row }) => {
         return <span className="font-medium">{row.original.title}</span>;
       },
+    },
+    {
+      id: "priority",
+      accessorKey: "priority",
+      header: "Priority",
+      enableSorting: true,
+      size: 100,
+      cell: ({ row }) => <TaskPriorityBadge priority={row.original.priority} />,
     },
     {
       id: "assignee",

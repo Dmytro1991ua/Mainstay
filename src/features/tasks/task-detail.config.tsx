@@ -7,6 +7,7 @@ import { Pill } from "@/shared/ui/pill";
 
 import { InlineStatusSelect } from "./components/InlineStatusSelect";
 import { OverdueBadge } from "./components/OverdueBadge";
+import { TaskPriorityBadge } from "./components/TaskPriorityBadge";
 import { TASK_STATUS_PILL } from "./config";
 import { formatDueDate, getUserInitials, isTaskOverdue } from "./utils";
 
@@ -27,6 +28,10 @@ export const getTaskDetailFields = (task: Task, { canEditStatus }: FieldOptions)
       ) : (
         <Pill status={TASK_STATUS_PILL[task.status]} />
       ),
+    },
+    {
+      label: "Priority",
+      value: <TaskPriorityBadge priority={task.priority} />,
     },
     {
       label: "Assigned to",
