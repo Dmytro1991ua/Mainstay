@@ -6,12 +6,15 @@ export type TaskStatus = Task["status"];
 export type CreateTaskInput = components["schemas"]["CreateTaskInput"];
 export type UpdateTaskInput = components["schemas"]["UpdateTaskInput"];
 
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+
 export type TaskListParams = {
   page?: number;
   limit?: number;
-  sortBy?: "createdAt" | "status" | "title";
+  sortBy?: "createdAt" | "status" | "title" | "priority";
   sortOrder?: "asc" | "desc";
   status?: TaskStatus;
+  priority?: TaskPriority;
   assignedTo?: string;
   search?: string;
   overdue?: boolean;

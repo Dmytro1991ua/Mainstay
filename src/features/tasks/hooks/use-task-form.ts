@@ -42,6 +42,7 @@ export const useTaskForm = () => {
       description: task.description ?? "",
       assignedTo: task.assignedTo ?? "",
       dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
+      priority: task.priority,
     });
 
     setSheetMode({ type: "edit", task });
@@ -54,6 +55,7 @@ export const useTaskForm = () => {
         description: values.description || undefined,
         assignedTo: values.assignedTo || undefined,
         dueDate: values.dueDate ? new Date(values.dueDate).toISOString() : undefined,
+        priority: values.priority,
       });
       toast.success("Task created", { description: `"${values.title}" was added.` });
       closeSheet();
@@ -69,6 +71,7 @@ export const useTaskForm = () => {
         description: values.description || undefined,
         assignedTo: values.assignedTo || null,
         dueDate: values.dueDate ? new Date(values.dueDate).toISOString() : null,
+        priority: values.priority,
       };
       await updateMutation.mutateAsync({ id, data: update });
       toast.success("Task updated", { description: `"${values.title}" was saved.` });

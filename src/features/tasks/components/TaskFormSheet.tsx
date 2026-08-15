@@ -4,8 +4,10 @@ import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
+import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
 
+import { TASK_PRIORITY_OPTIONS } from "../config";
 import { useUsersList } from "../hooks/use-users-list";
 
 import { AssigneeField } from "./AssigneeField";
@@ -86,6 +88,20 @@ export const TaskFormSheet = ({
             )}
           />
         </FormField>
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field }) => (
+            <FormField id="task-priority" label="Priority">
+              <Select
+                options={TASK_PRIORITY_OPTIONS}
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled={!canManage}
+              />
+            </FormField>
+          )}
+        />
         <Controller
           name="assignedTo"
           control={control}

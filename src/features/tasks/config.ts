@@ -1,6 +1,8 @@
 import type { FilterConfig } from "@/shared/ui/data-table";
 import { PillStatus } from "@/shared/ui/pill";
 
+import type { TaskPriority } from "./api/tasks.api";
+
 export const TASK_STATUS_PILL: Record<"OPEN" | "IN_PROGRESS" | "DONE", PillStatus> = {
   OPEN: PillStatus.Open,
   IN_PROGRESS: PillStatus.InProgress,
@@ -13,6 +15,18 @@ export const TASK_STATUS_OPTIONS = [
   { value: "DONE", label: "Done" },
 ];
 
+export const TASK_PRIORITY_CONFIG: Record<TaskPriority, { label: string; className: string }> = {
+  LOW: { label: "Low", className: "border-green-border bg-green-soft text-green" },
+  MEDIUM: { label: "Medium", className: "border-amber-border bg-amber-soft text-amber" },
+  HIGH: { label: "High", className: "border-red-border bg-red-soft text-red" },
+};
+
+export const TASK_PRIORITY_OPTIONS = [
+  { value: "LOW", label: "Low" },
+  { value: "MEDIUM", label: "Medium" },
+  { value: "HIGH", label: "High" },
+];
+
 export const TASK_FILTER_CONFIG: FilterConfig[] = [
   {
     id: "status",
@@ -22,6 +36,16 @@ export const TASK_FILTER_CONFIG: FilterConfig[] = [
       { label: "Open", value: "OPEN" },
       { label: "In Progress", value: "IN_PROGRESS" },
       { label: "Done", value: "DONE" },
+    ],
+  },
+  {
+    id: "priority",
+    label: "Priority",
+    type: "single",
+    options: [
+      { label: "Low", value: "LOW" },
+      { label: "Medium", value: "MEDIUM" },
+      { label: "High", value: "HIGH" },
     ],
   },
   {
