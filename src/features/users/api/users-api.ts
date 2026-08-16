@@ -11,6 +11,7 @@ export type UsersListParams = {
   role?: UserRole;
   sortBy?: "createdAt" | "userName" | "email";
   sortOrder?: "asc" | "desc";
+  available?: boolean;
 };
 
 export const getUser = async (id: string): Promise<User> => {

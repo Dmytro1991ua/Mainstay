@@ -11,6 +11,7 @@ import type * as React from "react";
 export type ComboboxOption = {
   value: string;
   label: string;
+  meta?: Record<string, unknown>;
 };
 
 type InfiniteComboboxProps = {
@@ -24,6 +25,7 @@ type InfiniteComboboxProps = {
   searchPlaceholder?: string;
   disabled?: boolean;
   error?: boolean;
+  renderOption?: (opt: ComboboxOption) => React.ReactNode;
 };
 
 export const InfiniteCombobox = ({
@@ -37,6 +39,7 @@ export const InfiniteCombobox = ({
   searchPlaceholder = "Search...",
   disabled,
   error,
+  renderOption,
 }: InfiniteComboboxProps) => {
   const {
     open,
@@ -49,7 +52,7 @@ export const InfiniteCombobox = ({
     handleSelect,
   } = useCombobox({ options, value, onValueChange });
 
-  const renderOption = (opt: ComboboxOption) => (
+  const renderOptionItem = (opt: ComboboxOption) => (
     <button
       key={opt.value}
       type="button"
@@ -63,7 +66,7 @@ export const InfiniteCombobox = ({
       <span className="absolute left-2 flex size-4 items-center justify-center">
         {value === opt.value && <Check className="size-3.5 text-accent" />}
       </span>
-      {opt.label}
+      {renderOption ? renderOption(opt) : opt.label}
     </button>
   );
 
@@ -108,13 +111,17 @@ export const InfiniteCombobox = ({
             />
           </div>
 
-          <div id={scrollContainerId} className="max-h-52 overflow-y-auto p-1.5">
+          <div
+            id={scrollContainerId}
+            className="max-h-52 overflow-y-auto p-1.5"
+            onWheel={(e) => e.stopPropagation()}
+          >
             {search ? (
               <>
                 {filtered.length === 0 && (
                   <p className="py-2 text-center text-sm text-text-3">No results</p>
                 )}
-                {filtered.map(renderOption)}
+                {filtered.map((opt) => renderOptionItem(opt))}
               </>
             ) : (
               <InfiniteScroll
@@ -132,7 +139,7 @@ export const InfiniteCombobox = ({
                 {options.length === 0 && !isFetchingNextPage && (
                   <p className="py-2 text-center text-sm text-text-3">No results</p>
                 )}
-                {options.map(renderOption)}
+                {options.map((opt) => renderOptionItem(opt))}
               </InfiniteScroll>
             )}
           </div>

@@ -7,17 +7,9 @@ import { getPendingInvites, getUsers } from "../api/users-api";
 import { USERS_REFETCH_INTERVAL } from "../config";
 
 import type { PendingInvite, User, UserRole } from "../api/users-api";
-import type { DisplayStatus } from "../config";
+import type { DisplayStatus, UserAvailability, UserTableRow } from "../config";
 
-export type UserTableRow = {
-  id: string;
-  email: string;
-  role: UserRole;
-  source: "user" | "invite";
-  userName: string | null;
-  displayStatus: DisplayStatus;
-  isExpired?: boolean;
-};
+export type { UserTableRow };
 
 const USERS_KEY = "users";
 const INVITES_KEY = ["users", "pending-invites"];
@@ -39,15 +31,17 @@ export const useUsersData = (tableState: TableUrlState) => {
 
   const roleFilter = tableState.filters?.["role"]?.[0] as UserRole | undefined;
   const statusFilter = tableState.filters?.["status"]?.[0] as DisplayStatus | undefined;
+  const availableFilter = tableState.filters?.["available"]?.[0] === "true" ? true : undefined;
 
   const usersQuery = useInfiniteQuery({
-    queryKey: [USERS_KEY, { role: roleFilter }],
+    queryKey: [USERS_KEY, { role: roleFilter, available: availableFilter }],
     queryFn: ({ pageParam }) =>
       getUsers({
         limit: 25,
         sortBy: "userName",
         sortOrder: "asc",
         role: roleFilter,
+        available: availableFilter,
         page: pageParam,
       }),
     initialPageParam: 1,
@@ -73,6 +67,7 @@ export const useUsersData = (tableState: TableUrlState) => {
       source: "user",
       userName: u.userName,
       displayStatus: u.status,
+      availability: u.availability as UserAvailability | null,
     }));
 
   const inviteRows: UserTableRow[] = (invitesQuery.data ?? []).map((inv: PendingInvite) => ({
@@ -82,6 +77,7 @@ export const useUsersData = (tableState: TableUrlState) => {
     source: "invite",
     userName: null,
     displayStatus: "PENDING",
+    availability: null,
     isExpired: inv.isExpired,
   }));
 

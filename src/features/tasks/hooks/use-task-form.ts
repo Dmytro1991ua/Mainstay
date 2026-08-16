@@ -48,6 +48,17 @@ export const useTaskForm = () => {
     setSheetMode({ type: "edit", task });
   };
 
+  const handleAssigneeConflict = (error: unknown): boolean => {
+    const status = (error as { response?: { status?: number } })?.response?.status;
+
+    if (status === 409) {
+      form.setError("assignedTo", { message: getApiErrorMessage(error) });
+      return true;
+    }
+
+    return false;
+  };
+
   const saveAdd = async (values: TaskFormValues) => {
     try {
       await createMutation.mutateAsync({
@@ -60,7 +71,9 @@ export const useTaskForm = () => {
       toast.success("Task created", { description: `"${values.title}" was added.` });
       closeSheet();
     } catch (error) {
-      toast.error("Failed to create task", { description: getApiErrorMessage(error) });
+      if (!handleAssigneeConflict(error)) {
+        toast.error("Failed to create task", { description: getApiErrorMessage(error) });
+      }
     }
   };
 
@@ -77,7 +90,9 @@ export const useTaskForm = () => {
       toast.success("Task updated", { description: `"${values.title}" was saved.` });
       closeSheet();
     } catch (error) {
-      toast.error("Failed to update task", { description: getApiErrorMessage(error) });
+      if (!handleAssigneeConflict(error)) {
+        toast.error("Failed to update task", { description: getApiErrorMessage(error) });
+      }
     }
   };
 

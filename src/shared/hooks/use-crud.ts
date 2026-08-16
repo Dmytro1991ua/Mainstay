@@ -25,11 +25,15 @@ export const useInfiniteQueryList = <TItem, TParams extends { page?: number }>(
 export const useMutation = <TData, TVariables>(
   queryKey: string,
   mutationFn: (variables: TVariables) => Promise<TData>,
+  options?: { alsoInvalidate?: string[] },
 ) => {
   const queryClient = useQueryClient();
 
   return useRQMutation({
     mutationFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [queryKey] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      options?.alsoInvalidate?.forEach((key) => queryClient.invalidateQueries({ queryKey: [key] }));
+    },
   });
 };

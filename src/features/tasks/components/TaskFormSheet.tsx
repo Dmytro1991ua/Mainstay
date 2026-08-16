@@ -43,13 +43,20 @@ export const TaskFormSheet = ({
 
   const isAdd = sheetMode?.type === "add";
   const currentUserId = useAuthStore((s) => s.user?.id);
-  const { data: usersData, fetchNextPage, hasNextPage, isFetchingNextPage } = useUsersList();
+  const {
+    data: usersData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useUsersList({
+    availableOnly: isAdd,
+  });
 
   const assigneeOptions =
     usersData?.pages
       .flatMap((p) => p.data)
       .filter((u) => u.id !== currentUserId)
-      .map((u) => ({ value: u.id, label: u.userName })) ?? [];
+      .map((u) => ({ value: u.id, label: u.userName, availability: u.availability })) ?? [];
 
   return (
     <FormSheet

@@ -10,22 +10,25 @@ type User = components["schemas"]["User"];
 const PAGE_SIZE = 20;
 const DEFAULT_QUERY_STALE_TIME = 5 * 60 * 1000;
 
-const fetchUsers = async (page: number): Promise<PaginatedResponse<User>> => {
+const fetchUsers = async (
+  page: number,
+  availableOnly?: boolean,
+): Promise<PaginatedResponse<User>> => {
   const res = await axiosInstance.get<PaginatedResponse<User>>("/users", {
-    params: { page, limit: PAGE_SIZE },
+    params: { page, limit: PAGE_SIZE, ...(availableOnly ? { available: true } : {}) },
   });
 
   return res.data;
 };
 
-export const useUsersList = () => {
+export const useUsersList = ({ availableOnly = false }: { availableOnly?: boolean } = {}) => {
   const roles = useAuthStore((s) => s.user?.roles ?? []);
 
   const canFetch = roles.includes("ADMIN") || roles.includes("MANAGER");
 
   return useInfiniteQuery({
-    queryKey: ["users", "list"],
-    queryFn: ({ pageParam }) => fetchUsers(pageParam),
+    queryKey: ["users", "list", { availableOnly }],
+    queryFn: ({ pageParam }) => fetchUsers(pageParam, availableOnly),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.meta.page < lastPage.meta.pages ? lastPage.meta.page + 1 : undefined,

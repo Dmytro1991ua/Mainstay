@@ -120,7 +120,9 @@ export const useTaskColumns = ({
           canManage ||
           (isTechnician && task.assignedTo === currentUserId && task.status !== "DONE");
         return canEditStatus ? (
-          <InlineStatusSelect task={task} />
+          <div data-stop-row-click>
+            <InlineStatusSelect task={task} />
+          </div>
         ) : (
           <Pill status={TASK_STATUS_PILL[task.status]} />
         );
