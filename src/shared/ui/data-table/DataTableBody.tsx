@@ -34,7 +34,14 @@ export const DataTableBody = <TData,>({
         <tr
           key={row.id}
           data-selected={row.getIsSelected()}
-          onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+          onClick={
+            onRowClick
+              ? (e) => {
+                  if ((e.target as HTMLElement).closest("[data-stop-row-click]")) return;
+                  onRowClick(row.original);
+                }
+              : undefined
+          }
           onKeyDown={onRowClick ? (e) => onRowKeyDown(e, row.original, onRowClick) : undefined}
           tabIndex={onRowClick ? 0 : undefined}
           title={

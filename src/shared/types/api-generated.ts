@@ -1940,6 +1940,8 @@ export interface components {
              * @enum {string}
              */
             status: "ACTIVE" | "INACTIVE";
+            /** @enum {string} */
+            availability: "AVAILABLE" | "RESERVED" | "BUSY" | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */

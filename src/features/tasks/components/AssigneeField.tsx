@@ -1,5 +1,8 @@
 import { Mail } from "lucide-react";
 
+import { UserAvailabilityBadge } from "@/features/users/components/UserAvailabilityBadge";
+import type { UserAvailability } from "@/features/users/config";
+import type { ComboboxOption } from "@/shared/ui/combobox";
 import { InfiniteCombobox } from "@/shared/ui/combobox";
 import { FormField } from "@/shared/ui/form-field";
 
@@ -7,12 +10,14 @@ import type { SheetMode } from "../types";
 import type { TaskFormValues } from "../validation";
 import type { FieldError, ControllerRenderProps } from "react-hook-form";
 
+export type AssigneeOption = ComboboxOption & { availability?: UserAvailability | null };
+
 type AssigneeFieldProps = {
   field: ControllerRenderProps<TaskFormValues, "assignedTo">;
   error: FieldError | undefined;
   sheetMode: SheetMode | null;
   isAdd: boolean;
-  options: { value: string; label: string }[];
+  options: AssigneeOption[];
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
@@ -56,6 +61,12 @@ export const AssigneeField = ({
         isFetchingNextPage={isFetchingNextPage}
         placeholder="Select assignee"
         disabled={!canManage}
+        renderOption={(opt) => (
+          <span className="flex w-full items-center justify-between gap-2">
+            <span>{opt.label}</span>
+            <UserAvailabilityBadge availability={(opt as AssigneeOption).availability ?? null} />
+          </span>
+        )}
       />
     </FormField>
   );

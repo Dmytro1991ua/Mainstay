@@ -12,14 +12,20 @@ import {
 
 export const TASKS_KEY = "tasks";
 
+const USERS_KEY = "users";
+
 export const useTasksQuery = (params: TaskListParams) =>
   useInfiniteQueryList<Task, TaskListParams>(TASKS_KEY, params, fetchTasks);
 
-export const useCreateTask = () => useMutation(TASKS_KEY, createTask);
+export const useCreateTask = () =>
+  useMutation(TASKS_KEY, createTask, { alsoInvalidate: [USERS_KEY] });
 
 export const useUpdateTask = () =>
-  useMutation(TASKS_KEY, ({ id, data }: { id: string; data: UpdateTaskInput }) =>
-    updateTask(id, data),
+  useMutation(
+    TASKS_KEY,
+    ({ id, data }: { id: string; data: UpdateTaskInput }) => updateTask(id, data),
+    { alsoInvalidate: [USERS_KEY] },
   );
 
-export const useDeleteTask = () => useMutation(TASKS_KEY, deleteTask);
+export const useDeleteTask = () =>
+  useMutation(TASKS_KEY, deleteTask, { alsoInvalidate: [USERS_KEY] });

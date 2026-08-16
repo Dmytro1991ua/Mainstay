@@ -4,8 +4,8 @@ import { Button } from "@/shared/ui/button";
 import { DetailShell } from "@/shared/ui/detail-shell";
 import { EmptyState } from "@/shared/ui/empty-state";
 
+import { getUserDetailFields } from "../config";
 import { useUserDetail } from "../hooks/use-user-detail";
-import { getUserDetailFields } from "../user-detail.config";
 
 import { UserDeleteDialog } from "./UserDeleteDialog";
 import { UserDetailActions } from "./UserDetailActions";
