@@ -845,7 +845,7 @@ export interface paths {
                     sortBy?: "createdAt" | "status" | "title";
                     sortOrder?: "asc" | "desc";
                     search?: string;
-                    status?: "OPEN" | "IN_PROGRESS" | "DONE";
+                    status?: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
                     assignedTo?: string;
                     overdue?: string;
                     dueDateFrom?: string | null;
@@ -1036,6 +1036,189 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/tasks/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Mark a task as COMPLETED. Requires after photo uploaded, all checklist items checked, and adequate inventory for parts used. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CompleteTaskInput"];
+                };
+            };
+            responses: {
+                /** @description Task completed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+                /** @description Completion gates not met (missing after photo, unchecked items, insufficient inventory) */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/before-photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Upload a before photo for a task. Only allowed when task status is IN_PROGRESS. Accepts multipart/form-data with a `photo` field (JPEG, PNG, or WebP; max 5 MB). */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Photo uploaded — returns the updated task */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+                /** @description Task not in IN_PROGRESS status */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/tasks/{id}/after-photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Upload an after photo for a task. Accepts multipart/form-data with a `photo` field (JPEG, PNG, or WebP; max 5 MB). */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Photo uploaded — returns the updated task */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/checklist-templates/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get the checklist template for a given task category. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Checklist template */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ChecklistTemplateResponse"];
+                    };
+                };
+                /** @description Category not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/users": {
@@ -1854,15 +2037,52 @@ export interface components {
                 pages: number;
             };
         };
+        TaskPartUsage: {
+            /** Format: uuid */
+            inventoryItemId: string;
+            inventoryItem?: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+            };
+            quantityUsed: number;
+        };
+        ChecklistItem: {
+            item: string;
+            checked: boolean;
+        };
+        ChecklistTemplate: {
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            items: string[];
+        };
+        ChecklistTemplateResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["ChecklistTemplate"];
+        };
+        CompleteTaskInput: {
+            checklist: string[];
+            partsUsed: {
+                /** Format: uuid */
+                inventoryItemId: string;
+                quantity: number;
+            }[];
+        };
         Task: {
             /** Format: uuid */
             id: string;
             title: string;
             description: string | null;
             /** @enum {string} */
-            status: "OPEN" | "IN_PROGRESS" | "DONE";
+            status: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
             /** @enum {string} */
-            priority: "LOW" | "MEDIUM" | "HIGH";
+            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
+            beforePhotoUrl: string | null;
+            afterPhotoUrl: string | null;
+            partsUsed: components["schemas"]["TaskPartUsage"][];
             /** Format: uuid */
             assignedTo: string | null;
             assignee: {
@@ -1873,10 +2093,16 @@ export interface components {
             } | null;
             /** Format: date-time */
             dueDate: string | null;
+            cancellationReason: string | null;
+            /** Format: date-time */
+            cancelledAt: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        CancelTaskInput: {
+            reason: string;
         };
         TaskResponse: {
             /** @enum {boolean} */
@@ -1899,7 +2125,9 @@ export interface components {
              */
             dueDate?: string | null;
             /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH";
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
         };
         UpdateTaskInput: {
             title?: string;
@@ -1908,13 +2136,15 @@ export interface components {
              * @example IN_PROGRESS
              * @enum {string}
              */
-            status?: "OPEN" | "IN_PROGRESS" | "DONE";
+            status?: "OPEN" | "IN_PROGRESS";
             /** Format: uuid */
             assignedTo?: string | null;
             /** Format: date-time */
             dueDate?: string | null;
             /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH";
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
         };
         UsersListResponse: {
             /** @enum {boolean} */

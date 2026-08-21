@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/utils";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { formatShortDate } from "@/shared/utils/formatters";
 
-import { isTaskOverdue } from "../utils";
+import { isTaskClosedStatus, isTaskOverdue } from "../utils";
 
 import { STATUS_CLASS_CONFIG, STATUS_LABEL_CONFIG } from "./configs";
 import { Initials } from "./Initials";
@@ -33,7 +33,7 @@ export const RecentTasks = ({ tasks }: { tasks: Task[] }) => {
               <p
                 className={cn(
                   "truncate text-sm font-medium",
-                  task.status === "DONE" ? "text-text-3" : "text-text",
+                  isTaskClosedStatus(task.status) ? "text-text-3" : "text-text",
                 )}
               >
                 {task.title}

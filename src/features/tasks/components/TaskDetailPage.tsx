@@ -4,11 +4,15 @@ import { Button } from "@/shared/ui/button";
 import { DetailShell } from "@/shared/ui/detail-shell";
 import { EmptyState } from "@/shared/ui/empty-state";
 
+import { getTaskDetailFields, TERMINAL_BANNERS } from "../config";
+import { useTaskCancel } from "../hooks/use-task-cancel";
+import { useTaskComplete } from "../hooks/use-task-complete";
 import { useTaskDetail } from "../hooks/use-task-detail";
-import { getTaskDetailFields } from "../task-detail.config";
 
 const SKELETON_KEYS = [
   "Status",
+  "Priority",
+  "Category",
   "Assigned to",
   "Due date",
   "Created",
@@ -16,6 +20,8 @@ const SKELETON_KEYS = [
   "Description",
 ];
 
+import { TaskCancelDialog } from "./TaskCancelDialog";
+import { TaskCompleteSheet } from "./TaskCompleteSheet";
 import { TaskDeleteDialog } from "./TaskDeleteDialog";
 import { TaskDetailActions } from "./TaskDetailActions";
 import { TaskFormSheet } from "./TaskFormSheet";
@@ -28,9 +34,15 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
     isPending,
     isError,
     refetch,
+    isTerminal,
     canManage,
     canDelete,
     canEditStatus,
+    canComplete,
+    canCancel,
+    canUploadBeforePhoto,
+    isUploadingBeforePhoto,
+    handleUploadBeforePhoto,
     openEdit,
     form,
     isSaving,
@@ -43,6 +55,9 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
     closeDelete,
     isDeleting,
   } = useTaskDetail(taskId);
+
+  const { taskToComplete, openComplete, closeComplete } = useTaskComplete();
+  const { cancelTarget, openCancel, closeCancel, handleCancel, isCancelling } = useTaskCancel();
 
   if (isPending) {
     return (
@@ -72,20 +87,34 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
     );
   }
 
+  const terminalBanner = TERMINAL_BANNERS[task.status] ?? null;
+
   return (
     <>
       <DetailShell
         backTo="/tasks"
         title={task.title}
+        banner={terminalBanner}
         actions={
           <TaskDetailActions
             canManage={canManage}
             canDelete={canDelete}
+            canComplete={canComplete}
+            canCancel={canCancel}
+            isTerminal={isTerminal}
+            taskStatus={task.status}
             onEdit={() => openEdit(task)}
             onDelete={() => openDelete(task)}
+            onComplete={() => openComplete(task)}
+            onCancel={() => openCancel(task)}
           />
         }
-        fields={getTaskDetailFields(task, { canEditStatus })}
+        fields={getTaskDetailFields(task, {
+          canEditStatus,
+          canUploadBeforePhoto,
+          isUploadingBeforePhoto,
+          onUploadBeforePhoto: handleUploadBeforePhoto,
+        })}
         skeletonKeys={SKELETON_KEYS}
       />
       <TaskFormSheet
@@ -101,6 +130,13 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
         onConfirm={handleDelete}
         onClose={closeDelete}
         isDeleting={isDeleting}
+      />
+      <TaskCompleteSheet task={taskToComplete} onClose={closeComplete} />
+      <TaskCancelDialog
+        target={cancelTarget}
+        onConfirm={handleCancel}
+        onClose={closeCancel}
+        isCancelling={isCancelling}
       />
     </>
   );

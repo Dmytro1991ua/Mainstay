@@ -124,12 +124,14 @@ export const STATUS_LABEL_CONFIG: Record<Task["status"], string> = {
   OPEN: "Open",
   IN_PROGRESS: "In Progress",
   DONE: "Done",
+  CANCELLED: "Cancelled",
 };
 
 export const STATUS_CLASS_CONFIG: Record<Task["status"], string> = {
   OPEN: "bg-accent-soft text-accent",
   IN_PROGRESS: "bg-amber-soft text-amber",
   DONE: "bg-green-soft text-green",
+  CANCELLED: "bg-red-soft text-red",
 };
 
 export const STAT_CARD_VARIANT_CONFIG: Record<

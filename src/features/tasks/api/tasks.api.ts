@@ -3,10 +3,16 @@ import type { components } from "@/shared/types/api-generated";
 
 export type Task = components["schemas"]["Task"];
 export type TaskStatus = Task["status"];
+export type TaskCategory = NonNullable<Task["category"]>;
+export type TaskPartUsage = components["schemas"]["TaskPartUsage"];
+export type ChecklistItem = components["schemas"]["ChecklistItem"];
+export type ChecklistTemplate = components["schemas"]["ChecklistTemplate"];
 export type CreateTaskInput = components["schemas"]["CreateTaskInput"];
 export type UpdateTaskInput = components["schemas"]["UpdateTaskInput"];
+export type CompleteTaskInput = components["schemas"]["CompleteTaskInput"];
+export type CancelTaskInput = components["schemas"]["CancelTaskInput"];
 
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export type TaskListParams = {
   page?: number;
@@ -48,4 +54,45 @@ export const getTask = async (id: string): Promise<Task> => {
 
 export const deleteTask = async (id: string) => {
   await axiosInstance.delete(`/tasks/${id}`);
+};
+
+const uploadPhoto = async (
+  id: string,
+  endpoint: "before-photo" | "after-photo",
+  file: File,
+): Promise<Task> => {
+  const form = new FormData();
+  form.append("photo", file);
+  const res = await axiosInstance.patch<components["schemas"]["TaskResponse"]>(
+    `/tasks/${id}/${endpoint}`,
+    form,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return res.data.data;
+};
+
+export const uploadBeforePhoto = (id: string, file: File) => uploadPhoto(id, "before-photo", file);
+export const uploadAfterPhoto = (id: string, file: File) => uploadPhoto(id, "after-photo", file);
+
+export const completeTask = async (id: string, data: CompleteTaskInput): Promise<Task> => {
+  const res = await axiosInstance.post<components["schemas"]["TaskResponse"]>(
+    `/tasks/${id}/complete`,
+    data,
+  );
+  return res.data.data;
+};
+
+export const cancelTask = async (id: string, data: CancelTaskInput): Promise<Task> => {
+  const res = await axiosInstance.post<components["schemas"]["TaskResponse"]>(
+    `/tasks/${id}/cancel`,
+    data,
+  );
+  return res.data.data;
+};
+
+export const getChecklistTemplate = async (category: string): Promise<ChecklistTemplate> => {
+  const res = await axiosInstance.get<components["schemas"]["ChecklistTemplateResponse"]>(
+    `/checklist-templates/${category}`,
+  );
+  return res.data.data;
 };

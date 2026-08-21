@@ -7,7 +7,7 @@ import { FormField } from "@/shared/ui/form-field";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
 
-import { TASK_PRIORITY_OPTIONS } from "../config";
+import { TASK_CATEGORY_OPTIONS, TASK_PRIORITY_OPTIONS } from "../config";
 import { useUsersList } from "../hooks/use-users-list";
 
 import { AssigneeField } from "./AssigneeField";
@@ -104,6 +104,21 @@ export const TaskFormSheet = ({
                 options={TASK_PRIORITY_OPTIONS}
                 value={field.value}
                 onValueChange={field.onChange}
+                disabled={!canManage}
+              />
+            </FormField>
+          )}
+        />
+        <Controller
+          name="category"
+          control={control}
+          render={({ field }) => (
+            <FormField id="task-category" label="Category" error={errors.category}>
+              <Select
+                options={TASK_CATEGORY_OPTIONS}
+                value={field.value ?? ""}
+                onValueChange={field.onChange}
+                placeholder="Select a category"
                 disabled={!canManage}
               />
             </FormField>
