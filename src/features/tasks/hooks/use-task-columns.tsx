@@ -7,7 +7,7 @@ import { RowActions } from "@/shared/ui/row-actions";
 import { InlineStatusSelect } from "../components/InlineStatusSelect";
 import { TaskPriorityBadge } from "../components/TaskPriorityBadge";
 import { TASK_STATUS_PILL } from "../config";
-import { formatDueDate, getUserInitials, isTaskOverdue } from "../utils";
+import { formatDueDate, getUserInitials, isTaskClosedStatus, isTaskOverdue } from "../utils";
 
 import type { Task } from "../api/tasks.api";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -116,9 +116,9 @@ export const useTaskColumns = ({
       size: 120,
       cell: ({ row }) => {
         const task = row.original;
+        const isTerminal = isTaskClosedStatus(task.status);
         const canEditStatus =
-          canManage ||
-          (isTechnician && task.assignedTo === currentUserId && task.status !== "DONE");
+          !isTerminal && (canManage || (isTechnician && task.assignedTo === currentUserId));
         return canEditStatus ? (
           <div data-stop-row-click>
             <InlineStatusSelect task={task} />
@@ -139,11 +139,12 @@ export const useTaskColumns = ({
             size: canManage && canDelete ? 80 : 0,
             cell: ({ row }) => {
               const task = row.original;
+              const isTerminalRow = isTaskClosedStatus(task.status);
 
               return (
                 <RowActions
                   label={task.title}
-                  onEdit={canManage ? () => onEdit(task) : undefined}
+                  onEdit={canManage && !isTerminalRow ? () => onEdit(task) : undefined}
                   onDelete={canDelete ? () => onDelete(task) : undefined}
                 />
               );

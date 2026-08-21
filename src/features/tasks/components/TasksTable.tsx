@@ -17,6 +17,7 @@ import { TaskFormSheet } from "./TaskFormSheet";
 
 const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
   if (task.status === "DONE") return { isHighlighted: true, highlightStyles: "bg-row-green" };
+  if (task.status === "CANCELLED") return { isHighlighted: true, highlightStyles: "bg-row-red" };
   if (isTaskOverdue(task)) return { isHighlighted: true, highlightStyles: "bg-row-amber" };
   return { isHighlighted: false, highlightStyles: "" };
 };
