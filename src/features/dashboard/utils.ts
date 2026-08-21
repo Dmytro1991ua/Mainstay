@@ -1,7 +1,11 @@
+import { isTaskClosedStatus } from "../tasks/utils";
+
 import type { Task } from "./api/dashboard-api";
 
+export { isTaskClosedStatus };
+
 export const isTaskOverdue = (task: Task) =>
-  task.status !== "DONE" && !!task.dueDate && new Date(task.dueDate) < new Date();
+  !isTaskClosedStatus(task.status) && !!task.dueDate && new Date(task.dueDate) < new Date();
 
 export const calculateStockStatus = (quantity: number, minStockLevel: number) => {
   const fillPercent =

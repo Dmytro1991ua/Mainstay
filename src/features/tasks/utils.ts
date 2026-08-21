@@ -4,8 +4,10 @@ import type { TableUrlState } from "@/shared/ui/data-table";
 
 import type { Task, TaskListParams } from "./api/tasks.api";
 
+export const isTaskClosedStatus = (status: string) => status === "DONE" || status === "CANCELLED";
+
 export const isTaskOverdue = (task: Pick<Task, "dueDate" | "status">): boolean =>
-  task.status !== "DONE" && !!task.dueDate && new Date(task.dueDate) < new Date();
+  !isTaskClosedStatus(task.status) && !!task.dueDate && new Date(task.dueDate) < new Date();
 
 export const formatDueDate = (dueDate: string | null): string => {
   if (!dueDate) return "—";
