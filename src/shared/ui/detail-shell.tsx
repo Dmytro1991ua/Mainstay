@@ -16,6 +16,8 @@ type DetailShellProps = {
   title: string;
   /** Buttons rendered on the right side of the header card. */
   actions?: React.ReactNode;
+  /** Optional banner rendered between the header and the fields card. */
+  banner?: React.ReactNode;
   fields: DetailField[];
   /** Shows skeleton layout while data is loading. */
   isPending?: boolean;
@@ -30,6 +32,7 @@ export const DetailShell = ({
   backTo,
   title,
   actions,
+  banner,
   fields,
   isPending,
   skeletonKeys = DEFAULT_SKELETON_KEYS,
@@ -43,6 +46,7 @@ export const DetailShell = ({
         <h1 className="flex-1 truncate text-base font-semibold text-text">{title}</h1>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
       </div>
+      {banner}
       <div className="rounded-xl border border-border bg-panel shadow-card">
         {fields.map(({ label, value }) => (
           <PropRow key={label} label={label}>
