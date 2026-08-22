@@ -21,6 +21,7 @@ export const RecurringTaskDetailPage = ({ scheduleId }: RecurringTaskDetailPageP
     isError,
     refetch,
     canManage,
+    canDelete,
     sheetMode,
     form,
     openEdit,
@@ -82,6 +83,7 @@ export const RecurringTaskDetailPage = ({ scheduleId }: RecurringTaskDetailPageP
               isActive={schedule.isActive}
               isPausing={isPausing}
               isResuming={isResuming}
+              canDelete={canDelete}
               onPause={handlePause}
               onResume={handleResume}
               onEdit={() => openEdit(schedule)}

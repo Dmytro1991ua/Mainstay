@@ -11,6 +11,7 @@ export const useRecurringTaskDetail = (scheduleId: string) => {
   const roles = useAuthStore((s) => s.user?.roles ?? []);
 
   const canManage = roles.includes("ADMIN") || roles.includes("MANAGER");
+  const canDelete = roles.includes("ADMIN");
 
   const { data: schedule, isPending, isError, refetch } = useRecurringTaskQuery(scheduleId);
 
@@ -25,6 +26,7 @@ export const useRecurringTaskDetail = (scheduleId: string) => {
     isError,
     refetch,
     canManage,
+    canDelete,
     sheetMode,
     form,
     openEdit,

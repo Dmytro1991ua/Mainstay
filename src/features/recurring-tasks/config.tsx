@@ -84,7 +84,11 @@ export const getScheduleDetailFields = (schedule: RecurringTask): DetailField[] 
   },
   {
     label: "Created by",
-    value: <span className="text-sm text-text">{schedule.creator.userName}</span>,
+    value: schedule.creator ? (
+      <span className="text-sm text-text">{schedule.creator.userName}</span>
+    ) : (
+      UNSET
+    ),
   },
   {
     label: "Description",

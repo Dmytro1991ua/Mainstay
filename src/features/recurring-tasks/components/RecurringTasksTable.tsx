@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, CalendarClock, Plus, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
+import { useAuthStore } from "@/shared/stores/auth-store";
 import { Button } from "@/shared/ui/button";
 import { DataTable } from "@/shared/ui/data-table";
 import { ConfirmDialog } from "@/shared/ui/dialog";
@@ -24,6 +25,8 @@ const NOOP_SET_STATE = () => {};
 
 export const RecurringTasksTable = ({ isActiveFilter }: RecurringTasksTableProps) => {
   const navigate = useNavigate();
+  const roles = useAuthStore((s) => s.user?.roles ?? []);
+  const canDelete = roles.includes("ADMIN");
   const {
     data: schedules = [],
     isPending,
@@ -40,6 +43,7 @@ export const RecurringTasksTable = ({ isActiveFilter }: RecurringTasksTableProps
   const { handlePause, handleResume, handleDelete, isDeleting } = useScheduleActions();
 
   const columns = useRecurringTaskColumns({
+    canDelete,
     onEdit: openEdit,
     onDelete: setDeleteTarget,
     onPause: handlePause,

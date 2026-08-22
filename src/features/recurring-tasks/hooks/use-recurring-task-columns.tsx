@@ -11,6 +11,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 const UNSET = <span className="text-text-3">—</span>;
 
 type UseRecurringTaskColumnsOptions = {
+  canDelete: boolean;
   onEdit: (schedule: RecurringTask) => void;
   onDelete: (schedule: RecurringTask) => void;
   onPause: (schedule: RecurringTask) => void;
@@ -18,6 +19,7 @@ type UseRecurringTaskColumnsOptions = {
 };
 
 export const useRecurringTaskColumns = ({
+  canDelete,
   onEdit,
   onDelete,
   onPause,
@@ -80,6 +82,7 @@ export const useRecurringTaskColumns = ({
     cell: ({ row }) => (
       <RecurringTaskRowActions
         schedule={row.original}
+        canDelete={canDelete}
         onEdit={onEdit}
         onDelete={onDelete}
         onPause={onPause}

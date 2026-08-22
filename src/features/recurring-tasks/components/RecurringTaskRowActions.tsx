@@ -15,6 +15,7 @@ type ActionConfig = {
 
 type RecurringTaskRowActionsProps = {
   schedule: RecurringTask;
+  canDelete: boolean;
   onEdit: (schedule: RecurringTask) => void;
   onDelete: (schedule: RecurringTask) => void;
   onPause: (schedule: RecurringTask) => void;
@@ -28,6 +29,7 @@ const stop = (e: React.MouseEvent, fn: () => void) => {
 
 export const RecurringTaskRowActions = ({
   schedule,
+  canDelete,
   onEdit,
   onDelete,
   onPause,
@@ -46,12 +48,16 @@ export const RecurringTaskRowActions = ({
       onClick: (e) => stop(e, () => onEdit(schedule)),
       hoverClass: "hover:bg-panel-2 hover:text-text",
     },
-    {
-      title: "Delete schedule",
-      icon: Trash2,
-      onClick: (e) => stop(e, () => onDelete(schedule)),
-      hoverClass: "hover:bg-red-soft hover:text-red",
-    },
+    ...(canDelete
+      ? [
+          {
+            title: "Delete schedule",
+            icon: Trash2,
+            onClick: (e: React.MouseEvent) => stop(e, () => onDelete(schedule)),
+            hoverClass: "hover:bg-red-soft hover:text-red",
+          } satisfies ActionConfig,
+        ]
+      : []),
   ];
 
   return (
