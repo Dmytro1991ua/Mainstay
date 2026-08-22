@@ -6,6 +6,7 @@ import { useAuthStore } from "@/shared/stores/auth-store";
 import { InfiniteCombobox } from "@/shared/ui/combobox";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
+import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
 
@@ -129,14 +130,16 @@ export const RecurringTaskFormSheet = ({
             </FormField>
           )}
         />
-        <FormField
-          id="schedule-interval"
-          label="Repeat every (days)"
-          type="number"
-          placeholder="e.g. 30"
-          registration={register("intervalDays", { valueAsNumber: true })}
-          error={errors.intervalDays}
-        />
+        <FormField id="schedule-interval" label="Repeat every (days)" error={errors.intervalDays}>
+          <Input
+            id="schedule-interval"
+            type="number"
+            min={1}
+            placeholder="e.g. 30"
+            aria-invalid={!!errors.intervalDays}
+            {...register("intervalDays", { valueAsNumber: true })}
+          />
+        </FormField>
         <ControlledDatePicker
           name="nextDueAt"
           control={control}
