@@ -2096,6 +2096,8 @@ export interface components {
             cancellationReason: string | null;
             /** Format: date-time */
             cancelledAt: string | null;
+            /** Format: uuid */
+            recurringTaskId: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -2247,6 +2249,76 @@ export interface components {
              * @enum {string}
              */
             status: "ACTIVE" | "INACTIVE";
+        };
+        RecurringTask: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description: string | null;
+            /** @enum {string} */
+            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
+            /** Format: uuid */
+            assignedTo: string | null;
+            assignee: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
+            } | null;
+            intervalDays: number;
+            /** Format: date-time */
+            nextDueAt: string;
+            isActive: boolean;
+            /** Format: uuid */
+            createdBy: string;
+            creator: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
+            };
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        RecurringTaskResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["RecurringTask"];
+        };
+        RecurringTasksListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["RecurringTask"][];
+        };
+        CreateRecurringTaskInput: {
+            title: string;
+            description?: string;
+            intervalDays: number;
+            /** Format: date-time */
+            firstDueAt: string;
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /** Format: uuid */
+            assignedTo?: string;
+        };
+        UpdateRecurringTaskInput: {
+            title?: string;
+            description?: string;
+            intervalDays?: number;
+            /** Format: date-time */
+            nextDueAt?: string;
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @enum {string} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /** Format: uuid */
+            assignedTo?: string | null;
         };
     };
     responses: never;
