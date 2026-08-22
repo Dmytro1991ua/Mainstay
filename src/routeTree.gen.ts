@@ -20,14 +20,17 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/_auth.forgot-pa
 import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppTasksRouteImport } from './routes/_app.tasks'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppRecurringTasksRouteImport } from './routes/_app.recurring-tasks'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppUsersIndexRouteImport } from './routes/_app.users.index'
 import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
+import { Route as AppRecurringTasksIndexRouteImport } from './routes/_app.recurring-tasks.index'
 import { Route as AppInventoryIndexRouteImport } from './routes/_app.inventory.index'
 import { Route as AppUsersUserIdRouteImport } from './routes/_app.users.$userId'
 import { Route as AppTasksTaskIdRouteImport } from './routes/_app.tasks.$taskId'
+import { Route as AppRecurringTasksScheduleIdRouteImport } from './routes/_app.recurring-tasks.$scheduleId'
 import { Route as AppInventoryItemIdRouteImport } from './routes/_app.inventory.$itemId'
 
 const AuthRoute = AuthRouteImport.update({
@@ -83,6 +86,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRecurringTasksRoute = AppRecurringTasksRouteImport.update({
+  id: '/recurring-tasks',
+  path: '/recurring-tasks',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -108,6 +116,11 @@ const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppTasksRoute,
 } as any)
+const AppRecurringTasksIndexRoute = AppRecurringTasksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRecurringTasksRoute,
+} as any)
 const AppInventoryIndexRoute = AppInventoryIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -123,6 +136,12 @@ const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
   path: '/$taskId',
   getParentRoute: () => AppTasksRoute,
 } as any)
+const AppRecurringTasksScheduleIdRoute =
+  AppRecurringTasksScheduleIdRouteImport.update({
+    id: '/$scheduleId',
+    path: '/$scheduleId',
+    getParentRoute: () => AppRecurringTasksRoute,
+  } as any)
 const AppInventoryItemIdRoute = AppInventoryItemIdRouteImport.update({
   id: '/$itemId',
   path: '/$itemId',
@@ -134,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/inventory': typeof AppInventoryRouteWithChildren
   '/notifications': typeof AppNotificationsRoute
+  '/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
   '/settings': typeof AppSettingsRoute
   '/tasks': typeof AppTasksRouteWithChildren
   '/users': typeof AppUsersRouteWithChildren
@@ -143,9 +163,11 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
   '/inventory/$itemId': typeof AppInventoryItemIdRoute
+  '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/users/$userId': typeof AppUsersUserIdRoute
   '/inventory/': typeof AppInventoryIndexRoute
+  '/recurring-tasks/': typeof AppRecurringTasksIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
   '/users/': typeof AppUsersIndexRoute
 }
@@ -160,9 +182,11 @@ export interface FileRoutesByTo {
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
   '/inventory/$itemId': typeof AppInventoryItemIdRoute
+  '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/users/$userId': typeof AppUsersUserIdRoute
   '/inventory': typeof AppInventoryIndexRoute
+  '/recurring-tasks': typeof AppRecurringTasksIndexRoute
   '/tasks': typeof AppTasksIndexRoute
   '/users': typeof AppUsersIndexRoute
 }
@@ -174,6 +198,7 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/inventory': typeof AppInventoryRouteWithChildren
   '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tasks': typeof AppTasksRouteWithChildren
   '/_app/users': typeof AppUsersRouteWithChildren
@@ -183,9 +208,11 @@ export interface FileRoutesById {
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
   '/_app/inventory/$itemId': typeof AppInventoryItemIdRoute
+  '/_app/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/_app/users/$userId': typeof AppUsersUserIdRoute
   '/_app/inventory/': typeof AppInventoryIndexRoute
+  '/_app/recurring-tasks/': typeof AppRecurringTasksIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
   '/_app/users/': typeof AppUsersIndexRoute
 }
@@ -196,6 +223,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/inventory'
     | '/notifications'
+    | '/recurring-tasks'
     | '/settings'
     | '/tasks'
     | '/users'
@@ -205,9 +233,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/auth/accept-invite'
     | '/inventory/$itemId'
+    | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
     | '/users/$userId'
     | '/inventory/'
+    | '/recurring-tasks/'
     | '/tasks/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
@@ -222,9 +252,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/auth/accept-invite'
     | '/inventory/$itemId'
+    | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
     | '/users/$userId'
     | '/inventory'
+    | '/recurring-tasks'
     | '/tasks'
     | '/users'
   id:
@@ -235,6 +267,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_app/inventory'
     | '/_app/notifications'
+    | '/_app/recurring-tasks'
     | '/_app/settings'
     | '/_app/tasks'
     | '/_app/users'
@@ -244,9 +277,11 @@ export interface FileRouteTypes {
     | '/_auth/reset-password'
     | '/auth/accept-invite'
     | '/_app/inventory/$itemId'
+    | '/_app/recurring-tasks/$scheduleId'
     | '/_app/tasks/$taskId'
     | '/_app/users/$userId'
     | '/_app/inventory/'
+    | '/_app/recurring-tasks/'
     | '/_app/tasks/'
     | '/_app/users/'
   fileRoutesById: FileRoutesById
@@ -337,6 +372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/recurring-tasks': {
+      id: '/_app/recurring-tasks'
+      path: '/recurring-tasks'
+      fullPath: '/recurring-tasks'
+      preLoaderRoute: typeof AppRecurringTasksRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/notifications': {
       id: '/_app/notifications'
       path: '/notifications'
@@ -372,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTasksIndexRouteImport
       parentRoute: typeof AppTasksRoute
     }
+    '/_app/recurring-tasks/': {
+      id: '/_app/recurring-tasks/'
+      path: '/'
+      fullPath: '/recurring-tasks/'
+      preLoaderRoute: typeof AppRecurringTasksIndexRouteImport
+      parentRoute: typeof AppRecurringTasksRoute
+    }
     '/_app/inventory/': {
       id: '/_app/inventory/'
       path: '/'
@@ -392,6 +441,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tasks/$taskId'
       preLoaderRoute: typeof AppTasksTaskIdRouteImport
       parentRoute: typeof AppTasksRoute
+    }
+    '/_app/recurring-tasks/$scheduleId': {
+      id: '/_app/recurring-tasks/$scheduleId'
+      path: '/$scheduleId'
+      fullPath: '/recurring-tasks/$scheduleId'
+      preLoaderRoute: typeof AppRecurringTasksScheduleIdRouteImport
+      parentRoute: typeof AppRecurringTasksRoute
     }
     '/_app/inventory/$itemId': {
       id: '/_app/inventory/$itemId'
@@ -416,6 +472,19 @@ const AppInventoryRouteChildren: AppInventoryRouteChildren = {
 const AppInventoryRouteWithChildren = AppInventoryRoute._addFileChildren(
   AppInventoryRouteChildren,
 )
+
+interface AppRecurringTasksRouteChildren {
+  AppRecurringTasksScheduleIdRoute: typeof AppRecurringTasksScheduleIdRoute
+  AppRecurringTasksIndexRoute: typeof AppRecurringTasksIndexRoute
+}
+
+const AppRecurringTasksRouteChildren: AppRecurringTasksRouteChildren = {
+  AppRecurringTasksScheduleIdRoute: AppRecurringTasksScheduleIdRoute,
+  AppRecurringTasksIndexRoute: AppRecurringTasksIndexRoute,
+}
+
+const AppRecurringTasksRouteWithChildren =
+  AppRecurringTasksRoute._addFileChildren(AppRecurringTasksRouteChildren)
 
 interface AppTasksRouteChildren {
   AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
@@ -449,6 +518,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppInventoryRoute: typeof AppInventoryRouteWithChildren
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppRecurringTasksRoute: typeof AppRecurringTasksRouteWithChildren
   AppSettingsRoute: typeof AppSettingsRoute
   AppTasksRoute: typeof AppTasksRouteWithChildren
   AppUsersRoute: typeof AppUsersRouteWithChildren
@@ -458,6 +528,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppInventoryRoute: AppInventoryRouteWithChildren,
   AppNotificationsRoute: AppNotificationsRoute,
+  AppRecurringTasksRoute: AppRecurringTasksRouteWithChildren,
   AppSettingsRoute: AppSettingsRoute,
   AppTasksRoute: AppTasksRouteWithChildren,
   AppUsersRoute: AppUsersRouteWithChildren,
