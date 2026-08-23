@@ -1,5 +1,6 @@
 import {
   Bell,
+  CalendarClock,
   ClipboardList,
   LayoutDashboard,
   type LucideIcon,
@@ -17,6 +18,7 @@ export type AppPath =
   | "/dashboard"
   | "/inventory"
   | "/tasks"
+  | "/recurring-tasks"
   | "/notifications"
   | "/users"
   | "/settings";
@@ -38,6 +40,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/inventory", label: "Inventory", icon: Package },
   { to: "/tasks", label: "Tasks", icon: ClipboardList },
+  {
+    to: "/recurring-tasks",
+    label: "Schedules",
+    icon: CalendarClock,
+    roles: ["ADMIN", "MANAGER"],
+  },
   { to: "/notifications", label: "Notifications", icon: Bell },
   { to: "/users", label: "Users", icon: Users, roles: ["ADMIN", "MANAGER"] },
   { to: "/settings", label: "Settings", icon: Settings },

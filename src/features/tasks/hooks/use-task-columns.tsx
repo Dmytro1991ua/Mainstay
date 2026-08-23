@@ -5,6 +5,7 @@ import { Pill } from "@/shared/ui/pill";
 import { RowActions } from "@/shared/ui/row-actions";
 
 import { InlineStatusSelect } from "../components/InlineStatusSelect";
+import { RecurringBadge } from "../components/RecurringBadge";
 import { TaskPriorityBadge } from "../components/TaskPriorityBadge";
 import { TASK_STATUS_PILL } from "../config";
 import { formatDueDate, getUserInitials, isTaskClosedStatus, isTaskOverdue } from "../utils";
@@ -56,7 +57,13 @@ export const useTaskColumns = ({
       enableSorting: true,
       size: 320,
       cell: ({ row }) => {
-        return <span className="font-medium">{row.original.title}</span>;
+        const { title, recurringTaskId } = row.original;
+        return (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="font-medium">{title}</span>
+            {recurringTaskId && <RecurringBadge />}
+          </div>
+        );
       },
     },
     {
