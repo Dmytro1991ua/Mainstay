@@ -20,6 +20,7 @@ type UseTaskColumnsOptions = {
   currentUserId?: string;
   onEdit: (task: Task) => void;
   onDelete: (task: Task) => void;
+  onRequestStart?: (task: Task) => void;
 };
 
 export const useTaskColumns = ({
@@ -29,6 +30,7 @@ export const useTaskColumns = ({
   currentUserId,
   onEdit,
   onDelete,
+  onRequestStart,
 }: UseTaskColumnsOptions): ColumnDef<Task>[] => {
   const showActions = canManage || canDelete || isTechnician;
 
@@ -128,7 +130,7 @@ export const useTaskColumns = ({
           !isTerminal && (canManage || (isTechnician && task.assignedTo === currentUserId));
         return canEditStatus ? (
           <div data-stop-row-click>
-            <InlineStatusSelect task={task} />
+            <InlineStatusSelect task={task} onRequestStart={onRequestStart} />
           </div>
         ) : (
           <Pill status={TASK_STATUS_PILL[task.status]} />

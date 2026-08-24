@@ -1,5 +1,6 @@
 import { axiosInstance } from "@/shared/lib/api-client";
 import type { components } from "@/shared/types/api-generated";
+import { calcUploadPercent } from "@/shared/utils";
 
 export type Task = components["schemas"]["Task"];
 export type TaskStatus = Task["status"];
@@ -60,18 +61,22 @@ const uploadPhoto = async (
   id: string,
   endpoint: "before-photo" | "after-photo",
   file: File,
+  onProgress?: (percent: number) => void,
 ): Promise<Task> => {
   const form = new FormData();
   form.append("photo", file);
-  const res = await axiosInstance.patch<components["schemas"]["TaskResponse"]>(
+  // No Content-Type header — axios detects FormData and sets it with the correct boundary automatically.
+  // Server uses POST (not PATCH as documented in the OpenAPI spec).
+  const res = await axiosInstance.post<components["schemas"]["TaskResponse"]>(
     `/tasks/${id}/${endpoint}`,
     form,
-    { headers: { "Content-Type": "multipart/form-data" } },
+    onProgress ? { onUploadProgress: (e) => onProgress(calcUploadPercent(e)) } : undefined,
   );
   return res.data.data;
 };
 
-export const uploadBeforePhoto = (id: string, file: File) => uploadPhoto(id, "before-photo", file);
+export const uploadBeforePhoto = (id: string, file: File, onProgress?: (percent: number) => void) =>
+  uploadPhoto(id, "before-photo", file, onProgress);
 export const uploadAfterPhoto = (id: string, file: File) => uploadPhoto(id, "after-photo", file);
 
 export const completeTask = async (id: string, data: CompleteTaskInput): Promise<Task> => {

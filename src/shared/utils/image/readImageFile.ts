@@ -5,7 +5,6 @@ import {
   MAX_FILE_SIZE,
   MAX_IMAGE_DIMENSION,
   READ_ERROR_MESSAGE,
-  SIZE_ERROR_MESSAGE,
 } from "./constants";
 
 /**
@@ -13,15 +12,16 @@ import {
  * Returns the DataURL (base64) of the original image on success.
  * Throws a descriptive Error on any validation failure.
  */
-export const readImageFile = (file: File): Promise<string> =>
+export const readImageFile = (file: File, maxSize = MAX_FILE_SIZE): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!ALLOWED_IMAGE_FORMATS.includes(file.type)) {
       reject(new Error(FORMAT_ERROR_MESSAGE));
       return;
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      reject(new Error(SIZE_ERROR_MESSAGE));
+    if (file.size > maxSize) {
+      const mb = Math.round(maxSize / (1024 * 1024));
+      reject(new Error(`File too large. Maximum allowed size is ${mb} MB.`));
       return;
     }
 

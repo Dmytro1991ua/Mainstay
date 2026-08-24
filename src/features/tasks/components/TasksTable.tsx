@@ -1,19 +1,26 @@
 import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, ClipboardList, Plus, RotateCcw } from "lucide-react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
 import type { OnSetTableState, RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
 import { DataTable } from "@/shared/ui/data-table";
 import { EmptyState } from "@/shared/ui/empty-state";
+import { toast } from "@/shared/ui/toast";
 
 import { useTaskColumns } from "../hooks/use-task-columns";
 import { useTaskDelete } from "../hooks/use-task-delete";
 import { useTaskForm } from "../hooks/use-task-form";
+import { useTaskStartSheet } from "../hooks/use-task-start-sheet";
 import { useTasksData } from "../hooks/use-tasks-data";
 import { isTaskOverdue } from "../utils";
 
 import { TaskDeleteDialog } from "./TaskDeleteDialog";
 import { TaskFormSheet } from "./TaskFormSheet";
+import { TaskStartSheet } from "./TaskStartSheet";
+
+import type { Task } from "../api/tasks.api";
+import type { TaskTab } from "../hooks/use-tasks-tab";
 
 const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
   if (task.status === "DONE") return { isHighlighted: true, highlightStyles: "bg-row-green" };
@@ -22,8 +29,42 @@ const getTaskRowHighlight = (task: Task): RowHighlightInfo => {
   return { isHighlighted: false, highlightStyles: "" };
 };
 
-import type { Task } from "../api/tasks.api";
-import type { TaskTab } from "../hooks/use-tasks-tab";
+// Rendered outside DataTable so its portal events never bubble to any <tr> onClick.
+const TaskStartSheetContainer = ({ task, onClose }: { task: Task; onClose: () => void }) => {
+  const {
+    photoUrl,
+    isUploading,
+    uploadProgress,
+    isStarting,
+    handlePhotoUpload,
+    handleStart: startTask,
+  } = useTaskStartSheet(task);
+
+  const handleStart = async () => {
+    if (!photoUrl) return;
+    try {
+      await startTask();
+      toast.success("Task started");
+      onClose();
+    } catch {
+      toast.error("Failed to start task");
+    }
+  };
+
+  return (
+    <TaskStartSheet
+      isOpen
+      taskTitle={task.title}
+      photoUrl={photoUrl}
+      isUploading={isUploading}
+      uploadProgress={uploadProgress}
+      isStarting={isStarting}
+      onClose={onClose}
+      onPhotoUpload={handlePhotoUpload}
+      onStart={handleStart}
+    />
+  );
+};
 
 type TasksTableProps = {
   tableState: TableUrlState;
@@ -59,6 +100,13 @@ export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: T
   } = useTaskForm();
   const { isDeleting, openDelete, deleteTarget, handleDelete, closeDelete } = useTaskDelete();
 
+  const navigate = useNavigate();
+  const [startTask, setStartTask] = useState<Task | null>(null);
+  // Radix Select fires onValueChange during pointerup. The click event fires after,
+  // still in the same browser task. Setting this ref synchronously in onRequestStart
+  // ensures handleRowClick sees it before the click lands.
+  const suppressRowClickRef = useRef(false);
+
   const columns = useTaskColumns({
     canManage,
     canDelete,
@@ -66,11 +114,17 @@ export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: T
     currentUserId,
     onEdit: openEdit,
     onDelete: openDelete,
+    onRequestStart: (task) => {
+      suppressRowClickRef.current = true;
+      setStartTask(task);
+    },
   });
 
-  const navigate = useNavigate();
-
   const handleRowClick = (task: Task) => {
+    if (suppressRowClickRef.current) {
+      suppressRowClickRef.current = false;
+      return;
+    }
     navigate({ to: "/tasks/$taskId", params: { taskId: task.id } });
   };
 
@@ -137,6 +191,13 @@ export const TasksTable = ({ tableState, onSetTableState, activeTab = "all" }: T
         onClose={closeDelete}
         isDeleting={isDeleting}
       />
+      {startTask && (
+        <TaskStartSheetContainer
+          key={startTask.id}
+          task={startTask}
+          onClose={() => setStartTask(null)}
+        />
+      )}
     </>
   );
 };

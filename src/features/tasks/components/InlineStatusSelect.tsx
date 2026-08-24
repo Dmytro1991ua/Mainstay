@@ -5,73 +5,51 @@ import { cn } from "@/shared/lib/utils";
 import { SelectContent, SelectItem } from "@/shared/ui/select";
 
 import { useInlineStatus } from "../hooks/use-inline-status";
-import { useTaskStartSheet } from "../hooks/use-task-start-sheet";
-
-import { TaskStartSheet } from "./TaskStartSheet";
 
 import type { Task } from "../api/tasks.api";
 
-export const InlineStatusSelect = ({ task }: { task: Task }) => {
-  const {
-    isOpen,
-    photoUrl,
-    isUploading,
-    isStarting,
-    openStart,
-    closeStart,
-    handlePhotoUpload,
-    handleStart,
-  } = useTaskStartSheet(task);
+type InlineStatusSelectProps = {
+  task: Task;
+  onRequestStart?: (task: Task) => void;
+};
 
+export const InlineStatusSelect = ({ task, onRequestStart }: InlineStatusSelectProps) => {
   const { current, pillStatus, pillClass, dotClassName, isPending, handleChange, statusOptions } =
-    useInlineStatus(task, openStart);
+    useInlineStatus(task, onRequestStart ? () => onRequestStart(task) : undefined);
 
   return (
-    <>
-      <SelectPrimitive.Root value={current} onValueChange={handleChange} disabled={isPending}>
-        <SelectPrimitive.Trigger
-          onClick={(e) => e.stopPropagation()}
-          className={cn(
-            "inline-flex w-30 cursor-pointer items-center justify-between rounded-full px-2 py-1 text-xs font-medium",
-            "transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
-            "disabled:pointer-events-none disabled:opacity-70",
-            pillClass,
-          )}
-        >
-          <span className="flex items-center gap-1 whitespace-nowrap">
-            <span className="flex size-3 shrink-0 items-center justify-center" aria-hidden>
-              {isPending ? (
-                <Loader2 className="size-3 animate-spin" />
-              ) : (
-                <span className={cn("size-1.5 rounded-full", dotClassName)} />
-              )}
-            </span>
-            {pillStatus}
+    <SelectPrimitive.Root value={current} onValueChange={handleChange} disabled={isPending}>
+      <SelectPrimitive.Trigger
+        onClick={(e) => e.stopPropagation()}
+        className={cn(
+          "inline-flex w-30 cursor-pointer items-center justify-between rounded-full px-2 py-1 text-xs font-medium",
+          "transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+          "disabled:pointer-events-none disabled:opacity-70",
+          pillClass,
+        )}
+      >
+        <span className="flex items-center gap-1 whitespace-nowrap">
+          <span className="flex size-3 shrink-0 items-center justify-center" aria-hidden>
+            {isPending ? (
+              <Loader2 className="size-3 animate-spin" />
+            ) : (
+              <span className={cn("size-1.5 rounded-full", dotClassName)} />
+            )}
           </span>
-          <SelectPrimitive.Icon asChild>
-            <ChevronDown className="size-3 shrink-0 opacity-60" />
-          </SelectPrimitive.Icon>
-        </SelectPrimitive.Trigger>
+          {pillStatus}
+        </span>
+        <SelectPrimitive.Icon asChild>
+          <ChevronDown className="size-3 shrink-0 opacity-60" />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
 
-        <SelectContent>
-          {statusOptions.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </SelectPrimitive.Root>
-
-      <TaskStartSheet
-        isOpen={isOpen}
-        taskTitle={task.title}
-        photoUrl={photoUrl}
-        isUploading={isUploading}
-        isStarting={isStarting}
-        onClose={closeStart}
-        onPhotoUpload={handlePhotoUpload}
-        onStart={handleStart}
-      />
-    </>
+      <SelectContent>
+        {statusOptions.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </SelectPrimitive.Root>
   );
 };

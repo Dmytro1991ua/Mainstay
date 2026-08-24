@@ -1,6 +1,6 @@
 import { Bell } from "lucide-react";
 
-import { NOTIFICATION_TYPE_CONFIG } from "@/shared/lib/notification-config";
+import { getNotificationTypeConfig } from "@/shared/lib/notification-config";
 import { cn } from "@/shared/lib/utils";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { formatTimeAgo } from "@/shared/utils/formatters";
@@ -22,7 +22,7 @@ export const RecentNotifications = ({ notifications }: { notifications: Notifica
   return (
     <div className={cn("divide-y divide-border")}>
       {notifications.map((n) => {
-        const { icon: Icon, iconClass, bgClass } = NOTIFICATION_TYPE_CONFIG[n.type];
+        const { icon: Icon, iconClass, bgClass } = getNotificationTypeConfig(n.type);
         return (
           <div key={n.id} className={cn("flex items-start gap-3 py-2.5")}>
             <span

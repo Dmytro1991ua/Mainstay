@@ -120,9 +120,10 @@ export const RecurringTaskFormSheet = ({
             <FormField id="schedule-assignee" label="Default assignee">
               <InfiniteCombobox
                 value={field.value ?? ""}
-                onValueChange={field.onChange}
+                onValueChange={(v) => field.onChange(v || null)}
                 options={assigneeOptions}
                 placeholder="Select assignee"
+                clearable
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage ?? false}
                 isFetchingNextPage={isFetchingNextPage}

@@ -4,7 +4,8 @@ export const ACCEPTED_IMAGE_TYPES: Record<string, string[]> = {
   "image/*": [".png", ".jpg", ".jpeg", ".webp"],
 };
 
-export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB — avatar uploads
+export const MAX_PHOTO_SIZE = 5 * 1024 * 1024; // 5 MB — task before/after photos
 
 export const MAX_IMAGE_DIMENSION = 4096; // px — validated before resize
 

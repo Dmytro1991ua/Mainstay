@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Popover as PopoverPrimitive } from "radix-ui";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -25,6 +25,7 @@ type InfiniteComboboxProps = {
   searchPlaceholder?: string;
   disabled?: boolean;
   error?: boolean;
+  clearable?: boolean;
   renderOption?: (opt: ComboboxOption) => React.ReactNode;
 };
 
@@ -39,6 +40,7 @@ export const InfiniteCombobox = ({
   searchPlaceholder = "Search...",
   disabled,
   error,
+  clearable,
   renderOption,
 }: InfiniteComboboxProps) => {
   const {
@@ -86,7 +88,22 @@ export const InfiniteCombobox = ({
           )}
         >
           <span className="truncate">{selected?.label ?? placeholder}</span>
-          <ChevronsUpDown className="size-4 shrink-0 text-text-3" />
+          <span className="flex shrink-0 items-center gap-1">
+            {clearable && selected && (
+              <button
+                type="button"
+                aria-label="Clear selection"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onValueChange?.("");
+                }}
+                className="rounded p-0.5 text-text-3 hover:text-text"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
+            <ChevronsUpDown className="size-4 text-text-3" />
+          </span>
         </button>
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>

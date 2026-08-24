@@ -2,18 +2,13 @@ import { PageShell } from "@/shared/ui/page-shell";
 
 import { useDashboard } from "../hooks/use-dashboard";
 
-import { DASHBOARD_WIDGETS_CONFIG } from "./configs";
-import { SkeletonStatsGrid } from "./DashboardSkeletons";
-import { StatsGrid } from "./StatsGrid";
-import { WidgetSection } from "./WidgetSection";
+import { DashboardError } from "./DashboardError";
+import { DashboardStats } from "./DashboardStats";
+import { DashboardWidgets } from "./DashboardWidgets";
 
 export const DashboardPage = () => {
   const data = useDashboard();
-  const { isTechnician } = data;
-
-  const widgets = isTechnician
-    ? DASHBOARD_WIDGETS_CONFIG.filter((w) => !w.technicianHidden)
-    : DASHBOARD_WIDGETS_CONFIG;
+  const { isTechnician, isLoading, isError, stats } = data;
 
   const subtitle = isTechnician
     ? "Your assigned tasks at a glance"
@@ -21,26 +16,14 @@ export const DashboardPage = () => {
 
   return (
     <PageShell title="Dashboard" subtitle={subtitle} variant="plain">
-      {data.isLoading ? (
-        <SkeletonStatsGrid />
+      {isError ? (
+        <DashboardError onRetry={data.refetch} />
       ) : (
-        <StatsGrid stats={data.stats} isTechnician={isTechnician} />
+        <>
+          <DashboardStats isLoading={isLoading} isTechnician={isTechnician} stats={stats} />
+          <DashboardWidgets data={data} isTechnician={isTechnician} />
+        </>
       )}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {widgets.map(({ key, title, skeleton, viewAllTo, badge, fullWidth, render }) => (
-          <WidgetSection
-            key={key}
-            title={title}
-            loading={data.isLoading}
-            skeleton={skeleton}
-            viewAllTo={viewAllTo}
-            badge={!data.isLoading ? badge?.(data) : undefined}
-            className={fullWidth ? "sm:col-span-2" : undefined}
-          >
-            {render(data)}
-          </WidgetSection>
-        ))}
-      </div>
     </PageShell>
   );
 };
