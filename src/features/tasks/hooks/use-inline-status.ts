@@ -17,6 +17,15 @@ export const useInlineStatus = (task: Task, onRequestStart?: () => void) => {
   const roles = useAuthStore((s) => s.user?.roles ?? []);
 
   const [optimistic, setOptimistic] = useState<TaskStatus | null>(null);
+  const [syncedStatus, setSyncedStatus] = useState<TaskStatus>(task.status);
+
+  // Drop the optimistic value once the server status changes (caught up or diverged).
+  // Adjusting state during render avoids the flicker of resetting after the mutation
+  // resolves but before the query cache reflects the new status.
+  if (task.status !== syncedStatus) {
+    setSyncedStatus(task.status);
+    setOptimistic(null);
+  }
 
   const isTechnician =
     roles.includes("TECHNICIAN") && !roles.some((r) => r === "ADMIN" || r === "MANAGER");
@@ -39,7 +48,6 @@ export const useInlineStatus = (task: Task, onRequestStart?: () => void) => {
         id: task.id,
         data: { status: newStatus as "OPEN" | "IN_PROGRESS" },
       });
-      setOptimistic(null);
     } catch (error) {
       setOptimistic(null);
       toast.error("Failed to update status", { description: getApiErrorMessage(error) });

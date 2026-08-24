@@ -1,4 +1,12 @@
-import { AlertTriangle, ClipboardList, Clock, Package, PackageX } from "lucide-react";
+import {
+  AlertTriangle,
+  CalendarCheck,
+  CalendarClock,
+  ClipboardList,
+  Clock,
+  Package,
+  PackageX,
+} from "lucide-react";
 
 import type { ChartConfig } from "@/shared/ui/chart";
 
@@ -10,12 +18,20 @@ import { OverdueTasksList } from "./OverdueTasksList";
 import { RecentNotifications } from "./RecentNotifications";
 import { RecentTasks } from "./RecentTasks";
 import { TaskStatusChart } from "./TaskStatusChart";
+import { TechnicianWorkload } from "./TechnicianWorkload";
 
 import type { DashboardWidgetConfig, StatCardVariant } from "./types";
 import type { Task } from "../api/dashboard-api";
 import type { LucideIcon } from "lucide-react";
 
-type StatsKey = "totalItems" | "lowStockCount" | "outOfStockCount" | "activeTasks" | "overdueCount";
+type StatsKey =
+  | "totalItems"
+  | "lowStockCount"
+  | "outOfStockCount"
+  | "activeTasks"
+  | "overdueCount"
+  | "activeSchedules"
+  | "schedulesThisWeek";
 
 export type Stats = Record<StatsKey, number> & { totalTasks: number };
 
@@ -59,6 +75,22 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     icon: Clock,
     variant: (value) => (value > 0 ? "red" : "default"),
     subtext: (value) => (value > 0 ? "Past due date" : "All on track"),
+  },
+  {
+    key: "activeSchedules",
+    label: "Active Schedules",
+    icon: CalendarClock,
+    technicianHidden: true,
+    variant: (value) => (value > 0 ? "accent" : "default"),
+    subtext: (value) => (value > 0 ? "Recurring schedules running" : "No active schedules"),
+  },
+  {
+    key: "schedulesThisWeek",
+    label: "Schedules Due",
+    icon: CalendarCheck,
+    technicianHidden: true,
+    variant: (value) => (value > 0 ? "amber" : "default"),
+    subtext: (value) => (value > 0 ? "Generating tasks this week" : "Nothing due this week"),
   },
 ];
 
@@ -108,6 +140,15 @@ export const DASHBOARD_WIDGETS_CONFIG: DashboardWidgetConfig[] = [
     skeleton: <SkeletonWidget />,
     viewAllTo: "/tasks",
     render: ({ dueThisWeekTasks }) => <DueThisWeekList tasks={dueThisWeekTasks} />,
+  },
+  {
+    key: "technician-workload",
+    title: "Technician Workload",
+    skeleton: <SkeletonWidget />,
+    viewAllTo: "/users",
+    technicianHidden: true,
+    fullWidth: true,
+    render: ({ technicians }) => <TechnicianWorkload technicians={technicians} />,
   },
   {
     key: "inventory-by-category",

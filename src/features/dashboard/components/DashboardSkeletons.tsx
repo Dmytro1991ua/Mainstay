@@ -1,15 +1,17 @@
+import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/skeleton";
 
-const CARD_KEYS = ["c1", "c2", "c3", "c4", "c5"] as const;
+import { getStatsColClass } from "./stats-grid-cols";
+
 const ROW_KEYS = ["r1", "r2", "r3", "r4", "r5"] as const;
 const LEGEND_KEYS = ["l1", "l2", "l3"] as const;
 const CAT_KEYS = ["k1", "k2", "k3", "k4", "k5", "k6"] as const;
 
-export const SkeletonStatsGrid = () => (
-  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-    {CARD_KEYS.map((k) => (
+export const SkeletonStatsGrid = ({ count = 5 }: { count?: number }) => (
+  <div className={cn("grid gap-4", getStatsColClass(count))}>
+    {Array.from({ length: count }, (_, i) => (
       <div
-        key={k}
+        key={i}
         className="rounded-xl border border-border border-l-4 border-l-accent bg-panel p-5 shadow-card"
       >
         <div className="flex items-start gap-4">

@@ -1,48 +1,43 @@
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 
-import { getApiErrorMessage } from "@/shared/lib/api-error";
-import { toast } from "@/shared/ui/toast";
+import { uploadBeforePhoto } from "../api/tasks.api";
 
 import { usePhotoUpload } from "./use-photo-upload";
-import { useUpdateTask, useUploadBeforePhoto } from "./use-tasks";
+import { TASKS_KEY, useUpdateTask } from "./use-tasks";
 
 import type { Task } from "../api/tasks.api";
 
 export const useTaskStartSheet = (task: Task) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const uploadMutation = useUploadBeforePhoto();
+  const queryClient = useQueryClient();
   const updateMutation = useUpdateTask();
+  const didUploadRef = useRef(false);
 
-  const { photoUrl, isUploading, handleUpload, reset } = usePhotoUpload((file) =>
-    uploadMutation.mutateAsync({ id: task.id, file }).then((t) => t.beforePhotoUrl ?? null),
+  const { photoUrl, isUploading, uploadProgress, handleUpload } = usePhotoUpload(
+    async (file, onProgress) => {
+      // Server requires IN_PROGRESS status before accepting a before-photo upload.
+      await updateMutation.mutateAsync({ id: task.id, data: { status: "IN_PROGRESS" } });
+      const updated = await uploadBeforePhoto(task.id, file, onProgress);
+      didUploadRef.current = true;
+      queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      return updated.beforePhotoUrl ?? null;
+    },
+    task.beforePhotoUrl ?? null,
   );
 
-  const openStart = () => {
-    reset();
-    setIsOpen(true);
-  };
-
-  const closeStart = () => setIsOpen(false);
-
+  // A fresh upload already set the status to IN_PROGRESS. Only when the sheet reuses
+  // an existing before-photo (re-opened after reverting to OPEN) do we set it here.
   const handleStart = async () => {
-    if (!photoUrl) return;
-    try {
+    if (!didUploadRef.current && task.status !== "IN_PROGRESS") {
       await updateMutation.mutateAsync({ id: task.id, data: { status: "IN_PROGRESS" } });
-      toast.success("Task started");
-      closeStart();
-    } catch (error) {
-      toast.error("Failed to start task", { description: getApiErrorMessage(error) });
     }
   };
 
   return {
-    isOpen,
     photoUrl,
     isUploading,
-    isStarting: updateMutation.isPending,
-    openStart,
-    closeStart,
+    isStarting: updateMutation.isPending && !isUploading,
+    uploadProgress,
     handlePhotoUpload: handleUpload,
     handleStart,
   };

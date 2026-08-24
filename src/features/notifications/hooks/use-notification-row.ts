@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { NOTIFICATION_TYPE_CONFIG } from "@/shared/lib/notification-config";
+import { getNotificationTypeConfig } from "@/shared/lib/notification-config";
 
 import { getNotificationNav } from "../utils";
 
@@ -17,7 +17,7 @@ export const useNotificationRow = ({ notification, onMarkRead, onDelete }: Param
 
   const nav = getNotificationNav(notification);
 
-  const typeConfig = NOTIFICATION_TYPE_CONFIG[notification.type];
+  const typeConfig = getNotificationTypeConfig(notification.type);
   const isInteractive = !!nav || !notification.isRead;
 
   const handleClick = () => {

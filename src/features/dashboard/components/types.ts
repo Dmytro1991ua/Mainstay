@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 export type StatCardVariant = "default" | "accent" | "amber" | "red" | "green";
 
-type DashboardData = ReturnType<typeof useDashboard>;
+export type DashboardData = ReturnType<typeof useDashboard>;
 
 export type DashboardWidgetConfig = {
   key: string;

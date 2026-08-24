@@ -4,6 +4,43 @@ import { sortBy } from "lodash";
 import { axiosInstance } from "@/shared/lib/api-client";
 import type { components } from "@/shared/types/api-generated";
 
+// Manual types until server PR #60 is reflected in generated types
+type TasksByStatus = { OPEN: number; IN_PROGRESS: number; DONE: number; CANCELLED: number };
+
+export type ManagerDashboardStats = {
+  tasks: {
+    total: number;
+    byStatus: TasksByStatus;
+    overdue: number;
+    createdThisMonth: number;
+    completedThisMonth: number;
+    avgCompletionDays: number | null;
+  };
+  inventory: { total: number; inStock: number; lowStock: number; outOfStock: number };
+  technicians: { id: string; userName: string; openTasks: number; overdueTasks: number }[];
+  schedules: { active: number; dueThisWeek: number };
+};
+
+export type TechnicianDashboardStats = {
+  myTasks: {
+    total: number;
+    byStatus: TasksByStatus;
+    overdue: number;
+    completedThisMonth: number;
+  };
+};
+
+export type DashboardStats = ManagerDashboardStats | TechnicianDashboardStats;
+
+export const isManagerStats = (d: DashboardStats): d is ManagerDashboardStats => "schedules" in d;
+
+export const getDashboardStats = async (): Promise<DashboardStats> => {
+  const { data } = await axiosInstance.get<{ success: true; data: DashboardStats }>(
+    "/dashboard/stats",
+  );
+  return data.data;
+};
+
 export type InventoryItem = components["schemas"]["InventoryItem"];
 export type Notification = components["schemas"]["Notification"];
 export type Task = components["schemas"]["Task"];

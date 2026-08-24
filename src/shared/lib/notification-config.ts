@@ -1,4 +1,4 @@
-import { AlertTriangle, Clock, PackageX } from "lucide-react";
+import { AlertTriangle, Bell, Clock, PackageX } from "lucide-react";
 
 import type { components } from "@/shared/types/api-generated";
 
@@ -14,6 +14,19 @@ type NotificationTypeDef = {
   unreadRowBg: string;
   unreadBorderClass: string;
 };
+
+export const FALLBACK_NOTIFICATION_TYPE: NotificationTypeDef = {
+  icon: Bell,
+  iconClass: "text-text-2",
+  bgClass: "bg-panel-2",
+  label: "Notification",
+  unreadRowBg: "bg-panel-2",
+  unreadBorderClass: "border-l-border",
+};
+
+export const getNotificationTypeConfig = (type: string): NotificationTypeDef =>
+  (NOTIFICATION_TYPE_CONFIG as Record<string, NotificationTypeDef>)[type] ??
+  FALLBACK_NOTIFICATION_TYPE;
 
 export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationTypeDef> = {
   LOW_STOCK: {

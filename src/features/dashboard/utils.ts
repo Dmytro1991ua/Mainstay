@@ -15,3 +15,11 @@ export const calculateStockStatus = (quantity: number, minStockLevel: number) =>
 
   return { fillPercent, isLowStock };
 };
+
+// Which stat cards a role sees — single source so the grid and its skeleton
+// count agree without hard-coded numbers. Generic + arg-passed to avoid importing
+// the card config here (that would create a configs → components → utils cycle).
+export const getVisibleStatCards = <T extends { technicianHidden?: true }>(
+  cards: readonly T[],
+  isTechnician?: boolean,
+): readonly T[] => (isTechnician ? cards.filter((c) => !c.technicianHidden) : cards);

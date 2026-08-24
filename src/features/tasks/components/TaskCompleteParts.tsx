@@ -28,12 +28,12 @@ export const TaskCompleteParts = ({
   onRemovePart,
 }: TaskCompletePartsProps) => (
   <>
-    <div className="flex gap-2">
+    <div className="flex min-w-0 gap-2">
       <select
         value={pickerItemId}
         onChange={(e) => onPickerItemChange(e.target.value)}
         className={cn(
-          "flex-1 truncate rounded-lg border border-border bg-panel px-2.5 py-2 text-sm shadow-sm transition-colors outline-none",
+          "min-w-0 flex-1 truncate rounded-lg border border-border bg-panel px-2.5 py-2 text-sm shadow-sm transition-colors outline-none",
           "focus:border-accent focus:ring-2 focus:ring-accent/50",
           !pickerItemId && "text-text-3",
         )}
@@ -54,7 +54,7 @@ export const TaskCompleteParts = ({
         value={pickerQty}
         onChange={(e) => onPickerQtyChange(Math.max(1, Number(e.target.value)))}
         className={cn(
-          "w-20 rounded-lg border border-border bg-panel px-2.5 py-2 text-sm shadow-sm outline-none",
+          "w-16 shrink-0 rounded-lg border border-border bg-panel px-2.5 py-2 text-sm shadow-sm outline-none",
           "focus:border-accent focus:ring-2 focus:ring-accent/50",
         )}
         placeholder="Qty"
@@ -65,7 +65,7 @@ export const TaskCompleteParts = ({
         size="sm"
         onClick={onAddPart}
         disabled={!pickerItemId}
-        className="shrink-0 self-start"
+        className="h-auto shrink-0 py-2"
       >
         <Plus className="size-3.5" />
         Add

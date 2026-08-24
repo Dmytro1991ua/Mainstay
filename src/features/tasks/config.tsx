@@ -177,6 +177,11 @@ export const getTaskDetailFields = (task: Task, options: DetailFieldOptions): De
         />
       ),
     });
+  } else if (task.beforePhotoUrl) {
+    fields.push({
+      label: "Before photo",
+      value: <PhotoLink href={task.beforePhotoUrl} alt="Before" />,
+    });
   }
 
   if (task.afterPhotoUrl) {

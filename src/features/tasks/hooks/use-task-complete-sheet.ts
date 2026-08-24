@@ -51,7 +51,7 @@ export const useTaskCompleteSheet = (task: Task, onClose: () => void) => {
     photoUrl: afterPhotoUrl,
     isUploading: isUploadingPhoto,
     handleUpload: handlePhotoUpload,
-  } = usePhotoUpload((file) =>
+  } = usePhotoUpload((file, _onProgress) =>
     uploadAfterPhotoMutation
       .mutateAsync({ id: task.id, file })
       .then((t) => t.afterPhotoUrl ?? null),
