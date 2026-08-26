@@ -21,6 +21,7 @@ const SKELETON_KEYS = [
 ];
 
 import { TaskCancelDialog } from "./TaskCancelDialog";
+import { TaskComments } from "./TaskComments";
 import { TaskCompleteSheet } from "./TaskCompleteSheet";
 import { TaskDeleteDialog } from "./TaskDeleteDialog";
 import { TaskDetailActions } from "./TaskDetailActions";
@@ -116,7 +117,9 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
           onUploadBeforePhoto: handleUploadBeforePhoto,
         })}
         skeletonKeys={SKELETON_KEYS}
-      />
+      >
+        <TaskComments taskId={task.id} canComment={!isTerminal} />
+      </DetailShell>
       <TaskFormSheet
         sheetMode={sheetMode}
         form={form}
