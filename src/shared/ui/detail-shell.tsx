@@ -26,6 +26,8 @@ type DetailShellProps = {
    * Pass the expected field labels so the skeleton matches the loaded layout.
    */
   skeletonKeys?: string[];
+  /** Extra content rendered below the fields card, inside the scroll area. */
+  children?: React.ReactNode;
 };
 
 export const DetailShell = ({
@@ -36,6 +38,7 @@ export const DetailShell = ({
   fields,
   isPending,
   skeletonKeys = DEFAULT_SKELETON_KEYS,
+  children,
 }: DetailShellProps) => {
   if (isPending) return <DetailShellSkeleton skeletonKeys={skeletonKeys} />;
 
@@ -54,6 +57,7 @@ export const DetailShell = ({
           </PropRow>
         ))}
       </div>
+      {children}
     </div>
   );
 };
