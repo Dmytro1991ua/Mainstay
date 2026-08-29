@@ -4,6 +4,355 @@
  */
 
 export interface paths {
+    "/assets/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Return the complete list of valid asset category values. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Array of category enum values */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetCategoriesResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Aggregate asset counts grouped by category. Returns totals for operational, down, and retired across all categories and per category. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Asset stats */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetStatsResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List assets. Supports pagination, search, sorting, `category` filter, and `status` filter (`OPERATIONAL`, `DOWN`, `RETIRED`). */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    sortBy?: "name" | "category" | "status" | "location" | "createdAt";
+                    sortOrder?: "asc" | "desc";
+                    search?: string;
+                    category?: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+                    status?: "OPERATIONAL" | "DOWN" | "RETIRED";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of assets */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Register a new asset. Requires ADMIN or MANAGER role. Serial number must be unique. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateAssetInput"];
+                };
+            };
+            responses: {
+                /** @description Asset created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetResponse"];
+                    };
+                };
+                /** @description Insufficient permissions */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Serial number already exists */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets/{id}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Maintenance history for one asset — every task recorded against it. Supports the same pagination, sorting, and filters as the tasks list. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    sortBy?: "createdAt" | "priority" | "status" | "title";
+                    sortOrder?: "asc" | "desc";
+                    search?: string;
+                    status?: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
+                    priority?: "LOW" | "MEDIUM" | "HIGH";
+                    category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+                    assignedTo?: string;
+                    overdue?: string;
+                    dueDateFrom?: string | null;
+                    dueDateTo?: string | null;
+                    recurringTaskId?: string;
+                    assetId?: string;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of the asset's tasks */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TasksListResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get a single asset by ID. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Asset found */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** @description Delete an asset. ADMIN only. Tasks recorded against it are preserved; their asset link is cleared. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Asset deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description ADMIN role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** @description Update an asset. Requires ADMIN or MANAGER role. Serial number is not updatable. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateAssetInput"];
+                };
+            };
+            responses: {
+                /** @description Asset updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetResponse"];
+                    };
+                };
+                /** @description Insufficient permissions */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
     "/auth/register": {
         parameters: {
             query?: never;
@@ -204,6 +553,114 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Request a password reset email. Always returns 204 regardless of whether the email exists — prevents user enumeration. The email contains a single-use link that expires in 1 hour. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ForgotPasswordInput"];
+                };
+            };
+            responses: {
+                /** @description Request received — if the email is registered, a reset link has been sent */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Too many attempts — rate limited */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Reset the password using the token from the reset email. The token is single-use and expires in 1 hour. On success, all active sessions are revoked and the user must log in again. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ResetPasswordInput"];
+                };
+            };
+            responses: {
+                /** @description Password updated — all sessions revoked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Token invalid, expired, or password does not meet requirements */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Too many attempts — rate limited */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/accept-invite": {
         parameters: {
             query?: never;
@@ -265,6 +722,160 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/checklist-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List checklist templates for all categories. All authenticated users. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description All checklist templates */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ChecklistTemplatesListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/checklist-templates/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get checklist template for a specific inventory category. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Checklist template found */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ChecklistTemplateResponse"];
+                    };
+                };
+                /** @description No template exists for this category */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Update checklist items for a category. ADMIN or MANAGER only. Creates the template if it does not yet exist. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChecklistTemplateInput"];
+                };
+            };
+            responses: {
+                /** @description Template updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ChecklistTemplateResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/dashboard/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns dashboard statistics. ADMIN/MANAGER receive full stats (all tasks, inventory health, technician workloads, schedule summary). TECHNICIAN receives their own task breakdown only. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Dashboard stats */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DashboardStatsResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -632,7 +1243,7 @@ export interface paths {
                     page?: number;
                     limit?: number;
                     isRead?: string;
-                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE";
+                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED";
                 };
                 header?: never;
                 path?: never;
@@ -829,6 +1440,448 @@ export interface paths {
         };
         trace?: never;
     };
+    "/recurring-tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List recurring maintenance schedules. ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    isActive?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of recurring task schedules */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTasksListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Create a recurring maintenance schedule. The first task will be generated on firstDueAt; subsequent tasks are generated every intervalDays thereafter. ADMIN/MANAGER only. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateRecurringTaskInput"];
+                };
+            };
+            responses: {
+                /** @description Schedule created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTaskResponse"];
+                    };
+                };
+                /** @description Assignee not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/recurring-tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get a single recurring schedule by ID. ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Schedule found */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTaskResponse"];
+                    };
+                };
+                /** @description Schedule not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** @description Delete a recurring schedule. Generated tasks are kept but lose their schedule link. ADMIN only. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Schedule deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description ADMIN role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Schedule not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** @description Update a recurring schedule's title, interval, assignee, or other fields. ADMIN/MANAGER only. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateRecurringTaskInput"];
+                };
+            };
+            responses: {
+                /** @description Schedule updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTaskResponse"];
+                    };
+                };
+                /** @description Schedule or assignee not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/recurring-tasks/{id}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Pause a schedule — no tasks will be generated until resumed. ADMIN/MANAGER only. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Schedule paused */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTaskResponse"];
+                    };
+                };
+                /** @description Schedule not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Schedule is already paused */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/recurring-tasks/{id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Resume a paused schedule. ADMIN/MANAGER only. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Schedule resumed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecurringTaskResponse"];
+                    };
+                };
+                /** @description Schedule not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Schedule is already active */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List all comments for a task, ordered oldest first. All authenticated roles. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Comments list */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskCommentsListResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Add a comment to a task. All authenticated roles. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateTaskCommentInput"];
+                };
+            };
+            responses: {
+                /** @description Comment created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskCommentResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/comments/{commentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete a comment. Authors can delete their own; ADMIN can delete any. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    commentId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not your comment */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Comment not found, or it does not belong to this task */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks": {
         parameters: {
             query?: never;
@@ -836,20 +1889,24 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description List tasks. Supports search (title + description), `status`, `assignedTo`, `overdue=true`, and `dueDateFrom`/`dueDateTo` date range filters. */
+        /** @description List tasks. Supports search, status, priority, category, assignedTo, overdue, and date range filters. */
         get: {
             parameters: {
                 query?: {
                     page?: number;
                     limit?: number;
-                    sortBy?: "createdAt" | "status" | "title";
+                    sortBy?: "createdAt" | "priority" | "status" | "title";
                     sortOrder?: "asc" | "desc";
                     search?: string;
                     status?: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
+                    priority?: "LOW" | "MEDIUM" | "HIGH";
+                    category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
                     assignedTo?: string;
                     overdue?: string;
                     dueDateFrom?: string | null;
                     dueDateTo?: string | null;
+                    recurringTaskId?: string;
+                    assetId?: string;
                 };
                 header?: never;
                 path?: never;
@@ -991,7 +2048,7 @@ export interface paths {
         };
         options?: never;
         head?: never;
-        /** @description Update a task. ADMIN/MANAGER may update any field. TECHNICIAN may only update `status` on tasks assigned to them. */
+        /** @description Update a task. ADMIN/MANAGER may update any field. TECHNICIAN may only update status on tasks assigned to them. */
         patch: {
             parameters: {
                 query?: never;
@@ -1016,7 +2073,7 @@ export interface paths {
                         "application/json": components["schemas"]["TaskResponse"];
                     };
                 };
-                /** @description Technician attempting to update a task not assigned to them, or sending fields other than status */
+                /** @description Insufficient permissions */
                 403: {
                     headers: {
                         [name: string]: unknown;
@@ -1038,6 +2095,136 @@ export interface paths {
         };
         trace?: never;
     };
+    "/tasks/{id}/before-photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Upload a before photo for a task (multipart/form-data, field: photo). TECHNICIAN must be assigned to the task. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Before photo uploaded */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+                /** @description No file provided or invalid file type */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not assigned to this task */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/after-photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Upload an after photo for a task (multipart/form-data, field: photo). Required before completing the task. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description After photo uploaded */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+                /** @description No file provided or invalid file type */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not assigned to this task */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks/{id}/complete": {
         parameters: {
             query?: never;
@@ -1047,7 +2234,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Mark a task as COMPLETED. Requires after photo uploaded, all checklist items checked, and adequate inventory for parts used. */
+        /** @description Complete a task. Requires after photo to be uploaded first. Validates checklist against the category template and decrements inventory for parts used. */
         post: {
             parameters: {
                 query?: never;
@@ -1072,58 +2259,7 @@ export interface paths {
                         "application/json": components["schemas"]["TaskResponse"];
                     };
                 };
-                /** @description Completion gates not met (missing after photo, unchecked items, insufficient inventory) */
-                422: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/tasks/{id}/before-photo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** @description Upload a before photo for a task. Only allowed when task status is IN_PROGRESS. Accepts multipart/form-data with a `photo` field (JPEG, PNG, or WebP; max 5 MB). */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Photo uploaded — returns the updated task */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["TaskResponse"];
-                    };
-                };
-                /** @description Task not in IN_PROGRESS status */
+                /** @description After photo missing or checklist incomplete */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -1132,78 +2268,26 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-            };
-        };
-        trace?: never;
-    };
-    "/tasks/{id}/after-photo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** @description Upload an after photo for a task. Accepts multipart/form-data with a `photo` field (JPEG, PNG, or WebP; max 5 MB). */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Photo uploaded — returns the updated task */
-                200: {
+                /** @description Not assigned to this task */
+                403: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TaskResponse"];
+                        "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-            };
-        };
-        trace?: never;
-    };
-    "/checklist-templates/{category}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get the checklist template for a given task category. */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Checklist template */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ChecklistTemplateResponse"];
-                    };
-                };
-                /** @description Category not found */
+                /** @description Task or inventory item not found */
                 404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task already completed or insufficient inventory stock */
+                409: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1213,8 +2297,6 @@ export interface paths {
                 };
             };
         };
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1236,6 +2318,7 @@ export interface paths {
                     limit?: number;
                     role?: "ADMIN" | "MANAGER" | "TECHNICIAN";
                     status?: "ACTIVE" | "INACTIVE";
+                    available?: string;
                     sortBy?: "createdAt" | "userName" | "email";
                     sortOrder?: "asc" | "desc";
                 };
@@ -1303,7 +2386,34 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /** @description Permanently delete the authenticated user's own account. All active sessions are revoked before deletion. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Account deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description User not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -1682,6 +2792,87 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/me/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Sign out of all devices by revoking every active refresh token. The caller's current access token remains valid until it expires (≤15 min). */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description All sessions revoked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Change the authenticated user's password. Requires the current password for verification. Revokes all active sessions — the user must log in again on all devices. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ChangePasswordInput"];
+                };
+            };
+            responses: {
+                /** @description Password changed — all sessions revoked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Current password incorrect, or new password same as current */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
     "/users/me/avatar": {
         parameters: {
             query?: never;
@@ -1787,19 +2978,240 @@ export interface paths {
         };
         trace?: never;
     };
+    "/users/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get the authenticated user's notification preferences. Missing keys default to enabled — a fresh account with no saved preferences receives all notification types. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Current preferences */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NotificationPreferencesResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Partially update notification preferences. Only the keys you send are changed — omitted keys stay as they are. Set a type to false to stop receiving those notifications. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesInput"];
+                };
+            };
+            responses: {
+                /** @description Updated preferences */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NotificationPreferencesResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        RegisterResponse: {
+        AssetCategoriesResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: ("HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING")[];
+        };
+        AssetStatsResponse: {
             /** @enum {boolean} */
             success: true;
             data: {
+                total: number;
+                operational: number;
+                down: number;
+                retired: number;
+                byCategory: {
+                    HVAC?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    ELECTRICAL?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    PLUMBING?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    MECHANICAL?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    VEHICLE?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    IT_EQUIPMENT?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    SAFETY_SYSTEM?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                    BUILDING?: {
+                        total: number;
+                        operational: number;
+                        down: number;
+                        retired: number;
+                    };
+                };
+            };
+        };
+        AssetListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Asset"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        Asset: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            serialNumber: string;
+            /** @enum {string} */
+            category: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+            location: string;
+            /** @enum {string} */
+            status: "OPERATIONAL" | "DOWN" | "RETIRED";
+            manufacturer: string | null;
+            model: string | null;
+            /** Format: date-time */
+            installDate: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        TasksListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Task"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        Task: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description: string | null;
+            /** @enum {string} */
+            status: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
+            /** @enum {string} */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /** @enum {string|null} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
+            /** Format: uuid */
+            assignedTo: string | null;
+            assignee: {
                 /** Format: uuid */
                 id: string;
                 userName: string;
                 email: string;
-            };
+            } | null;
+            /** Format: date-time */
+            dueDate: string | null;
+            /** Format: uri */
+            beforePhotoUrl: string | null;
+            /** Format: uri */
+            afterPhotoUrl: string | null;
+            cancellationReason: string | null;
+            /** Format: date-time */
+            cancelledAt: string | null;
+            /** Format: uuid */
+            cancelledBy: string | null;
+            /** Format: uuid */
+            recurringTaskId: string | null;
+            /** Format: uuid */
+            assetId: string | null;
+            asset: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                serialNumber: string;
+            } | null;
+            partsUsed: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                inventoryItemId: string;
+                quantity: number;
+                inventoryItem: {
+                    name: string;
+                    serialNumber: string;
+                };
+            }[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
         ErrorResponse: {
             /** @enum {boolean} */
@@ -1812,6 +3224,57 @@ export interface components {
                 fields?: {
                     [key: string]: string[];
                 };
+            };
+        };
+        AssetResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Asset"];
+        };
+        CreateAssetInput: {
+            /** @example Rooftop HVAC Unit #2 */
+            name: string;
+            /** @example HVAC-RTU-002 */
+            serialNumber: string;
+            /** @enum {string} */
+            category: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+            /** @example Building A — Roof */
+            location: string;
+            /**
+             * @default OPERATIONAL
+             * @enum {string}
+             */
+            status: "OPERATIONAL" | "DOWN" | "RETIRED";
+            /** @example Carrier */
+            manufacturer?: string;
+            /** @example 48TCED12 */
+            model?: string;
+            /**
+             * Format: date-time
+             * @example 2021-06-15T00:00:00.000Z
+             */
+            installDate?: string | null;
+        };
+        UpdateAssetInput: {
+            name?: string;
+            /** @enum {string} */
+            category?: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+            location?: string;
+            /** @enum {string} */
+            status?: "OPERATIONAL" | "DOWN" | "RETIRED";
+            manufacturer?: string | null;
+            model?: string | null;
+            /** Format: date-time */
+            installDate?: string | null;
+        };
+        RegisterResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
             };
         };
         RegisterInput: {
@@ -1843,6 +3306,22 @@ export interface components {
             /** @example Password123 */
             password: string;
         };
+        ForgotPasswordInput: {
+            /**
+             * Format: email
+             * @example john@example.com
+             */
+            email: string;
+        };
+        ResetPasswordInput: {
+            /**
+             * Format: uuid
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            token: string;
+            /** @example NewPassword123 */
+            newPassword: string;
+        };
         AcceptInviteInput: {
             /**
              * Format: uuid
@@ -1853,6 +3332,86 @@ export interface components {
             userName: string;
             /** @example Password123 */
             password: string;
+        };
+        ChecklistTemplatesListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["ChecklistTemplate"][];
+        };
+        ChecklistTemplate: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            items: string[];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ChecklistTemplateResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["ChecklistTemplate"];
+        };
+        UpdateChecklistTemplateInput: {
+            /**
+             * @example [
+             *       "Filter replaced?",
+             *       "Unit tested?",
+             *       "Area cleaned?"
+             *     ]
+             */
+            items: string[];
+        };
+        DashboardStatsResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["ManagerDashboard"] | components["schemas"]["TechnicianDashboard"];
+        };
+        ManagerDashboard: {
+            tasks: {
+                total: number;
+                byStatus: {
+                    OPEN: number;
+                    IN_PROGRESS: number;
+                    DONE: number;
+                    CANCELLED: number;
+                };
+                overdue: number;
+                createdThisMonth: number;
+                completedThisMonth: number;
+                /** @example 3.2 */
+                avgCompletionDays: number | null;
+            };
+            inventory: {
+                total: number;
+                inStock: number;
+                lowStock: number;
+                outOfStock: number;
+            };
+            technicians: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                openTasks: number;
+                overdueTasks: number;
+            }[];
+            schedules: {
+                active: number;
+                dueThisWeek: number;
+            };
+        };
+        TechnicianDashboard: {
+            myTasks: {
+                total: number;
+                byStatus: {
+                    OPEN: number;
+                    IN_PROGRESS: number;
+                    DONE: number;
+                    CANCELLED: number;
+                };
+                overdue: number;
+                completedThisMonth: number;
+            };
         };
         InventoryCategoriesResponse: {
             /** @enum {boolean} */
@@ -1990,7 +3549,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE";
+            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED";
             /** @example Low stock: "Cordless Drill" has 2 units (min: 5). */
             message: string;
             isRead: boolean;
@@ -2026,10 +3585,10 @@ export interface components {
             /** @example true */
             isRead: boolean;
         };
-        TasksListResponse: {
+        RecurringTasksListResponse: {
             /** @enum {boolean} */
             success: true;
-            data: components["schemas"]["Task"][];
+            data: components["schemas"]["RecurringTask"][];
             meta: {
                 total: number;
                 page: number;
@@ -2037,52 +3596,15 @@ export interface components {
                 pages: number;
             };
         };
-        TaskPartUsage: {
-            /** Format: uuid */
-            inventoryItemId: string;
-            inventoryItem?: {
-                /** Format: uuid */
-                id: string;
-                name: string;
-            };
-            quantityUsed: number;
-        };
-        ChecklistItem: {
-            item: string;
-            checked: boolean;
-        };
-        ChecklistTemplate: {
-            /** @enum {string} */
-            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
-            items: string[];
-        };
-        ChecklistTemplateResponse: {
-            /** @enum {boolean} */
-            success: true;
-            data: components["schemas"]["ChecklistTemplate"];
-        };
-        CompleteTaskInput: {
-            checklist: string[];
-            partsUsed: {
-                /** Format: uuid */
-                inventoryItemId: string;
-                quantity: number;
-            }[];
-        };
-        Task: {
+        RecurringTask: {
             /** Format: uuid */
             id: string;
             title: string;
             description: string | null;
             /** @enum {string} */
-            status: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
-            /** @enum {string} */
-            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /** @enum {string|null} */
             category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
-            beforePhotoUrl: string | null;
-            afterPhotoUrl: string | null;
-            partsUsed: components["schemas"]["TaskPartUsage"][];
             /** Format: uuid */
             assignedTo: string | null;
             assignee: {
@@ -2091,20 +3613,94 @@ export interface components {
                 userName: string;
                 email: string;
             } | null;
+            intervalDays: number;
             /** Format: date-time */
-            dueDate: string | null;
-            cancellationReason: string | null;
-            /** Format: date-time */
-            cancelledAt: string | null;
+            nextDueAt: string;
+            isActive: boolean;
             /** Format: uuid */
-            recurringTaskId: string | null;
+            createdBy: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
         };
-        CancelTaskInput: {
-            reason: string;
+        RecurringTaskResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["RecurringTask"];
+        };
+        CreateRecurringTaskInput: {
+            /** @example Replace HVAC filter — Building A */
+            title: string;
+            /** @example Replace the return-air filter with a MERV-13 unit. */
+            description?: string;
+            /**
+             * @default MEDIUM
+             * @example MEDIUM
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /**
+             * @example HVAC
+             * @enum {string}
+             */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /**
+             * Format: uuid
+             * @example f47ac10b-58cc-4372-a567-0e02b2c3d479
+             */
+            assignedTo?: string;
+            /** @example 90 */
+            intervalDays: number;
+            /**
+             * Format: date-time
+             * @example 2026-09-01T00:00:00.000Z
+             */
+            firstDueAt: string | null;
+        };
+        UpdateRecurringTaskInput: {
+            title?: string;
+            description?: string;
+            /**
+             * @example HIGH
+             * @enum {string}
+             */
+            priority?: "LOW" | "MEDIUM" | "HIGH";
+            /** @enum {string|null} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
+            /** Format: uuid */
+            assignedTo?: string | null;
+            /** @example 30 */
+            intervalDays?: number;
+        };
+        TaskCommentsListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["TaskComment"][];
+        };
+        TaskComment: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            taskId: string;
+            body: string;
+            author: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
+            };
+            /** Format: date-time */
+            createdAt: string;
+        };
+        TaskCommentResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["TaskComment"];
+        };
+        CreateTaskCommentInput: {
+            /** @example Found worn bearings at joint 3. Need replacement part #B-204. */
+            body: string;
         };
         TaskResponse: {
             /** @enum {boolean} */
@@ -2117,19 +3713,31 @@ export interface components {
             /** @example Filter is overdue for replacement. */
             description?: string;
             /**
+             * @default MEDIUM
+             * @example MEDIUM
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /**
+             * @example HVAC
+             * @enum {string}
+             */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /**
              * Format: uuid
              * @example f47ac10b-58cc-4372-a567-0e02b2c3d479
              */
             assignedTo?: string;
             /**
+             * Format: uuid
+             * @example f47ac10b-58cc-4372-a567-0e02b2c3d479
+             */
+            assetId?: string;
+            /**
              * Format: date-time
              * @example 2026-07-01T00:00:00.000Z
              */
             dueDate?: string | null;
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
-            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
         };
         UpdateTaskInput: {
             title?: string;
@@ -2138,15 +3746,44 @@ export interface components {
              * @example IN_PROGRESS
              * @enum {string}
              */
-            status?: "OPEN" | "IN_PROGRESS";
+            status?: "OPEN" | "IN_PROGRESS" | "DONE" | "CANCELLED";
+            /**
+             * @example HIGH
+             * @enum {string}
+             */
+            priority?: "LOW" | "MEDIUM" | "HIGH";
+            /** @enum {string|null} */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
             /** Format: uuid */
             assignedTo?: string | null;
+            /** Format: uuid */
+            assetId?: string | null;
             /** Format: date-time */
             dueDate?: string | null;
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
-            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+        };
+        CompleteTaskInput: {
+            /**
+             * @default []
+             * @example [
+             *       "Unit powered off before work?",
+             *       "Filter/component replaced or repaired?"
+             *     ]
+             */
+            checklist: string[];
+            /**
+             * @default []
+             * @example [
+             *       {
+             *         "inventoryItemId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+             *         "quantity": 2
+             *       }
+             *     ]
+             */
+            partsUsed: {
+                /** Format: uuid */
+                inventoryItemId: string;
+                quantity: number;
+            }[];
         };
         UsersListResponse: {
             /** @enum {boolean} */
@@ -2172,7 +3809,11 @@ export interface components {
              * @enum {string}
              */
             status: "ACTIVE" | "INACTIVE";
-            /** @enum {string} */
+            /**
+             * @description Technicians only. null for ADMIN/MANAGER.
+             * @example AVAILABLE
+             * @enum {string|null}
+             */
             availability: "AVAILABLE" | "RESERVED" | "BUSY" | null;
             /** Format: date-time */
             createdAt: string;
@@ -2243,6 +3884,12 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
         };
+        ChangePasswordInput: {
+            /** @example OldPassword123 */
+            currentPassword: string;
+            /** @example NewPassword456 */
+            newPassword: string;
+        };
         UpdateUserStatusInput: {
             /**
              * @example INACTIVE
@@ -2250,75 +3897,22 @@ export interface components {
              */
             status: "ACTIVE" | "INACTIVE";
         };
-        RecurringTask: {
-            /** Format: uuid */
-            id: string;
-            title: string;
-            description: string | null;
-            /** @enum {string} */
-            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
-            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
-            /** Format: uuid */
-            assignedTo: string | null;
-            assignee: {
-                /** Format: uuid */
-                id: string;
-                userName: string;
-                email: string;
-            } | null;
-            intervalDays: number;
-            /** Format: date-time */
-            nextDueAt: string;
-            isActive: boolean;
-            /** Format: uuid */
-            createdBy: string;
-            creator: {
-                /** Format: uuid */
-                id: string;
-                userName: string;
-                email: string;
+        NotificationPreferencesResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                LOW_STOCK: boolean;
+                OUT_OF_STOCK: boolean;
+                TASK_OVERDUE: boolean;
             };
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
         };
-        RecurringTaskResponse: {
-            /** @enum {boolean} */
-            success: true;
-            data: components["schemas"]["RecurringTask"];
-        };
-        RecurringTasksListResponse: {
-            /** @enum {boolean} */
-            success: true;
-            data: components["schemas"]["RecurringTask"][];
-        };
-        CreateRecurringTaskInput: {
-            title: string;
-            description?: string;
-            intervalDays: number;
-            /** Format: date-time */
-            firstDueAt: string;
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
-            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
-            /** Format: uuid */
-            assignedTo?: string;
-        };
-        UpdateRecurringTaskInput: {
-            title?: string;
-            description?: string;
-            intervalDays?: number;
-            /** Format: date-time */
-            nextDueAt?: string;
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-            /** @enum {string} */
-            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
-            /** Format: uuid */
-            assignedTo?: string | null;
+        NotificationPreferencesInput: {
+            /** @example true */
+            LOW_STOCK?: boolean;
+            /** @example true */
+            OUT_OF_STOCK?: boolean;
+            /** @example false */
+            TASK_OVERDUE?: boolean;
         };
     };
     responses: never;

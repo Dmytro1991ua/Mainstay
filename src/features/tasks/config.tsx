@@ -33,14 +33,12 @@ export const TASK_PRIORITY_CONFIG: Record<TaskPriority, { label: string; classNa
   LOW: { label: "Low", className: "border-green-border bg-green-soft text-green" },
   MEDIUM: { label: "Medium", className: "border-amber-border bg-amber-soft text-amber" },
   HIGH: { label: "High", className: "border-red-border bg-red-soft text-red" },
-  URGENT: { label: "Urgent", className: "border-red-border bg-red-soft text-red font-semibold" },
 };
 
 export const TASK_PRIORITY_OPTIONS = [
   { value: "LOW", label: "Low" },
   { value: "MEDIUM", label: "Medium" },
   { value: "HIGH", label: "High" },
-  { value: "URGENT", label: "Urgent" },
 ];
 
 export const TASK_CATEGORY_CONFIG: Record<TaskCategory, { label: string }> = {
@@ -78,7 +76,6 @@ export const TASK_FILTER_CONFIG: FilterConfig[] = [
       { label: "Low", value: "LOW" },
       { label: "Medium", value: "MEDIUM" },
       { label: "High", value: "HIGH" },
-      { label: "Urgent", value: "URGENT" },
     ],
   },
   {

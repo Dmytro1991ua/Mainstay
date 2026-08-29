@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TASK_PRIORITIES = ["LOW", "MEDIUM", "HIGH", "URGENT"] as const;
+export const TASK_PRIORITIES = ["LOW", "MEDIUM", "HIGH"] as const;
 
 export const TASK_CATEGORIES = [
   "ELECTRICAL",

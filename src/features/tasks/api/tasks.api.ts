@@ -5,15 +5,16 @@ import { calcUploadPercent } from "@/shared/utils";
 export type Task = components["schemas"]["Task"];
 export type TaskStatus = Task["status"];
 export type TaskCategory = NonNullable<Task["category"]>;
-export type TaskPartUsage = components["schemas"]["TaskPartUsage"];
-export type ChecklistItem = components["schemas"]["ChecklistItem"];
 export type ChecklistTemplate = components["schemas"]["ChecklistTemplate"];
 export type CreateTaskInput = components["schemas"]["CreateTaskInput"];
 export type UpdateTaskInput = components["schemas"]["UpdateTaskInput"];
 export type CompleteTaskInput = components["schemas"]["CompleteTaskInput"];
-export type CancelTaskInput = components["schemas"]["CancelTaskInput"];
 
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+// POST /tasks/:id/cancel is live (ADMIN/MANAGER, requires a reason) but not yet in the
+// OpenAPI spec, so it isn't in the generated types. Typed locally until the spec documents it.
+export type CancelTaskInput = { reason: string };
+
+export type TaskPriority = Task["priority"];
 
 export type TaskListParams = {
   page?: number;
