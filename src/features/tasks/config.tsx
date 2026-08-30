@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
 
 import { cn } from "@/shared/lib/utils";
@@ -112,6 +113,23 @@ export const getTaskDetailFields = (task: Task, options: DetailFieldOptions): De
       label: "Category",
       value: task.category ? (
         <span className="text-sm text-text">{TASK_CATEGORY_CONFIG[task.category].label}</span>
+      ) : (
+        <span className="text-text-3">—</span>
+      ),
+    },
+    {
+      label: "Asset",
+      value: task.asset ? (
+        <Link
+          to="/assets/$assetId"
+          params={{ assetId: task.asset.id }}
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          {task.asset.name}
+          <span className="ml-2 font-mono text-xs font-normal text-text-3">
+            {task.asset.serialNumber}
+          </span>
+        </Link>
       ) : (
         <span className="text-text-3">—</span>
       ),
