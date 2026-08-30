@@ -34,6 +34,7 @@ import { Route as AppUsersUserIdRouteImport } from './routes/_app.users.$userId'
 import { Route as AppTasksTaskIdRouteImport } from './routes/_app.tasks.$taskId'
 import { Route as AppRecurringTasksScheduleIdRouteImport } from './routes/_app.recurring-tasks.$scheduleId'
 import { Route as AppInventoryItemIdRouteImport } from './routes/_app.inventory.$itemId'
+import { Route as AppAssetsAssetIdRouteImport } from './routes/_app.assets.$assetId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -159,6 +160,11 @@ const AppInventoryItemIdRoute = AppInventoryItemIdRouteImport.update({
   path: '/$itemId',
   getParentRoute: () => AppInventoryRoute,
 } as any)
+const AppAssetsAssetIdRoute = AppAssetsAssetIdRouteImport.update({
+  id: '/$assetId',
+  path: '/$assetId',
+  getParentRoute: () => AppAssetsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/accept-invite': typeof AuthAcceptInviteRoute
+  '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/inventory/$itemId': typeof AppInventoryItemIdRoute
   '/_app/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/assets/$assetId'
     | '/inventory/$itemId'
     | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/auth/accept-invite'
+    | '/assets/$assetId'
     | '/inventory/$itemId'
     | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/_auth/register'
     | '/_auth/reset-password'
     | '/auth/accept-invite'
+    | '/_app/assets/$assetId'
     | '/_app/inventory/$itemId'
     | '/_app/recurring-tasks/$scheduleId'
     | '/_app/tasks/$taskId'
@@ -492,14 +504,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInventoryItemIdRouteImport
       parentRoute: typeof AppInventoryRoute
     }
+    '/_app/assets/$assetId': {
+      id: '/_app/assets/$assetId'
+      path: '/$assetId'
+      fullPath: '/assets/$assetId'
+      preLoaderRoute: typeof AppAssetsAssetIdRouteImport
+      parentRoute: typeof AppAssetsRoute
+    }
   }
 }
 
 interface AppAssetsRouteChildren {
+  AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
 }
 
 const AppAssetsRouteChildren: AppAssetsRouteChildren = {
+  AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
 }
 

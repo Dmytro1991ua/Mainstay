@@ -7,6 +7,7 @@ export type AssetStatus = Asset["status"];
 export type CreateAssetInput = components["schemas"]["CreateAssetInput"];
 export type UpdateAssetInput = components["schemas"]["UpdateAssetInput"];
 export type AssetStats = components["schemas"]["AssetStatsResponse"]["data"];
+export type AssetTask = components["schemas"]["Task"];
 
 export type AssetListParams = {
   page?: number;
@@ -59,4 +60,13 @@ export const updateAsset = async (id: string, data: UpdateAssetInput) => {
 
 export const deleteAsset = async (id: string) => {
   await axiosInstance.delete(`/assets/${id}`);
+};
+
+export const fetchAssetTasks = async (id: string): Promise<AssetTask[]> => {
+  const res = await axiosInstance.get<components["schemas"]["TasksListResponse"]>(
+    `/assets/${id}/tasks`,
+    { params: { limit: 50 } },
+  );
+
+  return res.data.data;
 };

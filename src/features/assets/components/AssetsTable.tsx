@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, HardHat, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -13,12 +14,16 @@ import { useAssetsData } from "../hooks/use-assets-data";
 import { AssetDeleteDialog } from "./AssetDeleteDialog";
 import { AssetFormSheet } from "./AssetFormSheet";
 
+import type { Asset } from "../api/assets.api";
+
 type AssetsTableProps = {
   tableState: TableUrlState;
   onSetTableState: OnSetTableState;
 };
 
 export const AssetsTable = ({ tableState, onSetTableState }: AssetsTableProps) => {
+  const navigate = useNavigate();
+
   const {
     assets,
     isLoading,
@@ -40,6 +45,10 @@ export const AssetsTable = ({ tableState, onSetTableState }: AssetsTableProps) =
     onEdit: openEdit,
     onDelete: openDelete,
   });
+
+  const handleRowClick = (asset: Asset) => {
+    navigate({ to: "/assets/$assetId", params: { assetId: asset.id } });
+  };
 
   return (
     <>
@@ -84,6 +93,7 @@ export const AssetsTable = ({ tableState, onSetTableState }: AssetsTableProps) =
             }
           />
         }
+        onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}
         onSetTableState={onSetTableState}

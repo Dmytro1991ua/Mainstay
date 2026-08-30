@@ -8,6 +8,7 @@ import {
   fetchAssetCategories,
   fetchAssets,
   fetchAssetStats,
+  fetchAssetTasks,
   updateAsset,
   type Asset,
   type AssetListParams,
@@ -31,6 +32,13 @@ export const useAssetStatsQuery = () =>
     queryKey: [ASSETS_KEY, "stats"],
     queryFn: fetchAssetStats,
     staleTime: 60_000,
+  });
+
+export const useAssetTasksQuery = (id: string) =>
+  useQuery({
+    queryKey: [ASSETS_KEY, id, "tasks"],
+    queryFn: () => fetchAssetTasks(id),
+    staleTime: 30_000,
   });
 
 export const useCreateAsset = () => useMutation(ASSETS_KEY, createAsset);
