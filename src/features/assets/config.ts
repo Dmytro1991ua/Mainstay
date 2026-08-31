@@ -1,7 +1,10 @@
+import { Archive, CheckCircle2, HardHat, XCircle } from "lucide-react";
+
 import type { FilterConfig } from "@/shared/ui/data-table";
 import { PillStatus } from "@/shared/ui/pill";
 
 import type { AssetStatus } from "./api/assets.api";
+import type { AssetStatCard } from "./types";
 import type { AssetFormValues } from "./validation";
 
 export const ASSET_STATUS_PILL: Record<AssetStatus, PillStatus> = {
@@ -51,5 +54,40 @@ export const ASSET_FILTER_CONFIG: FilterConfig[] = [
     label: "Status",
     type: "single",
     options: ASSET_STATUS_OPTIONS,
+  },
+];
+
+export const ASSET_STAT_CARDS: AssetStatCard[] = [
+  {
+    key: "total",
+    label: "Total assets",
+    icon: HardHat,
+    soft: "bg-accent-soft",
+    iconColor: "text-accent",
+    border: "border-l-accent",
+  },
+  {
+    key: "operational",
+    label: "Operational",
+    icon: CheckCircle2,
+    soft: "bg-green-soft",
+    iconColor: "text-green",
+    border: "border-l-green",
+  },
+  {
+    key: "down",
+    label: "Down",
+    icon: XCircle,
+    soft: "bg-red-soft",
+    iconColor: "text-red",
+    border: "border-l-red",
+  },
+  {
+    key: "retired",
+    label: "Retired",
+    icon: Archive,
+    soft: "bg-panel-2",
+    iconColor: "text-text-3",
+    border: "border-l-border",
   },
 ];

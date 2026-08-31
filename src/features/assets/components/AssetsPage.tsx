@@ -4,6 +4,7 @@ import type { OnSetTableState, TableUrlState } from "@/shared/ui/data-table";
 import { PageShell } from "@/shared/ui/page-shell";
 
 import { AssetsTable } from "./AssetsTable";
+import { AssetStats } from "./AssetStats";
 
 type AssetsPageProps = {
   tableState: TableUrlState;
@@ -24,6 +25,7 @@ export const AssetsPage = ({ tableState, onSetTableState }: AssetsPageProps) => 
       title="Assets"
       subtitle="Track equipment and its maintenance history"
       alert={renderAlert}
+      toolbar={<AssetStats />}
     >
       <AssetsTable tableState={tableState} onSetTableState={onSetTableState} />
     </PageShell>

@@ -1,6 +1,6 @@
-import type { TableUrlState } from "@/shared/ui/data-table";
+import type { RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
 
-import type { AssetCategory, AssetListParams } from "./api/assets.api";
+import type { Asset, AssetCategory, AssetListParams } from "./api/assets.api";
 
 // cspell:ignore HVAC
 const ACRONYMS: Record<string, string> = { HVAC: "HVAC", IT: "IT" };
@@ -13,6 +13,14 @@ export const formatCategoryLabel = (value: string): string =>
 
 export const getApiErrorStatus = (err: unknown): number | undefined =>
   (err as { response?: { status?: number } })?.response?.status;
+
+// Down reads red (needs attention); Retired reads muted gray (decommissioned);
+// Operational stays neutral (the norm) to avoid a wall of color across the registry.
+export const getAssetRowHighlight = (asset: Asset): RowHighlightInfo => {
+  if (asset.status === "DOWN") return { isHighlighted: true, highlightStyles: "bg-row-red" };
+  if (asset.status === "RETIRED") return { isHighlighted: true, highlightStyles: "bg-row-gray" };
+  return { isHighlighted: false, highlightStyles: "" };
+};
 
 export const buildAssetParams = (
   tableState: TableUrlState,

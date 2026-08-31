@@ -36,6 +36,7 @@
   --green-soft: #ecfdf3;
   --green-border: #c6e9cf;
   --row-green: #f8fffb;
+  --row-gray: #f6f6f7;
   --purple: #7c3aed;
   --purple-soft: #f4ecff;
   --purple-border: #e4d6fb;
@@ -76,6 +77,7 @@
   --green-soft: rgba(74, 222, 128, 0.12);
   --green-border: rgba(74, 222, 128, 0.26);
   --row-green: rgba(74, 222, 128, 0.04);
+  --row-gray: rgba(148, 163, 184, 0.06);
   --purple: #a78bfa;
   --purple-soft: rgba(167, 139, 250, 0.16);
   --purple-border: rgba(167, 139, 250, 0.3);

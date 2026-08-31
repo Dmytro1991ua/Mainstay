@@ -10,6 +10,7 @@ import { useAssetColumns } from "../hooks/use-asset-columns";
 import { useAssetDelete } from "../hooks/use-asset-delete";
 import { useAssetForm } from "../hooks/use-asset-form";
 import { useAssetsData } from "../hooks/use-assets-data";
+import { getAssetRowHighlight } from "../utils";
 
 import { AssetDeleteDialog } from "./AssetDeleteDialog";
 import { AssetFormSheet } from "./AssetFormSheet";
@@ -93,6 +94,7 @@ export const AssetsTable = ({ tableState, onSetTableState }: AssetsTableProps) =
             }
           />
         }
+        getRowHighlightInfo={getAssetRowHighlight}
         onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}
