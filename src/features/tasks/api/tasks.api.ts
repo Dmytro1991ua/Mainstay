@@ -24,6 +24,7 @@ export type TaskListParams = {
   status?: TaskStatus;
   priority?: TaskPriority;
   assignedTo?: string;
+  assetId?: string;
   search?: string;
   overdue?: boolean;
 };
