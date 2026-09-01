@@ -141,15 +141,19 @@ export const RecurringTaskFormSheet = ({
             {...register("intervalDays", { valueAsNumber: true })}
           />
         </FormField>
-        <ControlledDatePicker
-          name="nextDueAt"
-          control={control}
-          label={isAdd ? "First due date" : "Next due date"}
-          placeholder="Pick a date"
-          error={errors.nextDueAt}
-          disablePast={isAdd}
-          clearErrors={clearErrors}
-        />
+        {/* Only shown on create: the server derives the next due date from the
+            interval on update, so it isn't editable once a schedule exists. */}
+        {isAdd && (
+          <ControlledDatePicker
+            name="nextDueAt"
+            control={control}
+            label="First due date"
+            placeholder="Pick a date"
+            error={errors.nextDueAt}
+            disablePast
+            clearErrors={clearErrors}
+          />
+        )}
       </div>
     </FormSheet>
   );
