@@ -1,16 +1,14 @@
 import { useDebounce } from "@/shared/hooks/use-debounce";
-import { useAuthStore } from "@/shared/stores/auth-store";
 import type { FilterConfig, TableUrlState } from "@/shared/ui/data-table";
 
 import { ASSET_FILTER_CONFIG } from "../config";
 import { buildAssetParams, formatCategoryLabel } from "../utils";
 
+import { useAssetPermissions } from "./use-asset-permissions";
 import { useAssetCategoriesQuery, useAssetsQuery } from "./use-assets";
 
 export const useAssetsData = (tableState: TableUrlState) => {
-  const user = useAuthStore((s) => s.user);
-  const canManage = user?.roles.some((r) => r === "ADMIN" || r === "MANAGER") ?? false;
-  const canDelete = user?.roles.includes("ADMIN") ?? false;
+  const { canManage, canDelete } = useAssetPermissions();
 
   const debouncedSearch = useDebounce(tableState.search, 300);
   const { data, isLoading, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =

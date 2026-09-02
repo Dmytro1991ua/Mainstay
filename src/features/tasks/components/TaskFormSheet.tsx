@@ -3,10 +3,12 @@ import { Controller } from "react-hook-form";
 import { useAssetsQuery } from "@/features/assets";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
+import { toComboboxOption } from "@/shared/ui/combobox";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
+import { getEditState } from "@/shared/utils";
 
 import { TASK_CATEGORY_OPTIONS, TASK_PRIORITY_OPTIONS } from "../config";
 import { useUsersList } from "../hooks/use-users-list";
@@ -75,6 +77,12 @@ export const TaskFormSheet = ({
         label: a.name,
         meta: { serialNumber: a.serialNumber },
       })) ?? [];
+
+  const selectedAssetOption = toComboboxOption(
+    getEditState(sheetMode)?.task.asset,
+    (a) => a.name,
+    (a) => ({ serialNumber: a.serialNumber }),
+  );
 
   return (
     <FormSheet
@@ -166,6 +174,7 @@ export const TaskFormSheet = ({
             <AssetField
               field={field}
               options={assetOptions}
+              selectedOption={selectedAssetOption}
               fetchNextPage={fetchAssetsNextPage}
               hasNextPage={hasAssetsNextPage}
               isFetchingNextPage={isFetchingAssetsNextPage}

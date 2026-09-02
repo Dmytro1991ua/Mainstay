@@ -8,6 +8,7 @@ import type { ControllerRenderProps } from "react-hook-form";
 type AssetFieldProps = {
   field: ControllerRenderProps<TaskFormValues, "assetId">;
   options: ComboboxOption[];
+  selectedOption?: ComboboxOption;
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
@@ -17,6 +18,7 @@ type AssetFieldProps = {
 export const AssetField = ({
   field,
   options,
+  selectedOption,
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
@@ -27,6 +29,7 @@ export const AssetField = ({
       value={field.value ?? ""}
       onValueChange={field.onChange}
       options={options}
+      selectedOption={selectedOption}
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}

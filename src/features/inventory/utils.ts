@@ -27,9 +27,6 @@ export const getInventoryRowHighlight = (row: InventoryItem): RowHighlightInfo =
   return { isHighlighted: true, highlightStyles: ROW_HIGHLIGHT[status] ?? "" };
 };
 
-export const getApiErrorStatus = (err: unknown): number | undefined =>
-  (err as { response?: { status?: number } })?.response?.status;
-
 export const buildInventoryParams = (
   tableState: TableUrlState,
   search: string | undefined,

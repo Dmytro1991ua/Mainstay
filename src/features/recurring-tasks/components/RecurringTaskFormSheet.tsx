@@ -3,12 +3,13 @@ import { Controller } from "react-hook-form";
 import { useUsersList } from "@/features/tasks/hooks/use-users-list";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
-import { InfiniteCombobox } from "@/shared/ui/combobox";
+import { InfiniteCombobox, toComboboxOption } from "@/shared/ui/combobox";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
+import { getEditState } from "@/shared/utils";
 
 import { SCHEDULE_CATEGORY_OPTIONS, SCHEDULE_PRIORITY_OPTIONS } from "../config";
 
@@ -50,6 +51,11 @@ export const RecurringTaskFormSheet = ({
       .flatMap((p) => p.data)
       .filter((u) => u.id !== currentUserId)
       .map((u) => ({ value: u.id, label: u.userName })) ?? [];
+
+  const selectedAssigneeOption = toComboboxOption(
+    getEditState(sheetMode)?.schedule.assignee,
+    (u) => u.userName,
+  );
 
   return (
     <FormSheet
@@ -122,6 +128,7 @@ export const RecurringTaskFormSheet = ({
                 value={field.value ?? ""}
                 onValueChange={(v) => field.onChange(v || null)}
                 options={assigneeOptions}
+                selectedOption={selectedAssigneeOption}
                 placeholder="Select assignee"
                 clearable
                 fetchNextPage={fetchNextPage}

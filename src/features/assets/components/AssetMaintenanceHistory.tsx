@@ -21,7 +21,10 @@ const STATUS_PILL: Record<AssetTask["status"], PillStatus> = {
 const SKELETON_KEYS = ["h1", "h2", "h3"];
 
 export const AssetMaintenanceHistory = ({ assetId }: { assetId: string }) => {
-  const { data: tasks, isPending, isError, refetch } = useAssetTasksQuery(assetId);
+  const { data, isPending, isError, refetch } = useAssetTasksQuery(assetId);
+
+  const tasks = data?.data ?? [];
+  const total = data?.meta.total ?? 0;
 
   const renderContent = () => {
     if (isError) {
@@ -62,32 +65,39 @@ export const AssetMaintenanceHistory = ({ assetId }: { assetId: string }) => {
     }
 
     return (
-      <ul className="flex flex-col gap-1">
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <Link
-              to="/tasks/$taskId"
-              params={{ taskId: task.id }}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-panel-2"
-            >
-              <span className="flex-1 truncate text-sm font-medium text-text">{task.title}</span>
-              {task.dueDate && (
-                <span className="shrink-0 text-xs text-text-3">
-                  {formatShortDate(task.dueDate)}
-                </span>
-              )}
-              <Pill status={STATUS_PILL[task.status]} className="shrink-0" />
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul className="flex flex-col gap-1">
+          {tasks.map((task) => (
+            <li key={task.id}>
+              <Link
+                to="/tasks/$taskId"
+                params={{ taskId: task.id }}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-panel-2"
+              >
+                <span className="flex-1 truncate text-sm font-medium text-text">{task.title}</span>
+                {task.dueDate && (
+                  <span className="shrink-0 text-xs text-text-3">
+                    {formatShortDate(task.dueDate)}
+                  </span>
+                )}
+                <Pill status={STATUS_PILL[task.status]} className="shrink-0" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {total > tasks.length && (
+          <p className="mt-3 text-center text-xs text-text-3">
+            Showing the {tasks.length} most recent of {total}.
+          </p>
+        )}
+      </>
     );
   };
 
   return (
     <section className="rounded-xl border border-border bg-panel p-5 shadow-card">
       <h2 className="mb-3 text-sm font-semibold text-text">
-        Maintenance history{tasks ? ` (${tasks.length})` : ""}
+        Maintenance history{data ? ` (${total})` : ""}
       </h2>
       {renderContent()}
     </section>

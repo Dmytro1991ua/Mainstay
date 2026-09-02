@@ -1,19 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
-import { useAuthStore } from "@/shared/stores/auth-store";
-
 import { getAsset } from "../api/assets.api";
 
 import { useAssetDelete } from "./use-asset-delete";
 import { useAssetForm } from "./use-asset-form";
+import { useAssetPermissions } from "./use-asset-permissions";
 import { ASSETS_KEY } from "./use-assets";
 
 export const useAssetDetail = (assetId: string) => {
   const navigate = useNavigate();
-  const roles = useAuthStore((s) => s.user?.roles ?? []);
-  const canManage = roles.some((r) => r === "ADMIN" || r === "MANAGER");
-  const canDelete = roles.includes("ADMIN");
+  const { canManage, canDelete } = useAssetPermissions();
 
   const {
     data: asset,

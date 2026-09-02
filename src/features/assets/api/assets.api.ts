@@ -62,11 +62,13 @@ export const deleteAsset = async (id: string) => {
   await axiosInstance.delete(`/assets/${id}`);
 };
 
-export const fetchAssetTasks = async (id: string): Promise<AssetTask[]> => {
+export const ASSET_TASKS_LIMIT = 50;
+
+export const fetchAssetTasks = async (id: string) => {
   const res = await axiosInstance.get<components["schemas"]["TasksListResponse"]>(
     `/assets/${id}/tasks`,
-    { params: { limit: 50 } },
+    { params: { limit: ASSET_TASKS_LIMIT } },
   );
 
-  return res.data.data;
+  return res.data;
 };

@@ -11,9 +11,6 @@ export const formatCategoryLabel = (value: string): string =>
     .map((word) => ACRONYMS[word] ?? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 
-export const getApiErrorStatus = (err: unknown): number | undefined =>
-  (err as { response?: { status?: number } })?.response?.status;
-
 // Down reads red (needs attention); Retired reads muted gray (decommissioned);
 // Operational stays neutral (the norm) to avoid a wall of color across the registry.
 export const getAssetRowHighlight = (asset: Asset): RowHighlightInfo => {

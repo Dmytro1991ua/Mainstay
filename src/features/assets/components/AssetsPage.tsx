@@ -1,7 +1,8 @@
-import { useAuthStore } from "@/shared/stores/auth-store";
 import { Alert } from "@/shared/ui/alert";
 import type { OnSetTableState, TableUrlState } from "@/shared/ui/data-table";
 import { PageShell } from "@/shared/ui/page-shell";
+
+import { useAssetPermissions } from "../hooks/use-asset-permissions";
 
 import { AssetsTable } from "./AssetsTable";
 import { AssetStats } from "./AssetStats";
@@ -14,9 +15,7 @@ type AssetsPageProps = {
 const ALERT_MESSAGE = "Read-only — asset edits require a manager or admin.";
 
 export const AssetsPage = ({ tableState, onSetTableState }: AssetsPageProps) => {
-  const canManage = useAuthStore((s) => s.user)?.roles.some(
-    (r) => r === "ADMIN" || r === "MANAGER",
-  );
+  const { canManage } = useAssetPermissions();
 
   const renderAlert = <>{!canManage ? <Alert>{ALERT_MESSAGE}</Alert> : null}</>;
 
