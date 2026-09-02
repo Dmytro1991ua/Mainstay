@@ -56,7 +56,7 @@ export const FilterGroup = ({
         </button>
       </div>
       {isOpen && (
-        <div className="px-3 pb-2">
+        <div className="max-h-56 overflow-y-auto px-3 pb-2">
           {config.options.map((opt) => (
             <FilterGroupOption
               key={opt.value}
