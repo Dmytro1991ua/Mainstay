@@ -12,6 +12,7 @@ import {
   updateAsset,
   type Asset,
   type AssetListParams,
+  type AssetTask,
   type UpdateAssetInput,
 } from "../api/assets.api";
 
@@ -34,12 +35,12 @@ export const useAssetStatsQuery = () =>
     staleTime: 60_000,
   });
 
-export const useAssetTasksQuery = (id: string) =>
-  useQuery({
-    queryKey: [ASSETS_KEY, id, "tasks"],
-    queryFn: () => fetchAssetTasks(id),
-    staleTime: 30_000,
-  });
+export const useAssetTasks = (assetId: string) =>
+  useInfiniteQueryList<AssetTask, { assetId: string; page?: number }>(
+    `${ASSETS_KEY}-tasks`,
+    { assetId },
+    (params) => fetchAssetTasks(params.assetId, params.page),
+  );
 
 export const useCreateAsset = () => useMutation(ASSETS_KEY, createAsset);
 

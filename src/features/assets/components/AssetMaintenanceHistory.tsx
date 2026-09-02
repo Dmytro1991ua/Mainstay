@@ -7,7 +7,7 @@ import { Pill, PillStatus } from "@/shared/ui/pill";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { formatShortDate } from "@/shared/utils";
 
-import { useAssetTasksQuery } from "../hooks/use-assets";
+import { useAssetTasks } from "../hooks/use-assets";
 
 import type { AssetTask } from "../api/assets.api";
 
@@ -21,10 +21,11 @@ const STATUS_PILL: Record<AssetTask["status"], PillStatus> = {
 const SKELETON_KEYS = ["h1", "h2", "h3"];
 
 export const AssetMaintenanceHistory = ({ assetId }: { assetId: string }) => {
-  const { data, isPending, isError, refetch } = useAssetTasksQuery(assetId);
+  const { data, isPending, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useAssetTasks(assetId);
 
-  const tasks = data?.data ?? [];
-  const total = data?.meta.total ?? 0;
+  const tasks = data?.pages.flatMap((p) => p.data) ?? [];
+  const total = data?.pages[0]?.meta.total ?? 0;
 
   const renderContent = () => {
     if (isError) {
@@ -85,10 +86,17 @@ export const AssetMaintenanceHistory = ({ assetId }: { assetId: string }) => {
             </li>
           ))}
         </ul>
-        {total > tasks.length && (
-          <p className="mt-3 text-center text-xs text-text-3">
-            Showing the {tasks.length} most recent of {total}.
-          </p>
+        {hasNextPage && (
+          <div className="mt-3 flex justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? "Loading…" : `Load more (${tasks.length} of ${total})`}
+            </Button>
+          </div>
         )}
       </>
     );

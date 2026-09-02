@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/shared/hooks/use-crud";
 import { axiosInstance } from "@/shared/lib/api-client";
 import type { components } from "@/shared/types/api-generated";
 
@@ -62,13 +63,16 @@ export const deleteAsset = async (id: string) => {
   await axiosInstance.delete(`/assets/${id}`);
 };
 
-export const ASSET_TASKS_LIMIT = 50;
+export const ASSET_TASKS_PAGE_SIZE = 20;
 
-export const fetchAssetTasks = async (id: string) => {
+export const fetchAssetTasks = async (
+  id: string,
+  page: number,
+): Promise<PaginatedResponse<AssetTask>> => {
   const res = await axiosInstance.get<components["schemas"]["TasksListResponse"]>(
     `/assets/${id}/tasks`,
-    { params: { limit: ASSET_TASKS_LIMIT } },
+    { params: { page, limit: ASSET_TASKS_PAGE_SIZE } },
   );
 
-  return res.data;
+  return { data: res.data.data, meta: res.data.meta };
 };
