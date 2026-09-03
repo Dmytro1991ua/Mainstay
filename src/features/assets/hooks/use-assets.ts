@@ -18,8 +18,8 @@ import {
 
 export const ASSETS_KEY = "assets";
 
-export const useAssetsQuery = (params: AssetListParams) =>
-  useInfiniteQueryList<Asset, AssetListParams>(ASSETS_KEY, params, fetchAssets);
+export const useAssetsQuery = (params: AssetListParams, options?: { enabled?: boolean }) =>
+  useInfiniteQueryList<Asset, AssetListParams>(ASSETS_KEY, params, fetchAssets, options);
 
 export const useAssetCategoriesQuery = () =>
   useQuery({
@@ -49,4 +49,5 @@ export const useUpdateAsset = () =>
     updateAsset(id, data),
   );
 
-export const useDeleteAsset = () => useMutation(ASSETS_KEY, deleteAsset);
+export const useDeleteAsset = () =>
+  useMutation(ASSETS_KEY, deleteAsset, { alsoInvalidate: ["tasks"] });

@@ -67,7 +67,7 @@ export const TaskFormSheet = ({
     fetchNextPage: fetchAssetsNextPage,
     hasNextPage: hasAssetsNextPage,
     isFetchingNextPage: isFetchingAssetsNextPage,
-  } = useAssetsQuery({ limit: 20, sortBy: "name", sortOrder: "asc" });
+  } = useAssetsQuery({ limit: 20, sortBy: "name", sortOrder: "asc" }, { enabled: canManage });
 
   const assetOptions =
     assetsData?.pages

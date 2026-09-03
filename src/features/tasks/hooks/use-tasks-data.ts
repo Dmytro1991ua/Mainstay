@@ -31,6 +31,8 @@ export const useTasksData = (
   const { data: usersData } = useUsersList();
   const users = usersData?.pages.flatMap((p) => p.data) ?? [];
 
+  // TODO: caps the Asset filter at the first 50 assets. Fine for now; switch to a
+  // searchable/async filter (or a dedicated asset-names endpoint) if the registry grows large.
   const { data: assetsData } = useAssetsQuery({ limit: 50, sortBy: "name", sortOrder: "asc" });
   const assets = assetsData?.pages.flatMap((p) => p.data) ?? [];
 

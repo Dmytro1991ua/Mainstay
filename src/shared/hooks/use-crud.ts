@@ -13,6 +13,7 @@ export const useInfiniteQueryList = <TItem, TParams extends { page?: number }>(
   queryKey: string,
   params: TParams,
   fetcher: (params: TParams & { page: number }) => Promise<PaginatedResponse<TItem>>,
+  options?: { enabled?: boolean },
 ) =>
   useInfiniteQuery({
     queryKey: [queryKey, params],
@@ -20,6 +21,7 @@ export const useInfiniteQueryList = <TItem, TParams extends { page?: number }>(
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.meta.page < lastPage.meta.pages ? lastPage.meta.page + 1 : undefined,
+    enabled: options?.enabled,
   });
 
 export const useMutation = <TData, TVariables>(
