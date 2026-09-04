@@ -18,6 +18,12 @@ type InfiniteComboboxProps = {
   options: ComboboxOption[];
   value?: string;
   onValueChange?: (value: string) => void;
+  /**
+   * The currently-selected option, supplied by the caller. Ensures the trigger and
+   * list show the selection even when it hasn't been loaded into `options` yet
+   * (e.g. editing a record whose value sorts past the first page).
+   */
+  selectedOption?: ComboboxOption;
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
@@ -33,6 +39,7 @@ export const InfiniteCombobox = ({
   options,
   value,
   onValueChange,
+  selectedOption,
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
@@ -43,6 +50,11 @@ export const InfiniteCombobox = ({
   clearable,
   renderOption,
 }: InfiniteComboboxProps) => {
+  const allOptions =
+    selectedOption && !options.some((o) => o.value === selectedOption.value)
+      ? [selectedOption, ...options]
+      : options;
+
   const {
     open,
     search,
@@ -52,7 +64,7 @@ export const InfiniteCombobox = ({
     selected,
     handleOpenChange,
     handleSelect,
-  } = useCombobox({ options, value, onValueChange });
+  } = useCombobox({ options: allOptions, value, onValueChange });
 
   const renderOptionItem = (opt: ComboboxOption) => (
     <button
@@ -142,7 +154,7 @@ export const InfiniteCombobox = ({
               </>
             ) : (
               <InfiniteScroll
-                dataLength={options.length}
+                dataLength={allOptions.length}
                 next={fetchNextPage ?? (() => {})}
                 hasMore={hasNextPage ?? false}
                 loader={
@@ -153,10 +165,10 @@ export const InfiniteCombobox = ({
                 scrollableTarget={scrollContainerId}
                 style={{ overflow: "visible" }}
               >
-                {options.length === 0 && !isFetchingNextPage && (
+                {allOptions.length === 0 && !isFetchingNextPage && (
                   <p className="py-2 text-center text-sm text-text-3">No results</p>
                 )}
-                {options.map((opt) => renderOptionItem(opt))}
+                {allOptions.map((opt) => renderOptionItem(opt))}
               </InfiniteScroll>
             )}
           </div>

@@ -3,8 +3,9 @@ import { Mail } from "lucide-react";
 import { UserAvailabilityBadge } from "@/features/users/components/UserAvailabilityBadge";
 import type { UserAvailability } from "@/features/users/config";
 import type { ComboboxOption } from "@/shared/ui/combobox";
-import { InfiniteCombobox } from "@/shared/ui/combobox";
+import { InfiniteCombobox, toComboboxOption } from "@/shared/ui/combobox";
 import { FormField } from "@/shared/ui/form-field";
+import { getEditState } from "@/shared/utils";
 
 import type { SheetMode } from "../types";
 import type { TaskFormValues } from "../validation";
@@ -35,8 +36,9 @@ export const AssigneeField = ({
   isFetchingNextPage,
   canManage,
 }: AssigneeFieldProps) => {
-  const originalAssigneeId = sheetMode?.type === "edit" ? sheetMode.task.assignedTo : null;
-  const willNotify = !!field.value && (isAdd || field.value !== originalAssigneeId);
+  const editTask = getEditState(sheetMode)?.task;
+  const willNotify = !!field.value && (isAdd || field.value !== editTask?.assignedTo);
+  const selectedOption = toComboboxOption(editTask?.assignee, (u) => u.userName);
 
   return (
     <FormField
@@ -56,6 +58,7 @@ export const AssigneeField = ({
         value={field.value ?? ""}
         onValueChange={field.onChange}
         options={options}
+        selectedOption={selectedOption}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}

@@ -77,6 +77,7 @@ export const useRecurringTaskForm = () => {
 
   const saveEdit = async (values: RecurringTaskFormValues, id: string) => {
     try {
+      // The server derives the next due date from intervalDays; update no longer accepts a date.
       const update: UpdateRecurringTaskInput = {
         title: values.title,
         description: values.description || undefined,
@@ -84,7 +85,6 @@ export const useRecurringTaskForm = () => {
         priority: values.priority,
         category: (values.category as RecurringTaskCategory) || undefined,
         intervalDays: values.intervalDays,
-        nextDueAt: new Date(values.nextDueAt).toISOString(),
       };
       await updateMutation.mutateAsync({ id, data: update });
       toast.success("Schedule updated", { description: `"${values.title}" was saved.` });

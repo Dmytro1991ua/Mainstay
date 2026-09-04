@@ -1,15 +1,19 @@
 import { Controller } from "react-hook-form";
 
+import { useAssetsQuery } from "@/features/assets";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
+import { toComboboxOption } from "@/shared/ui/combobox";
 import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
+import { getEditState } from "@/shared/utils";
 
 import { TASK_CATEGORY_OPTIONS, TASK_PRIORITY_OPTIONS } from "../config";
 import { useUsersList } from "../hooks/use-users-list";
 
+import { AssetField } from "./AssetField";
 import { AssigneeField } from "./AssigneeField";
 
 import type { SheetMode } from "../types";
@@ -57,6 +61,28 @@ export const TaskFormSheet = ({
       .flatMap((p) => p.data)
       .filter((u) => u.id !== currentUserId)
       .map((u) => ({ value: u.id, label: u.userName, availability: u.availability })) ?? [];
+
+  const {
+    data: assetsData,
+    fetchNextPage: fetchAssetsNextPage,
+    hasNextPage: hasAssetsNextPage,
+    isFetchingNextPage: isFetchingAssetsNextPage,
+  } = useAssetsQuery({ limit: 20, sortBy: "name", sortOrder: "asc" }, { enabled: canManage });
+
+  const assetOptions =
+    assetsData?.pages
+      .flatMap((p) => p.data)
+      .map((a) => ({
+        value: a.id,
+        label: a.name,
+        meta: { serialNumber: a.serialNumber },
+      })) ?? [];
+
+  const selectedAssetOption = toComboboxOption(
+    getEditState(sheetMode)?.task.asset,
+    (a) => a.name,
+    (a) => ({ serialNumber: a.serialNumber }),
+  );
 
   return (
     <FormSheet
@@ -138,6 +164,21 @@ export const TaskFormSheet = ({
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
               canManage={canManage}
+            />
+          )}
+        />
+        <Controller
+          name="assetId"
+          control={control}
+          render={({ field }) => (
+            <AssetField
+              field={field}
+              options={assetOptions}
+              selectedOption={selectedAssetOption}
+              fetchNextPage={fetchAssetsNextPage}
+              hasNextPage={hasAssetsNextPage}
+              isFetchingNextPage={isFetchingAssetsNextPage}
+              disabled={!canManage}
             />
           )}
         />

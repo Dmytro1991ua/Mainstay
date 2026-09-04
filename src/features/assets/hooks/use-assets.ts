@@ -1,0 +1,53 @@
+import { useQuery } from "@tanstack/react-query";
+
+import { useInfiniteQueryList, useMutation } from "@/shared/hooks/use-crud";
+
+import {
+  createAsset,
+  deleteAsset,
+  fetchAssetCategories,
+  fetchAssets,
+  fetchAssetStats,
+  fetchAssetTasks,
+  updateAsset,
+  type Asset,
+  type AssetListParams,
+  type AssetTask,
+  type UpdateAssetInput,
+} from "../api/assets.api";
+
+export const ASSETS_KEY = "assets";
+
+export const useAssetsQuery = (params: AssetListParams, options?: { enabled?: boolean }) =>
+  useInfiniteQueryList<Asset, AssetListParams>(ASSETS_KEY, params, fetchAssets, options);
+
+export const useAssetCategoriesQuery = () =>
+  useQuery({
+    queryKey: [ASSETS_KEY, "categories"],
+    queryFn: fetchAssetCategories,
+    staleTime: Infinity,
+  });
+
+export const useAssetStatsQuery = () =>
+  useQuery({
+    queryKey: [ASSETS_KEY, "stats"],
+    queryFn: fetchAssetStats,
+    staleTime: 60_000,
+  });
+
+export const useAssetTasks = (assetId: string) =>
+  useInfiniteQueryList<AssetTask, { assetId: string; page?: number }>(
+    `${ASSETS_KEY}-tasks`,
+    { assetId },
+    (params) => fetchAssetTasks(params.assetId, params.page),
+  );
+
+export const useCreateAsset = () => useMutation(ASSETS_KEY, createAsset);
+
+export const useUpdateAsset = () =>
+  useMutation(ASSETS_KEY, ({ id, data }: { id: string; data: UpdateAssetInput }) =>
+    updateAsset(id, data),
+  );
+
+export const useDeleteAsset = () =>
+  useMutation(ASSETS_KEY, deleteAsset, { alsoInvalidate: ["tasks"] });

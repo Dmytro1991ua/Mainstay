@@ -103,7 +103,8 @@ export function DialogFooter({ className, ...props }: React.ComponentProps<"div"
 type ConfirmDialogProps = {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  /** May be async; a rejected promise is swallowed here (callers surface their own error toast). */
+  onConfirm: () => void | Promise<unknown>;
   title: string;
   description?: React.ReactNode;
   icon?: React.ReactNode;
@@ -149,7 +150,7 @@ export function ConfirmDialog({
           </DialogClose>
           <Button
             variant={variant === "destructive" ? "destructive" : "default"}
-            onClick={onConfirm}
+            onClick={() => void Promise.resolve(onConfirm()).catch(() => {})}
           >
             {confirmLabel}
           </Button>

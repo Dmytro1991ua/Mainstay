@@ -18,7 +18,6 @@ export const SCHEDULE_PRIORITY_OPTIONS = [
   { value: "LOW", label: "Low" },
   { value: "MEDIUM", label: "Medium" },
   { value: "HIGH", label: "High" },
-  { value: "URGENT", label: "Urgent" },
 ];
 
 export const SCHEDULE_CATEGORY_OPTIONS = [
@@ -78,14 +77,6 @@ export const getScheduleDetailFields = (schedule: RecurringTask): DetailField[] 
     label: "Assigned to",
     value: schedule.assignee ? (
       <span className="text-sm text-text">{schedule.assignee.userName}</span>
-    ) : (
-      UNSET
-    ),
-  },
-  {
-    label: "Created by",
-    value: schedule.creator ? (
-      <span className="text-sm text-text">{schedule.creator.userName}</span>
     ) : (
       UNSET
     ),

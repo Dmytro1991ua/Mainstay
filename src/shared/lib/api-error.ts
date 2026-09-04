@@ -15,3 +15,6 @@ export const getApiErrorMessage = (error: unknown, fallback = DEFAULT_ERROR_MESS
 
   return fallback;
 };
+
+export const getApiErrorStatus = (error: unknown): number | undefined =>
+  isAxiosError(error) ? error.response?.status : undefined;

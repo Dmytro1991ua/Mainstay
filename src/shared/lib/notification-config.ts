@@ -1,4 +1,4 @@
-import { AlertTriangle, Bell, Clock, PackageX } from "lucide-react";
+import { AlertTriangle, Bell, Clock, PackageX, XCircle } from "lucide-react";
 
 import type { components } from "@/shared/types/api-generated";
 
@@ -52,5 +52,13 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Task Overdue",
     unreadRowBg: "bg-amber-soft",
     unreadBorderClass: "border-l-amber",
+  },
+  TASK_CANCELLED: {
+    icon: XCircle,
+    iconClass: "text-red",
+    bgClass: "bg-red-soft",
+    label: "Task Cancelled",
+    unreadRowBg: "bg-red-soft",
+    unreadBorderClass: "border-l-red",
   },
 };

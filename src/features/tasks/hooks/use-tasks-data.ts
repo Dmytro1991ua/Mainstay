@@ -1,3 +1,4 @@
+import { useAssetsQuery } from "@/features/assets";
 import { useAuthStore } from "@/shared/stores/auth-store";
 import type { FilterConfig, TableUrlState } from "@/shared/ui/data-table";
 
@@ -30,8 +31,13 @@ export const useTasksData = (
   const { data: usersData } = useUsersList();
   const users = usersData?.pages.flatMap((p) => p.data) ?? [];
 
+  // TODO: caps the Asset filter at the first 50 assets. Fine for now; switch to a
+  // searchable/async filter (or a dedicated asset-names endpoint) if the registry grows large.
+  const { data: assetsData } = useAssetsQuery({ limit: 50, sortBy: "name", sortOrder: "asc" });
+  const assets = assetsData?.pages.flatMap((p) => p.data) ?? [];
+
   const assigneeFilter: FilterConfig[] =
-    canManage && users.length > 0
+    activeTab !== "mine" && canManage && users.length > 0
       ? [
           {
             id: "assignedTo",
@@ -42,15 +48,24 @@ export const useTasksData = (
         ]
       : [];
 
+  const assetFilter: FilterConfig[] =
+    assets.length > 0
+      ? [
+          {
+            id: "asset",
+            label: "Asset",
+            type: "single",
+            options: assets.map((a) => ({ value: a.id, label: a.name })),
+          },
+        ]
+      : [];
+
   const baseFilters =
     activeTab === "overdue"
       ? TASK_FILTER_CONFIG.filter((f) => f.id !== "overdue")
       : TASK_FILTER_CONFIG;
 
-  const filterConfig: FilterConfig[] =
-    activeTab !== "mine" && canManage && users.length > 0
-      ? [...baseFilters, ...assigneeFilter]
-      : baseFilters;
+  const filterConfig: FilterConfig[] = [...baseFilters, ...assigneeFilter, ...assetFilter];
   const tasks = data?.pages.flatMap((p) => p.data) ?? [];
 
   return {

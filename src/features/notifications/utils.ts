@@ -14,6 +14,7 @@ const NAV_TARGET: Record<NotificationType, NotificationNav["to"]> = {
   LOW_STOCK: "/inventory",
   OUT_OF_STOCK: "/inventory",
   TASK_OVERDUE: "/tasks",
+  TASK_CANCELLED: "/tasks",
 };
 
 const extractQuotedName = (message: string): string | undefined =>

@@ -21,6 +21,7 @@ export const buildTaskParams = (tableState: TableUrlState): TaskListParams => {
     status: tableState.filters?.status?.[0] as TaskListParams["status"],
     priority: tableState.filters?.priority?.[0] as TaskListParams["priority"],
     assignedTo: tableState.filters?.assignedTo?.[0],
+    assetId: tableState.filters?.asset?.[0],
     overdue: tableState.filters?.overdue?.[0] === "true" ? true : undefined,
     sortBy: (activeSort?.id as TaskListParams["sortBy"]) ?? "createdAt",
     sortOrder: activeSort?.desc ? "desc" : "asc",

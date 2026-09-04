@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
 
 import { cn } from "@/shared/lib/utils";
@@ -33,14 +34,12 @@ export const TASK_PRIORITY_CONFIG: Record<TaskPriority, { label: string; classNa
   LOW: { label: "Low", className: "border-green-border bg-green-soft text-green" },
   MEDIUM: { label: "Medium", className: "border-amber-border bg-amber-soft text-amber" },
   HIGH: { label: "High", className: "border-red-border bg-red-soft text-red" },
-  URGENT: { label: "Urgent", className: "border-red-border bg-red-soft text-red font-semibold" },
 };
 
 export const TASK_PRIORITY_OPTIONS = [
   { value: "LOW", label: "Low" },
   { value: "MEDIUM", label: "Medium" },
   { value: "HIGH", label: "High" },
-  { value: "URGENT", label: "Urgent" },
 ];
 
 export const TASK_CATEGORY_CONFIG: Record<TaskCategory, { label: string }> = {
@@ -78,7 +77,6 @@ export const TASK_FILTER_CONFIG: FilterConfig[] = [
       { label: "Low", value: "LOW" },
       { label: "Medium", value: "MEDIUM" },
       { label: "High", value: "HIGH" },
-      { label: "Urgent", value: "URGENT" },
     ],
   },
   {
@@ -115,6 +113,23 @@ export const getTaskDetailFields = (task: Task, options: DetailFieldOptions): De
       label: "Category",
       value: task.category ? (
         <span className="text-sm text-text">{TASK_CATEGORY_CONFIG[task.category].label}</span>
+      ) : (
+        <span className="text-text-3">—</span>
+      ),
+    },
+    {
+      label: "Asset",
+      value: task.asset ? (
+        <Link
+          to="/assets/$assetId"
+          params={{ assetId: task.asset.id }}
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          {task.asset.name}
+          <span className="ml-2 font-mono text-xs font-normal text-text-3">
+            {task.asset.serialNumber}
+          </span>
+        </Link>
       ) : (
         <span className="text-text-3">—</span>
       ),

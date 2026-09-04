@@ -20,22 +20,23 @@ export const TASKS_KEY = "tasks";
 
 const USERS_KEY = "users";
 const INVENTORY_KEY = "inventory";
+const ASSET_TASKS_KEY = "assets-tasks";
 
 export const useTasksQuery = (params: TaskListParams) =>
   useInfiniteQueryList<Task, TaskListParams>(TASKS_KEY, params, fetchTasks);
 
 export const useCreateTask = () =>
-  useMutation(TASKS_KEY, createTask, { alsoInvalidate: [USERS_KEY] });
+  useMutation(TASKS_KEY, createTask, { alsoInvalidate: [USERS_KEY, ASSET_TASKS_KEY] });
 
 export const useUpdateTask = () =>
   useMutation(
     TASKS_KEY,
     ({ id, data }: { id: string; data: UpdateTaskInput }) => updateTask(id, data),
-    { alsoInvalidate: [USERS_KEY] },
+    { alsoInvalidate: [USERS_KEY, ASSET_TASKS_KEY] },
   );
 
 export const useDeleteTask = () =>
-  useMutation(TASKS_KEY, deleteTask, { alsoInvalidate: [USERS_KEY] });
+  useMutation(TASKS_KEY, deleteTask, { alsoInvalidate: [USERS_KEY, ASSET_TASKS_KEY] });
 
 export const useUploadBeforePhoto = () =>
   useMutation(TASKS_KEY, ({ id, file }: { id: string; file: File }) => uploadBeforePhoto(id, file));
@@ -47,12 +48,12 @@ export const useCompleteTask = () =>
   useMutation(
     TASKS_KEY,
     ({ id, data }: { id: string; data: CompleteTaskInput }) => completeTask(id, data),
-    { alsoInvalidate: [USERS_KEY, INVENTORY_KEY] },
+    { alsoInvalidate: [USERS_KEY, INVENTORY_KEY, ASSET_TASKS_KEY] },
   );
 
 export const useCancelTask = () =>
   useMutation(
     TASKS_KEY,
     ({ id, data }: { id: string; data: CancelTaskInput }) => cancelTask(id, data),
-    { alsoInvalidate: [USERS_KEY] },
+    { alsoInvalidate: [USERS_KEY, ASSET_TASKS_KEY] },
   );

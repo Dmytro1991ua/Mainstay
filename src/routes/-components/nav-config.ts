@@ -2,6 +2,7 @@ import {
   Bell,
   CalendarClock,
   ClipboardList,
+  HardHat,
   LayoutDashboard,
   type LucideIcon,
   Package,
@@ -17,6 +18,7 @@ export type Role = components["schemas"]["User"]["roles"][number];
 export type AppPath =
   | "/dashboard"
   | "/inventory"
+  | "/assets"
   | "/tasks"
   | "/recurring-tasks"
   | "/notifications"
@@ -39,6 +41,7 @@ export type NavItem = {
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/inventory", label: "Inventory", icon: Package },
+  { to: "/assets", label: "Assets", icon: HardHat },
   { to: "/tasks", label: "Tasks", icon: ClipboardList },
   {
     to: "/recurring-tasks",
