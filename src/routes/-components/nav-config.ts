@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   Bell,
   CalendarClock,
   ClipboardList,
@@ -21,6 +22,7 @@ export type AppPath =
   | "/assets"
   | "/tasks"
   | "/recurring-tasks"
+  | "/reports"
   | "/notifications"
   | "/users"
   | "/settings";
@@ -49,6 +51,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     icon: CalendarClock,
     roles: ["ADMIN", "MANAGER"],
   },
+  { to: "/reports", label: "Reports", icon: BarChart3, roles: ["ADMIN", "MANAGER"] },
   { to: "/notifications", label: "Notifications", icon: Bell },
   { to: "/users", label: "Users", icon: Users, roles: ["ADMIN", "MANAGER"] },
   { to: "/settings", label: "Settings", icon: Settings },

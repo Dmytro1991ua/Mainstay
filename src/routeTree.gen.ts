@@ -20,6 +20,7 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/_auth.forgot-pa
 import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppTasksRouteImport } from './routes/_app.tasks'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppRecurringTasksRouteImport } from './routes/_app.recurring-tasks'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
@@ -27,6 +28,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAssetsRouteImport } from './routes/_app.assets'
 import { Route as AppUsersIndexRouteImport } from './routes/_app.users.index'
 import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
+import { Route as AppReportsIndexRouteImport } from './routes/_app.reports.index'
 import { Route as AppRecurringTasksIndexRouteImport } from './routes/_app.recurring-tasks.index'
 import { Route as AppInventoryIndexRouteImport } from './routes/_app.inventory.index'
 import { Route as AppAssetsIndexRouteImport } from './routes/_app.assets.index'
@@ -89,6 +91,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRecurringTasksRoute = AppRecurringTasksRouteImport.update({
   id: '/recurring-tasks',
   path: '/recurring-tasks',
@@ -123,6 +130,11 @@ const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppTasksRoute,
+} as any)
+const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppReportsRoute,
 } as any)
 const AppRecurringTasksIndexRoute = AppRecurringTasksIndexRouteImport.update({
   id: '/',
@@ -173,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof AppInventoryRouteWithChildren
   '/notifications': typeof AppNotificationsRoute
   '/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
+  '/reports': typeof AppReportsRouteWithChildren
   '/settings': typeof AppSettingsRoute
   '/tasks': typeof AppTasksRouteWithChildren
   '/users': typeof AppUsersRouteWithChildren
@@ -189,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/assets/': typeof AppAssetsIndexRoute
   '/inventory/': typeof AppInventoryIndexRoute
   '/recurring-tasks/': typeof AppRecurringTasksIndexRoute
+  '/reports/': typeof AppReportsIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
   '/users/': typeof AppUsersIndexRoute
 }
@@ -210,6 +224,7 @@ export interface FileRoutesByTo {
   '/assets': typeof AppAssetsIndexRoute
   '/inventory': typeof AppInventoryIndexRoute
   '/recurring-tasks': typeof AppRecurringTasksIndexRoute
+  '/reports': typeof AppReportsIndexRoute
   '/tasks': typeof AppTasksIndexRoute
   '/users': typeof AppUsersIndexRoute
 }
@@ -223,6 +238,7 @@ export interface FileRoutesById {
   '/_app/inventory': typeof AppInventoryRouteWithChildren
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
+  '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tasks': typeof AppTasksRouteWithChildren
   '/_app/users': typeof AppUsersRouteWithChildren
@@ -239,6 +255,7 @@ export interface FileRoutesById {
   '/_app/assets/': typeof AppAssetsIndexRoute
   '/_app/inventory/': typeof AppInventoryIndexRoute
   '/_app/recurring-tasks/': typeof AppRecurringTasksIndexRoute
+  '/_app/reports/': typeof AppReportsIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
   '/_app/users/': typeof AppUsersIndexRoute
 }
@@ -251,6 +268,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/notifications'
     | '/recurring-tasks'
+    | '/reports'
     | '/settings'
     | '/tasks'
     | '/users'
@@ -267,6 +285,7 @@ export interface FileRouteTypes {
     | '/assets/'
     | '/inventory/'
     | '/recurring-tasks/'
+    | '/reports/'
     | '/tasks/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
@@ -288,6 +307,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/inventory'
     | '/recurring-tasks'
+    | '/reports'
     | '/tasks'
     | '/users'
   id:
@@ -300,6 +320,7 @@ export interface FileRouteTypes {
     | '/_app/inventory'
     | '/_app/notifications'
     | '/_app/recurring-tasks'
+    | '/_app/reports'
     | '/_app/settings'
     | '/_app/tasks'
     | '/_app/users'
@@ -316,6 +337,7 @@ export interface FileRouteTypes {
     | '/_app/assets/'
     | '/_app/inventory/'
     | '/_app/recurring-tasks/'
+    | '/_app/reports/'
     | '/_app/tasks/'
     | '/_app/users/'
   fileRoutesById: FileRoutesById
@@ -406,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/recurring-tasks': {
       id: '/_app/recurring-tasks'
       path: '/recurring-tasks'
@@ -454,6 +483,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tasks/'
       preLoaderRoute: typeof AppTasksIndexRouteImport
       parentRoute: typeof AppTasksRoute
+    }
+    '/_app/reports/': {
+      id: '/_app/reports/'
+      path: '/'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof AppReportsIndexRouteImport
+      parentRoute: typeof AppReportsRoute
     }
     '/_app/recurring-tasks/': {
       id: '/_app/recurring-tasks/'
@@ -555,6 +591,18 @@ const AppRecurringTasksRouteChildren: AppRecurringTasksRouteChildren = {
 const AppRecurringTasksRouteWithChildren =
   AppRecurringTasksRoute._addFileChildren(AppRecurringTasksRouteChildren)
 
+interface AppReportsRouteChildren {
+  AppReportsIndexRoute: typeof AppReportsIndexRoute
+}
+
+const AppReportsRouteChildren: AppReportsRouteChildren = {
+  AppReportsIndexRoute: AppReportsIndexRoute,
+}
+
+const AppReportsRouteWithChildren = AppReportsRoute._addFileChildren(
+  AppReportsRouteChildren,
+)
+
 interface AppTasksRouteChildren {
   AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
   AppTasksIndexRoute: typeof AppTasksIndexRoute
@@ -589,6 +637,7 @@ interface AppRouteChildren {
   AppInventoryRoute: typeof AppInventoryRouteWithChildren
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppRecurringTasksRoute: typeof AppRecurringTasksRouteWithChildren
+  AppReportsRoute: typeof AppReportsRouteWithChildren
   AppSettingsRoute: typeof AppSettingsRoute
   AppTasksRoute: typeof AppTasksRouteWithChildren
   AppUsersRoute: typeof AppUsersRouteWithChildren
@@ -600,6 +649,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventoryRoute: AppInventoryRouteWithChildren,
   AppNotificationsRoute: AppNotificationsRoute,
   AppRecurringTasksRoute: AppRecurringTasksRouteWithChildren,
+  AppReportsRoute: AppReportsRouteWithChildren,
   AppSettingsRoute: AppSettingsRoute,
   AppTasksRoute: AppTasksRouteWithChildren,
   AppUsersRoute: AppUsersRouteWithChildren,
