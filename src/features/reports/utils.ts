@@ -1,4 +1,4 @@
-import { format, subWeeks } from "date-fns";
+import { format, parseISO, subWeeks } from "date-fns";
 
 import type { TableUrlState } from "@/shared/ui/data-table";
 import type { DateRange } from "@/shared/ui/date-picker";
@@ -17,7 +17,9 @@ export const getDefaultRange = (): DateRange => ({
 });
 
 export const formatBucketLabel = (bucket: string, groupBy: ThroughputGranularity): string => {
-  const date = new Date(bucket);
+  // Buckets are UTC boundaries (…T00:00:00.000Z). Parse the date part as a local
+  // date so format() doesn't shift the label back a day/month west of UTC.
+  const date = parseISO(bucket.slice(0, 10));
 
   return groupBy === "month" ? format(date, "MMM yyyy") : format(date, "MMM d");
 };
