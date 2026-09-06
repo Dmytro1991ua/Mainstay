@@ -1745,6 +1745,117 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reports/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lifetime reliability report, one row per asset: total/open/overdue/completed task counts, total parts consumed, and average completion time in days. Paginated; searchable by name/serial/location; filterable by category and status; sortable by any computed metric (defaults to most-worked first). ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    search?: string;
+                    category?: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+                    status?: "OPERATIONAL" | "DOWN" | "RETIRED";
+                    sortBy?: "totalTasks" | "openTasks" | "overdueTasks" | "completedTasks" | "partsConsumed" | "avgCompletionDays" | "name";
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Per-asset reliability rows */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetReliabilityResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reports/throughput": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Maintenance throughput over time: tasks created vs completed per bucket (day/week/month), zero-filled across the range, plus a summary with completion rate and average cycle time. Defaults to the last 12 weeks. ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string | null;
+                    to?: string | null;
+                    groupBy?: "day" | "week" | "month";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Throughput series and summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ThroughputResponse"];
+                    };
+                };
+                /** @description Invalid range (`from` after `to`) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks/{id}/comments": {
         parameters: {
             query?: never;
@@ -2287,6 +2398,84 @@ export interface paths {
                     };
                 };
                 /** @description Task already completed or insufficient inventory stock */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Cancel a task with a required reason. ADMIN/MANAGER only. This is the only way to cancel — PATCH /tasks/{id} with status CANCELLED is rejected. Blocked on tasks that are already DONE or CANCELLED. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CancelTaskInput"];
+                };
+            };
+            responses: {
+                /** @description Task cancelled */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TaskResponse"];
+                    };
+                };
+                /** @description Missing or empty cancellation reason */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task is already completed or already cancelled */
                 409: {
                     headers: {
                         [name: string]: unknown;
@@ -3673,6 +3862,56 @@ export interface components {
             /** @example 30 */
             intervalDays?: number;
         };
+        AssetReliabilityResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["AssetReliabilityRow"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        AssetReliabilityRow: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            serialNumber: string;
+            category: string;
+            status: string;
+            totalTasks: number;
+            openTasks: number;
+            overdueTasks: number;
+            completedTasks: number;
+            partsConsumed: number;
+            avgCompletionDays: number | null;
+        };
+        ThroughputResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: date-time */
+                from: string;
+                /** Format: date-time */
+                to: string;
+                /** @enum {string} */
+                groupBy: "day" | "week" | "month";
+                summary: {
+                    totalCreated: number;
+                    totalCompleted: number;
+                    completionRate: number | null;
+                    avgCompletionDays: number | null;
+                };
+                series: components["schemas"]["ThroughputBucket"][];
+            };
+        };
+        ThroughputBucket: {
+            /** Format: date-time */
+            bucket: string;
+            created: number;
+            completed: number;
+        };
         TaskCommentsListResponse: {
             /** @enum {boolean} */
             success: true;
@@ -3784,6 +4023,10 @@ export interface components {
                 inventoryItemId: string;
                 quantity: number;
             }[];
+        };
+        CancelTaskInput: {
+            /** @example Equipment was replaced — work no longer needed. */
+            reason: string;
         };
         UsersListResponse: {
             /** @enum {boolean} */

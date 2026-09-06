@@ -18,6 +18,17 @@ const TIME_STEPS: TimeStep[] = [
 
 export const formatShortDate = (iso: string) => format(new Date(iso), "MMM d");
 
+const ENUM_ACRONYMS: Record<string, string> = { HVAC: "HVAC", IT: "IT" };
+
+/** "IT_EQUIPMENT" → "IT Equipment", "OPERATIONAL" → "Operational". */
+export const formatEnumLabel = (value: string): string =>
+  value
+    .split("_")
+    .map(
+      (word) => ENUM_ACRONYMS[word] ?? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join(" ");
+
 export const formatUserName = (userName: string): string =>
   userName
     .split("_")
