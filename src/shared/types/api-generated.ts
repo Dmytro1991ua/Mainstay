@@ -1752,10 +1752,18 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Lifetime reliability report, one row per asset: total/open/overdue/completed task counts, total parts consumed, and average completion time in days. Ordered by most-worked assets first. ADMIN/MANAGER only. */
+        /** @description Lifetime reliability report, one row per asset: total/open/overdue/completed task counts, total parts consumed, and average completion time in days. Paginated; searchable by name/serial/location; filterable by category and status; sortable by any computed metric (defaults to most-worked first). ADMIN/MANAGER only. */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    search?: string;
+                    category?: "HVAC" | "ELECTRICAL" | "PLUMBING" | "MECHANICAL" | "VEHICLE" | "IT_EQUIPMENT" | "SAFETY_SYSTEM" | "BUILDING";
+                    status?: "OPERATIONAL" | "DOWN" | "RETIRED";
+                    sortBy?: "totalTasks" | "openTasks" | "overdueTasks" | "completedTasks" | "partsConsumed" | "avgCompletionDays" | "name";
+                    sortOrder?: "asc" | "desc";
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -3858,6 +3866,12 @@ export interface components {
             /** @enum {boolean} */
             success: true;
             data: components["schemas"]["AssetReliabilityRow"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
         };
         AssetReliabilityRow: {
             /** Format: uuid */

@@ -1,15 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { fetchAssetReliability, fetchThroughput, type ThroughputParams } from "../api/reports.api";
+import { useInfiniteQueryList } from "@/shared/hooks/use-crud";
+
+import {
+  fetchAssetReliability,
+  fetchThroughput,
+  type AssetReliabilityRow,
+  type ReliabilityListParams,
+  type ThroughputParams,
+} from "../api/reports.api";
 
 export const REPORTS_KEY = "reports";
 
-export const useAssetReliabilityQuery = () =>
-  useQuery({
-    queryKey: [REPORTS_KEY, "assets"],
-    queryFn: fetchAssetReliability,
-    staleTime: 60_000,
-  });
+export const useReliabilityQuery = (params: ReliabilityListParams) =>
+  useInfiniteQueryList<AssetReliabilityRow, ReliabilityListParams>(
+    `${REPORTS_KEY}-assets`,
+    params,
+    fetchAssetReliability,
+  );
 
 export const useThroughputQuery = (params: ThroughputParams) =>
   useQuery({

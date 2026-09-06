@@ -1,8 +1,13 @@
 import { format, subWeeks } from "date-fns";
 
+import type { TableUrlState } from "@/shared/ui/data-table";
 import type { DateRange } from "@/shared/ui/date-picker";
 
-import type { ThroughputGranularity } from "./api/reports.api";
+import type {
+  ReliabilityListParams,
+  ReliabilitySortBy,
+  ThroughputGranularity,
+} from "./api/reports.api";
 
 const DEFAULT_RANGE_WEEKS = 12;
 
@@ -22,3 +27,21 @@ export const formatCompletionRate = (rate: number | null): string =>
 
 export const formatDays = (days: number | null): string =>
   days == null ? "—" : `${days.toFixed(1)}d`;
+
+export const buildReliabilityParams = (
+  tableState: TableUrlState,
+  search: string | undefined,
+): ReliabilityListParams => {
+  const [activeSort] = tableState.sorting ?? [];
+  // Default to most-worked-first (desc) when the user hasn't chosen a sort.
+  const sortOrder = !activeSort || activeSort.desc ? "desc" : "asc";
+
+  return {
+    search: search || undefined,
+    status: tableState.filters?.status?.[0],
+    category: tableState.filters?.category?.[0],
+    sortBy: (activeSort?.id as ReliabilitySortBy) ?? "totalTasks",
+    sortOrder,
+    limit: 25,
+  };
+};
