@@ -5,14 +5,8 @@ import { ROW_HIGHLIGHT } from "./config";
 
 import type { InventoryItem, InventoryCategory, InventoryListParams } from "./api/inventory.api";
 
-// cspell:ignore HVAC
-const ACRONYMS: Record<string, string> = { HVAC: "HVAC" };
-
-export const formatCategoryLabel = (value: string): string =>
-  value
-    .split("_")
-    .map((word) => ACRONYMS[word] ?? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+// Category codes are enum-shaped (e.g. "SAFETY_EQUIPMENT"); reuse the shared formatter.
+export { formatEnumLabel as formatCategoryLabel } from "@/shared/utils";
 
 export const getInventoryStatus = (quantity: number, minStockLevel: number): PillStatus => {
   if (quantity === 0) return PillStatus.OutOfStock;
