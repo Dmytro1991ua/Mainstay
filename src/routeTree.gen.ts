@@ -17,6 +17,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/_auth.reset-pass
 import { Route as AuthRegisterRouteImport } from './routes/_auth.register'
 import { Route as AuthLoginRouteImport } from './routes/_auth.login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth.forgot-password'
+import { Route as AppWorkOrderRequestsRouteImport } from './routes/_app.work-order-requests'
 import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppTasksRouteImport } from './routes/_app.tasks'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
@@ -26,6 +27,7 @@ import { Route as AppNotificationsRouteImport } from './routes/_app.notification
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAssetsRouteImport } from './routes/_app.assets'
+import { Route as AppWorkOrderRequestsIndexRouteImport } from './routes/_app.work-order-requests.index'
 import { Route as AppUsersIndexRouteImport } from './routes/_app.users.index'
 import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app.reports.index'
@@ -76,6 +78,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => AuthRoute,
 } as any)
+const AppWorkOrderRequestsRoute = AppWorkOrderRequestsRouteImport.update({
+  id: '/work-order-requests',
+  path: '/work-order-requests',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppUsersRoute = AppUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -121,6 +128,12 @@ const AppAssetsRoute = AppAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWorkOrderRequestsIndexRoute =
+  AppWorkOrderRequestsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppWorkOrderRequestsRoute,
+  } as any)
 const AppUsersIndexRoute = AppUsersIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -189,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/tasks': typeof AppTasksRouteWithChildren
   '/users': typeof AppUsersRouteWithChildren
+  '/work-order-requests': typeof AppWorkOrderRequestsRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
@@ -205,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/reports/': typeof AppReportsIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
   '/users/': typeof AppUsersIndexRoute
+  '/work-order-requests/': typeof AppWorkOrderRequestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -227,6 +242,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsIndexRoute
   '/tasks': typeof AppTasksIndexRoute
   '/users': typeof AppUsersIndexRoute
+  '/work-order-requests': typeof AppWorkOrderRequestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -242,6 +258,7 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tasks': typeof AppTasksRouteWithChildren
   '/_app/users': typeof AppUsersRouteWithChildren
+  '/_app/work-order-requests': typeof AppWorkOrderRequestsRouteWithChildren
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
@@ -258,6 +275,7 @@ export interface FileRoutesById {
   '/_app/reports/': typeof AppReportsIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
   '/_app/users/': typeof AppUsersIndexRoute
+  '/_app/work-order-requests/': typeof AppWorkOrderRequestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -272,6 +290,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/work-order-requests'
     | '/forgot-password'
     | '/login'
     | '/register'
@@ -288,6 +307,7 @@ export interface FileRouteTypes {
     | '/reports/'
     | '/tasks/'
     | '/users/'
+    | '/work-order-requests/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -310,6 +330,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/tasks'
     | '/users'
+    | '/work-order-requests'
   id:
     | '__root__'
     | '/'
@@ -324,6 +345,7 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/_app/tasks'
     | '/_app/users'
+    | '/_app/work-order-requests'
     | '/_auth/forgot-password'
     | '/_auth/login'
     | '/_auth/register'
@@ -340,6 +362,7 @@ export interface FileRouteTypes {
     | '/_app/reports/'
     | '/_app/tasks/'
     | '/_app/users/'
+    | '/_app/work-order-requests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -407,6 +430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_app/work-order-requests': {
+      id: '/_app/work-order-requests'
+      path: '/work-order-requests'
+      fullPath: '/work-order-requests'
+      preLoaderRoute: typeof AppWorkOrderRequestsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/users': {
       id: '/_app/users'
       path: '/users'
@@ -469,6 +499,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/assets'
       preLoaderRoute: typeof AppAssetsRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/work-order-requests/': {
+      id: '/_app/work-order-requests/'
+      path: '/'
+      fullPath: '/work-order-requests/'
+      preLoaderRoute: typeof AppWorkOrderRequestsIndexRouteImport
+      parentRoute: typeof AppWorkOrderRequestsRoute
     }
     '/_app/users/': {
       id: '/_app/users/'
@@ -631,6 +668,17 @@ const AppUsersRouteWithChildren = AppUsersRoute._addFileChildren(
   AppUsersRouteChildren,
 )
 
+interface AppWorkOrderRequestsRouteChildren {
+  AppWorkOrderRequestsIndexRoute: typeof AppWorkOrderRequestsIndexRoute
+}
+
+const AppWorkOrderRequestsRouteChildren: AppWorkOrderRequestsRouteChildren = {
+  AppWorkOrderRequestsIndexRoute: AppWorkOrderRequestsIndexRoute,
+}
+
+const AppWorkOrderRequestsRouteWithChildren =
+  AppWorkOrderRequestsRoute._addFileChildren(AppWorkOrderRequestsRouteChildren)
+
 interface AppRouteChildren {
   AppAssetsRoute: typeof AppAssetsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
@@ -641,6 +689,7 @@ interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppTasksRoute: typeof AppTasksRouteWithChildren
   AppUsersRoute: typeof AppUsersRouteWithChildren
+  AppWorkOrderRequestsRoute: typeof AppWorkOrderRequestsRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -653,6 +702,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppTasksRoute: AppTasksRouteWithChildren,
   AppUsersRoute: AppUsersRouteWithChildren,
+  AppWorkOrderRequestsRoute: AppWorkOrderRequestsRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
