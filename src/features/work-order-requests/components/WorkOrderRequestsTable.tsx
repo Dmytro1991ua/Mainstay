@@ -1,4 +1,4 @@
-import { AlertTriangle, Inbox, RotateCcw } from "lucide-react";
+import { AlertTriangle, Inbox, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { DataTable } from "@/shared/ui/data-table";
@@ -6,7 +6,10 @@ import type { OnSetTableState, TableUrlState } from "@/shared/ui/data-table";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 import { useWorkOrderRequestColumns } from "../hooks/use-work-order-request-columns";
+import { useWorkOrderRequestForm } from "../hooks/use-work-order-request-form";
 import { useWorkOrderRequestsData } from "../hooks/use-work-order-requests-data";
+
+import { WorkOrderRequestFormSheet } from "./WorkOrderRequestFormSheet";
 
 type WorkOrderRequestsTableProps = {
   tableState: TableUrlState;
@@ -30,43 +33,60 @@ export const WorkOrderRequestsTable = ({
 
   const columns = useWorkOrderRequestColumns();
 
+  const { isOpen, openSheet, closeSheet, form, handleSave, isSaving } = useWorkOrderRequestForm();
+
   return (
-    <DataTable
-      tableId="work-order-requests"
-      columns={columns}
-      data={requests}
-      isPending={isLoading}
-      isError={isError}
-      hasNextPage={hasNextPage}
-      fetchNextPage={fetchNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-      searchPlaceholder="Search requests…"
-      filterConfig={filterConfig}
-      emptyState={
-        <EmptyState
-          icon={Inbox}
-          message="No requests found"
-          description="Try adjusting your search or filters."
-        />
-      }
-      errorState={
-        <EmptyState
-          icon={AlertTriangle}
-          message="Couldn't load requests"
-          description="The server didn't respond."
-          variant="red"
-          action={
-            <Button onClick={() => refetch()}>
-              <RotateCcw className="size-3.5" />
-              Retry
-            </Button>
-          }
-        />
-      }
-      getRowId={(row) => row.id}
-      tableState={tableState}
-      onSetTableState={onSetTableState}
-      exportFilename="work-order-requests"
-    />
+    <>
+      <DataTable
+        tableId="work-order-requests"
+        columns={columns}
+        data={requests}
+        isPending={isLoading}
+        isError={isError}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        searchPlaceholder="Search requests…"
+        filterConfig={filterConfig}
+        actions={
+          <Button onClick={openSheet} disabled={isError}>
+            <Plus />
+            New request
+          </Button>
+        }
+        emptyState={
+          <EmptyState
+            icon={Inbox}
+            message="No requests found"
+            description="Try adjusting your search or filters."
+          />
+        }
+        errorState={
+          <EmptyState
+            icon={AlertTriangle}
+            message="Couldn't load requests"
+            description="The server didn't respond."
+            variant="red"
+            action={
+              <Button onClick={() => refetch()}>
+                <RotateCcw className="size-3.5" />
+                Retry
+              </Button>
+            }
+          />
+        }
+        getRowId={(row) => row.id}
+        tableState={tableState}
+        onSetTableState={onSetTableState}
+        exportFilename="work-order-requests"
+      />
+      <WorkOrderRequestFormSheet
+        open={isOpen}
+        form={form}
+        onSave={handleSave}
+        onClose={closeSheet}
+        isSaving={isSaving}
+      />
+    </>
   );
 };
