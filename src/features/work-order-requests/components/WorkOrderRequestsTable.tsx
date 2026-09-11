@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Inbox, Plus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -10,6 +11,8 @@ import { useWorkOrderRequestForm } from "../hooks/use-work-order-request-form";
 import { useWorkOrderRequestsData } from "../hooks/use-work-order-requests-data";
 
 import { WorkOrderRequestFormSheet } from "./WorkOrderRequestFormSheet";
+
+import type { WorkOrderRequest } from "../api/work-order-requests.api";
 
 type WorkOrderRequestsTableProps = {
   tableState: TableUrlState;
@@ -32,8 +35,13 @@ export const WorkOrderRequestsTable = ({
   } = useWorkOrderRequestsData(tableState);
 
   const columns = useWorkOrderRequestColumns();
+  const navigate = useNavigate();
 
   const { isOpen, openSheet, closeSheet, form, handleSave, isSaving } = useWorkOrderRequestForm();
+
+  const handleRowClick = (request: WorkOrderRequest) => {
+    navigate({ to: "/work-order-requests/$requestId", params: { requestId: request.id } });
+  };
 
   return (
     <>
@@ -75,6 +83,7 @@ export const WorkOrderRequestsTable = ({
             }
           />
         }
+        onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}
         onSetTableState={onSetTableState}

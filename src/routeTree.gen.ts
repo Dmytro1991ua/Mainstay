@@ -34,6 +34,7 @@ import { Route as AppReportsIndexRouteImport } from './routes/_app.reports.index
 import { Route as AppRecurringTasksIndexRouteImport } from './routes/_app.recurring-tasks.index'
 import { Route as AppInventoryIndexRouteImport } from './routes/_app.inventory.index'
 import { Route as AppAssetsIndexRouteImport } from './routes/_app.assets.index'
+import { Route as AppWorkOrderRequestsRequestIdRouteImport } from './routes/_app.work-order-requests.$requestId'
 import { Route as AppUsersUserIdRouteImport } from './routes/_app.users.$userId'
 import { Route as AppTasksTaskIdRouteImport } from './routes/_app.tasks.$taskId'
 import { Route as AppRecurringTasksScheduleIdRouteImport } from './routes/_app.recurring-tasks.$scheduleId'
@@ -164,6 +165,12 @@ const AppAssetsIndexRoute = AppAssetsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppAssetsRoute,
 } as any)
+const AppWorkOrderRequestsRequestIdRoute =
+  AppWorkOrderRequestsRequestIdRouteImport.update({
+    id: '/$requestId',
+    path: '/$requestId',
+    getParentRoute: () => AppWorkOrderRequestsRoute,
+  } as any)
 const AppUsersUserIdRoute = AppUsersUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/users/$userId': typeof AppUsersUserIdRoute
+  '/work-order-requests/$requestId': typeof AppWorkOrderRequestsRequestIdRoute
   '/assets/': typeof AppAssetsIndexRoute
   '/inventory/': typeof AppInventoryIndexRoute
   '/recurring-tasks/': typeof AppRecurringTasksIndexRoute
@@ -236,6 +244,7 @@ export interface FileRoutesByTo {
   '/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/users/$userId': typeof AppUsersUserIdRoute
+  '/work-order-requests/$requestId': typeof AppWorkOrderRequestsRequestIdRoute
   '/assets': typeof AppAssetsIndexRoute
   '/inventory': typeof AppInventoryIndexRoute
   '/recurring-tasks': typeof AppRecurringTasksIndexRoute
@@ -269,6 +278,7 @@ export interface FileRoutesById {
   '/_app/recurring-tasks/$scheduleId': typeof AppRecurringTasksScheduleIdRoute
   '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/_app/users/$userId': typeof AppUsersUserIdRoute
+  '/_app/work-order-requests/$requestId': typeof AppWorkOrderRequestsRequestIdRoute
   '/_app/assets/': typeof AppAssetsIndexRoute
   '/_app/inventory/': typeof AppInventoryIndexRoute
   '/_app/recurring-tasks/': typeof AppRecurringTasksIndexRoute
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
     | '/users/$userId'
+    | '/work-order-requests/$requestId'
     | '/assets/'
     | '/inventory/'
     | '/recurring-tasks/'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/recurring-tasks/$scheduleId'
     | '/tasks/$taskId'
     | '/users/$userId'
+    | '/work-order-requests/$requestId'
     | '/assets'
     | '/inventory'
     | '/recurring-tasks'
@@ -356,6 +368,7 @@ export interface FileRouteTypes {
     | '/_app/recurring-tasks/$scheduleId'
     | '/_app/tasks/$taskId'
     | '/_app/users/$userId'
+    | '/_app/work-order-requests/$requestId'
     | '/_app/assets/'
     | '/_app/inventory/'
     | '/_app/recurring-tasks/'
@@ -549,6 +562,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAssetsIndexRouteImport
       parentRoute: typeof AppAssetsRoute
     }
+    '/_app/work-order-requests/$requestId': {
+      id: '/_app/work-order-requests/$requestId'
+      path: '/$requestId'
+      fullPath: '/work-order-requests/$requestId'
+      preLoaderRoute: typeof AppWorkOrderRequestsRequestIdRouteImport
+      parentRoute: typeof AppWorkOrderRequestsRoute
+    }
     '/_app/users/$userId': {
       id: '/_app/users/$userId'
       path: '/$userId'
@@ -669,10 +689,12 @@ const AppUsersRouteWithChildren = AppUsersRoute._addFileChildren(
 )
 
 interface AppWorkOrderRequestsRouteChildren {
+  AppWorkOrderRequestsRequestIdRoute: typeof AppWorkOrderRequestsRequestIdRoute
   AppWorkOrderRequestsIndexRoute: typeof AppWorkOrderRequestsIndexRoute
 }
 
 const AppWorkOrderRequestsRouteChildren: AppWorkOrderRequestsRouteChildren = {
+  AppWorkOrderRequestsRequestIdRoute: AppWorkOrderRequestsRequestIdRoute,
   AppWorkOrderRequestsIndexRoute: AppWorkOrderRequestsIndexRoute,
 }
 
