@@ -1,7 +1,10 @@
+import { Check, X } from "lucide-react";
+
 import type { FilterConfig } from "@/shared/ui/data-table";
 import { PillStatus } from "@/shared/ui/pill";
 
 import type { WorkOrderRequestStatus } from "./api/work-order-requests.api";
+import type { TriageAction } from "./types";
 
 export const WORK_ORDER_STATUS_PILL: Record<WorkOrderRequestStatus, PillStatus> = {
   PENDING: PillStatus.Pending,
@@ -18,4 +21,9 @@ export const WORK_ORDER_STATUS_OPTIONS = [
 // The list endpoint filters by status only (priority/category are display-only).
 export const WORK_ORDER_FILTER_CONFIG: FilterConfig[] = [
   { id: "status", label: "Status", type: "single", options: WORK_ORDER_STATUS_OPTIONS },
+];
+
+export const TRIAGE_ACTIONS: TriageAction[] = [
+  { key: "reject", label: "Reject", icon: X, variant: "outline" },
+  { key: "approve", label: "Approve", icon: Check },
 ];

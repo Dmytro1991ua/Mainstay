@@ -18,3 +18,16 @@ export const FORM_DEFAULTS: WorkOrderRequestFormValues = {
   priority: "MEDIUM",
   assetId: "",
 };
+
+export const workOrderApproveSchema = z.object({
+  // Both optional — "" means "leave unassigned / no due date".
+  assignedTo: z.string(),
+  dueDate: z.string(),
+});
+
+export type WorkOrderApproveValues = z.infer<typeof workOrderApproveSchema>;
+
+export const APPROVE_DEFAULTS: WorkOrderApproveValues = {
+  assignedTo: "",
+  dueDate: "",
+};
