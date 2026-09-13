@@ -9,6 +9,9 @@ export enum PillStatus {
   Operational = "Operational",
   Down = "Down",
   Retired = "Retired",
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
 }
 
 type PillConfig = {
@@ -56,5 +59,17 @@ export const PILL_CONFIG: Record<PillStatus, PillConfig> = {
   [PillStatus.Retired]: {
     className: "bg-panel-2 text-text-3 border border-border",
     dotClassName: "bg-text-3",
+  },
+  [PillStatus.Pending]: {
+    className: "bg-amber-soft text-amber border border-amber-border",
+    dotClassName: "bg-amber",
+  },
+  [PillStatus.Approved]: {
+    className: "bg-green-soft text-green border border-green-border",
+    dotClassName: "bg-green",
+  },
+  [PillStatus.Rejected]: {
+    className: "bg-red-soft text-red border border-red-border",
+    dotClassName: "bg-red",
   },
 };

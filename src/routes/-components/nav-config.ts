@@ -4,6 +4,7 @@ import {
   CalendarClock,
   ClipboardList,
   HardHat,
+  Inbox,
   LayoutDashboard,
   type LucideIcon,
   Package,
@@ -21,6 +22,7 @@ export type AppPath =
   | "/inventory"
   | "/assets"
   | "/tasks"
+  | "/work-order-requests"
   | "/recurring-tasks"
   | "/reports"
   | "/notifications"
@@ -45,6 +47,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { to: "/inventory", label: "Inventory", icon: Package },
   { to: "/assets", label: "Assets", icon: HardHat },
   { to: "/tasks", label: "Tasks", icon: ClipboardList },
+  { to: "/work-order-requests", label: "Requests", icon: Inbox },
   {
     to: "/recurring-tasks",
     label: "Schedules",

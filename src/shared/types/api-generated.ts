@@ -3236,6 +3236,276 @@ export interface paths {
         };
         trace?: never;
     };
+    "/work-order-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List requests. ADMIN/MANAGER see the full triage queue; other users see only their own. Paginated; filter by `status`; search title/description. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    search?: string;
+                    status?: "PENDING" | "APPROVED" | "REJECTED";
+                    sortBy?: "createdAt" | "priority" | "status";
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of requests */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WorkOrderRequestsListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description File a maintenance request (status PENDING). Any authenticated user may submit one. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateWorkOrderRequestInput"];
+                };
+            };
+            responses: {
+                /** @description Request created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WorkOrderRequestResponse"];
+                    };
+                };
+                /** @description Referenced asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/work-order-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get a single request. Accessible to its requester or any ADMIN/MANAGER. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Request found */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WorkOrderRequestResponse"];
+                    };
+                };
+                /** @description Not your request */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Request not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/work-order-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Approve a PENDING request. ADMIN/MANAGER only. Creates a task from the request (optionally assigning it and setting a due date) and links it back. Rejected if the request was already reviewed. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ApproveWorkOrderRequestInput"];
+                };
+            };
+            responses: {
+                /** @description Request approved; task created */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WorkOrderRequestResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Request or assignee/asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Request has already been reviewed */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/work-order-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Reject a PENDING request with a required reason. ADMIN/MANAGER only. Rejected if the request was already reviewed. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["RejectWorkOrderRequestInput"];
+                };
+            };
+            responses: {
+                /** @description Request rejected */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WorkOrderRequestResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Request not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Request has already been reviewed */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4156,6 +4426,99 @@ export interface components {
             OUT_OF_STOCK?: boolean;
             /** @example false */
             TASK_OVERDUE?: boolean;
+        };
+        WorkOrderRequestResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["WorkOrderRequest"];
+        };
+        WorkOrderRequest: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description: string | null;
+            /** @enum {string|null} */
+            category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS" | null;
+            /** @enum {string} */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /** @enum {string} */
+            status: "PENDING" | "APPROVED" | "REJECTED";
+            /** Format: uuid */
+            assetId: string | null;
+            /** Format: uuid */
+            requestedBy: string;
+            /** Format: uuid */
+            reviewedBy: string | null;
+            /** Format: date-time */
+            reviewedAt: string | null;
+            rejectionReason: string | null;
+            /** Format: uuid */
+            taskId: string | null;
+            requester: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
+            };
+            reviewer: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                email: string;
+            } | null;
+            asset: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                serialNumber: string;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CreateWorkOrderRequestInput: {
+            /** @example AC in Room 204 is leaking */
+            title: string;
+            /** @example Water pooling under the unit since this morning. */
+            description?: string;
+            /**
+             * @example HVAC
+             * @enum {string}
+             */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /**
+             * @default MEDIUM
+             * @example HIGH
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /** Format: uuid */
+            assetId?: string;
+        };
+        WorkOrderRequestsListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["WorkOrderRequest"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        ApproveWorkOrderRequestInput: {
+            /** Format: uuid */
+            assignedTo?: string;
+            /**
+             * Format: date-time
+             * @example 2026-09-15T00:00:00.000Z
+             */
+            dueDate?: string | null;
+        };
+        RejectWorkOrderRequestInput: {
+            /** @example Duplicate of an existing scheduled task. */
+            reason: string;
         };
     };
     responses: never;
