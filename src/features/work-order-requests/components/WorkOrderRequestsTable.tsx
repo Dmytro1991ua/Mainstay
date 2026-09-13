@@ -9,6 +9,7 @@ import { EmptyState } from "@/shared/ui/empty-state";
 import { useWorkOrderRequestColumns } from "../hooks/use-work-order-request-columns";
 import { useWorkOrderRequestForm } from "../hooks/use-work-order-request-form";
 import { useWorkOrderRequestsData } from "../hooks/use-work-order-requests-data";
+import { getWorkOrderRowHighlight } from "../utils";
 
 import { WorkOrderRequestFormSheet } from "./WorkOrderRequestFormSheet";
 
@@ -83,6 +84,7 @@ export const WorkOrderRequestsTable = ({
             }
           />
         }
+        getRowHighlightInfo={getWorkOrderRowHighlight}
         onRowClick={handleRowClick}
         getRowId={(row) => row.id}
         tableState={tableState}

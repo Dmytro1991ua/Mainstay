@@ -1,6 +1,9 @@
-import type { TableUrlState } from "@/shared/ui/data-table";
+import type { RowHighlightInfo, TableUrlState } from "@/shared/ui/data-table";
+
+import { WORK_ORDER_ROW_HIGHLIGHT } from "./config";
 
 import type {
+  WorkOrderRequest,
   WorkOrderRequestListParams,
   WorkOrderRequestSortBy,
 } from "./api/work-order-requests.api";
@@ -20,4 +23,10 @@ export const buildWorkOrderParams = (
     sortOrder,
     limit: 25,
   };
+};
+
+export const getWorkOrderRowHighlight = (row: WorkOrderRequest): RowHighlightInfo => {
+  const highlightStyles = WORK_ORDER_ROW_HIGHLIGHT[row.status] ?? "";
+
+  return { isHighlighted: !!highlightStyles, highlightStyles };
 };

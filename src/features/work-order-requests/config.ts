@@ -27,3 +27,8 @@ export const TRIAGE_ACTIONS: TriageAction[] = [
   { key: "reject", label: "Reject", icon: X, variant: "outline" },
   { key: "approve", label: "Approve", icon: Check },
 ];
+
+export const WORK_ORDER_ROW_HIGHLIGHT: Partial<Record<WorkOrderRequestStatus, string>> = {
+  APPROVED: "bg-row-green",
+  REJECTED: "bg-row-red",
+};

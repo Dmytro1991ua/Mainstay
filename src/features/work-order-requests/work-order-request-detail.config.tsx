@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
 
 import { TaskPriorityBadge } from "@/features/tasks/components/TaskPriorityBadge";
+import { Alert } from "@/shared/ui/alert";
 import type { DetailField } from "@/shared/ui/detail-shell";
 import { Pill } from "@/shared/ui/pill";
 import { formatEnumLabel } from "@/shared/utils";
@@ -9,6 +10,7 @@ import { formatEnumLabel } from "@/shared/utils";
 import { WORK_ORDER_STATUS_PILL } from "./config";
 
 import type { WorkOrderRequest } from "./api/work-order-requests.api";
+import type { ReactNode } from "react";
 
 const renderUser = (user: { userName: string; email: string }) => (
   <span className="text-text">
@@ -109,4 +111,16 @@ export const getWorkOrderRequestDetailFields = (request: WorkOrderRequest): Deta
   }
 
   return fields;
+};
+
+export const getWorkOrderTerminalBanner = (request: WorkOrderRequest): ReactNode => {
+  if (request.status === "APPROVED") {
+    return <Alert variant="success">This request was approved and a task was created.</Alert>;
+  }
+
+  if (request.status === "REJECTED") {
+    return <Alert variant="error">This request was rejected and is read-only.</Alert>;
+  }
+
+  return null;
 };

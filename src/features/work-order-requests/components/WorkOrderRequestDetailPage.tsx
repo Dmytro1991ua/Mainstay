@@ -7,7 +7,10 @@ import { EmptyState } from "@/shared/ui/empty-state";
 
 import { useWorkOrderRequestQuery } from "../hooks/use-work-order-requests";
 import { useWorkOrderTriage } from "../hooks/use-work-order-triage";
-import { getWorkOrderRequestDetailFields } from "../work-order-request-detail.config";
+import {
+  getWorkOrderRequestDetailFields,
+  getWorkOrderTerminalBanner,
+} from "../work-order-request-detail.config";
 
 import { WorkOrderApproveSheet } from "./WorkOrderApproveSheet";
 import { WorkOrderRejectDialog } from "./WorkOrderRejectDialog";
@@ -83,6 +86,7 @@ export const WorkOrderRequestDetailPage = ({ requestId }: WorkOrderRequestDetail
             <WorkOrderRequestDetailActions onApprove={openApprove} onReject={openReject} />
           ) : undefined
         }
+        banner={getWorkOrderTerminalBanner(request)}
         fields={getWorkOrderRequestDetailFields(request)}
         skeletonKeys={SKELETON_KEYS}
       />
