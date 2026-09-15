@@ -1,4 +1,4 @@
-import { AlertTriangle, Bell, Clock, PackageX, XCircle } from "lucide-react";
+import { AlertTriangle, Bell, CalendarClock, Clock, PackageX, XCircle } from "lucide-react";
 
 import type { components } from "@/shared/types/api-generated";
 
@@ -60,5 +60,14 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Task Cancelled",
     unreadRowBg: "bg-red-soft",
     unreadBorderClass: "border-l-red",
+  },
+  // A heads-up before the due date — calmer accent, distinct from amber "overdue".
+  TASK_DUE_SOON: {
+    icon: CalendarClock,
+    iconClass: "text-accent",
+    bgClass: "bg-accent-soft",
+    label: "Task Due Soon",
+    unreadRowBg: "bg-accent-soft",
+    unreadBorderClass: "border-l-accent",
   },
 };
