@@ -1,4 +1,12 @@
-import { AlertTriangle, Bell, CalendarClock, Clock, PackageX, XCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  CalendarClock,
+  CheckCircle2,
+  Clock,
+  PackageX,
+  XCircle,
+} from "lucide-react";
 
 import type { components } from "@/shared/types/api-generated";
 
@@ -69,5 +77,21 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Task Due Soon",
     unreadRowBg: "bg-accent-soft",
     unreadBorderClass: "border-l-accent",
+  },
+  WORK_ORDER_APPROVED: {
+    icon: CheckCircle2,
+    iconClass: "text-green",
+    bgClass: "bg-green-soft",
+    label: "Request Approved",
+    unreadRowBg: "bg-green-soft",
+    unreadBorderClass: "border-l-green",
+  },
+  WORK_ORDER_REJECTED: {
+    icon: XCircle,
+    iconClass: "text-red",
+    bgClass: "bg-red-soft",
+    label: "Request Rejected",
+    unreadRowBg: "bg-red-soft",
+    unreadBorderClass: "border-l-red",
   },
 };
