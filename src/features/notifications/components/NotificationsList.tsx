@@ -31,7 +31,7 @@ export const NotificationsList = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="overflow-hidden rounded-xl border border-border">
+        <div className="overflow-hidden rounded-xl border border-border bg-panel">
           {SKEL_KEYS.map((k) => (
             <NotificationRowSkeleton key={k} />
           ))}
