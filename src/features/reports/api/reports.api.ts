@@ -6,6 +6,23 @@ export type AssetReliabilityRow = components["schemas"]["AssetReliabilityRow"];
 export type ThroughputReport = components["schemas"]["ThroughputResponse"]["data"];
 export type ThroughputBucket = components["schemas"]["ThroughputBucket"];
 export type ThroughputGranularity = ThroughputReport["groupBy"];
+export type TechnicianWorkloadRow = components["schemas"]["TechnicianWorkloadRow"];
+
+export type TechnicianSortBy =
+  | "openTasks"
+  | "inProgressTasks"
+  | "overdueTasks"
+  | "completedTasks"
+  | "nextDueAt"
+  | "userName";
+
+export type TechnicianListParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: TechnicianSortBy;
+  sortOrder?: "asc" | "desc";
+};
 
 export type ReliabilitySortBy =
   | "totalTasks"
@@ -50,4 +67,15 @@ export const fetchThroughput = async (params: ThroughputParams): Promise<Through
   );
 
   return res.data.data;
+};
+
+export const fetchTechnicianWorkload = async (
+  params: TechnicianListParams,
+): Promise<PaginatedResponse<TechnicianWorkloadRow>> => {
+  const res = await axiosInstance.get<components["schemas"]["TechnicianWorkloadResponse"]>(
+    "/reports/technicians",
+    { params },
+  );
+
+  return { data: res.data.data, meta: res.data.meta };
 };

@@ -27,7 +27,7 @@ export const SkeletonStatsGrid = ({ count = 5 }: { count?: number }) => (
 );
 
 export const SkeletonWidget = () => (
-  <div className="h-96 rounded-xl border border-accent bg-bg p-4 shadow-card">
+  <div className="h-96 rounded-xl border border-accent bg-panel p-4 shadow-card">
     <div className="divide-y divide-border">
       {ROW_KEYS.map((k) => (
         <div key={k} className="flex items-center justify-between gap-3 py-2.5">
@@ -43,7 +43,7 @@ export const SkeletonWidget = () => (
 );
 
 export const SkeletonCategoryBreakdown = () => (
-  <div className="h-96 rounded-xl border border-accent bg-bg p-4 shadow-card">
+  <div className="h-96 rounded-xl border border-accent bg-panel p-4 shadow-card">
     <div className="divide-y divide-border">
       {CAT_KEYS.map((k) => (
         <div key={k} className="flex items-center gap-3 py-2.5">
@@ -59,7 +59,7 @@ export const SkeletonCategoryBreakdown = () => (
 );
 
 export const SkeletonChart = () => (
-  <div className="h-96 rounded-xl border border-accent bg-bg p-4 shadow-card">
+  <div className="h-96 rounded-xl border border-accent bg-panel p-4 shadow-card">
     <div className="flex flex-col items-center gap-4 py-3">
       <Skeleton className="h-30 w-30 rounded-full" />
       <div className="w-full space-y-2">

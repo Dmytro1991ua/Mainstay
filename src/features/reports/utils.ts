@@ -6,6 +6,8 @@ import type { DateRange } from "@/shared/ui/date-picker";
 import type {
   ReliabilityListParams,
   ReliabilitySortBy,
+  TechnicianListParams,
+  TechnicianSortBy,
   ThroughputGranularity,
 } from "./api/reports.api";
 
@@ -43,6 +45,22 @@ export const buildReliabilityParams = (
     status: tableState.filters?.status?.[0],
     category: tableState.filters?.category?.[0],
     sortBy: (activeSort?.id as ReliabilitySortBy) ?? "totalTasks",
+    sortOrder,
+    limit: 25,
+  };
+};
+
+export const buildTechnicianParams = (
+  tableState: TableUrlState,
+  search: string | undefined,
+): TechnicianListParams => {
+  const [activeSort] = tableState.sorting ?? [];
+  // Default to busiest-first (openTasks desc) when the user hasn't chosen a sort.
+  const sortOrder = !activeSort || activeSort.desc ? "desc" : "asc";
+
+  return {
+    search: search || undefined,
+    sortBy: (activeSort?.id as TechnicianSortBy) ?? "openTasks",
     sortOrder,
     limit: 25,
   };

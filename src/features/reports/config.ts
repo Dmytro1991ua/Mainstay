@@ -5,6 +5,7 @@ import type { ReportTab } from "./types";
 export const REPORT_TABS: { key: ReportTab; label: string }[] = [
   { key: "throughput", label: "Throughput" },
   { key: "reliability", label: "Asset reliability" },
+  { key: "technicians", label: "Technician workload" },
 ];
 
 export const THROUGHPUT_CHART_CONFIG = {

@@ -1,5 +1,4 @@
 import { BarChart3 } from "lucide-react";
-import { useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
@@ -10,20 +9,26 @@ import { PageShell } from "@/shared/ui/page-shell";
 import { REPORT_TABS } from "../config";
 
 import { AssetReliabilityReport } from "./AssetReliabilityReport";
+import { TechnicianWorkloadReport } from "./TechnicianWorkloadReport";
 import { ThroughputReport } from "./ThroughputReport";
 
 import type { ReportTab } from "../types";
 
 type ReportsPageProps = {
+  activeTab: ReportTab;
+  onTabChange: (tab: ReportTab) => void;
   tableState: TableUrlState;
   onSetTableState: OnSetTableState;
 };
 
-export const ReportsPage = ({ tableState, onSetTableState }: ReportsPageProps) => {
+export const ReportsPage = ({
+  activeTab,
+  onTabChange,
+  tableState,
+  onSetTableState,
+}: ReportsPageProps) => {
   const canView =
     useAuthStore((s) => s.user)?.roles.some((r) => r === "ADMIN" || r === "MANAGER") ?? false;
-
-  const [activeTab, setActiveTab] = useState<ReportTab>("throughput");
 
   if (!canView) {
     return (
@@ -43,7 +48,7 @@ export const ReportsPage = ({ tableState, onSetTableState }: ReportsPageProps) =
         <button
           key={key}
           type="button"
-          onClick={() => setActiveTab(key)}
+          onClick={() => onTabChange(key)}
           className={cn(
             "rounded-[7px] px-3 py-1.5 text-[12.5px] font-medium transition-colors",
             activeTab === key
@@ -61,13 +66,15 @@ export const ReportsPage = ({ tableState, onSetTableState }: ReportsPageProps) =
     <PageShell
       title="Reports"
       subtitle="Operational analytics across assets and tasks"
-      variant={activeTab === "reliability" ? "card" : "plain"}
+      variant={activeTab === "throughput" ? "plain" : "card"}
       toolbar={tabControl}
     >
-      {activeTab === "throughput" ? (
-        <ThroughputReport />
-      ) : (
+      {activeTab === "throughput" && <ThroughputReport />}
+      {activeTab === "reliability" && (
         <AssetReliabilityReport tableState={tableState} onSetTableState={onSetTableState} />
+      )}
+      {activeTab === "technicians" && (
+        <TechnicianWorkloadReport tableState={tableState} onSetTableState={onSetTableState} />
       )}
     </PageShell>
   );

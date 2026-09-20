@@ -1798,6 +1798,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reports/technicians": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Current workload per technician: open/in-progress/overdue/completed task counts and the next upcoming due date. One row per technician (idle ones show zeros). Paginated; searchable by userName/email; sortable by any count, nextDueAt, or userName (defaults to busiest first). ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    search?: string;
+                    sortBy?: "openTasks" | "inProgressTasks" | "overdueTasks" | "completedTasks" | "nextDueAt" | "userName";
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Per-technician workload rows */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TechnicianWorkloadResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reports/throughput": {
         parameters: {
             query?: never;
@@ -3633,6 +3684,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             } | null;
             /** Format: date-time */
@@ -3733,6 +3785,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             };
         };
@@ -4070,6 +4123,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             } | null;
             intervalDays: number;
@@ -4157,6 +4211,30 @@ export interface components {
             partsConsumed: number;
             avgCompletionDays: number | null;
         };
+        TechnicianWorkloadResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["TechnicianWorkloadRow"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        TechnicianWorkloadRow: {
+            /** Format: uuid */
+            id: string;
+            userName: string;
+            /** Format: email */
+            email: string;
+            openTasks: number;
+            inProgressTasks: number;
+            overdueTasks: number;
+            completedTasks: number;
+            /** Format: date-time */
+            nextDueAt: string | null;
+        };
         ThroughputResponse: {
             /** @enum {boolean} */
             success: true;
@@ -4197,6 +4275,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             };
             /** Format: date-time */
@@ -4314,7 +4393,10 @@ export interface components {
             id: string;
             /** @example johndoe */
             userName: string;
-            /** @example john@example.com */
+            /**
+             * Format: email
+             * @example john@example.com
+             */
             email: string;
             roles: ("ADMIN" | "MANAGER" | "TECHNICIAN")[];
             /**
@@ -4361,6 +4443,7 @@ export interface components {
             data: {
                 /** Format: uuid */
                 id: string;
+                /** Format: email */
                 email: string;
                 /** @enum {string} */
                 role: "MANAGER" | "TECHNICIAN";
@@ -4388,6 +4471,7 @@ export interface components {
         PendingInvite: {
             /** Format: uuid */
             id: string;
+            /** Format: email */
             email: string;
             /** @enum {string} */
             role: "ADMIN" | "MANAGER" | "TECHNICIAN";
@@ -4458,12 +4542,14 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             };
             reviewer: {
                 /** Format: uuid */
                 id: string;
                 userName: string;
+                /** Format: email */
                 email: string;
             } | null;
             asset: {
