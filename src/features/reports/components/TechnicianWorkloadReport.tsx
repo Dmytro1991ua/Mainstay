@@ -44,7 +44,11 @@ export const TechnicianWorkloadReport = ({
         <EmptyState
           icon={Users}
           message="No technicians found"
-          description="Try adjusting your search."
+          description={
+            tableState.search
+              ? "Try adjusting your search."
+              : "Technicians appear here once they're added to the workspace."
+          }
         />
       }
       errorState={
