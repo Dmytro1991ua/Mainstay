@@ -18,6 +18,7 @@ const NAV_TARGET: Record<NotificationType, NotificationNav["to"]> = {
   TASK_DUE_SOON: "/tasks",
   WORK_ORDER_APPROVED: "/work-order-requests",
   WORK_ORDER_REJECTED: "/work-order-requests",
+  REORDER_RAISED: "/inventory",
 };
 
 const extractQuotedName = (message: string): string | undefined =>

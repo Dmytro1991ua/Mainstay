@@ -1243,7 +1243,7 @@ export interface paths {
                     page?: number;
                     limit?: number;
                     isRead?: string;
-                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED";
+                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED";
                 };
                 header?: never;
                 path?: never;
@@ -1743,6 +1743,304 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/reorders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List reorders. ADMIN/MANAGER only. Paginated; filter by `status` and `inventoryItemId`. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    status?: "PENDING" | "ORDERED" | "RECEIVED" | "CANCELLED";
+                    inventoryItemId?: string;
+                    sortBy?: "createdAt" | "status";
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of reorders */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReordersListResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Manually raise a reorder for an inventory item (status PENDING). ADMIN/MANAGER only. Rejected if the item already has an open (PENDING/ORDERED) reorder. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateReorderInput"];
+                };
+            };
+            responses: {
+                /** @description Reorder raised */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReorderResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Inventory item not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Item already has an open reorder */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reorders/{id}/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Mark a PENDING reorder as ORDERED. ADMIN/MANAGER only. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Reorder marked ordered */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReorderResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder is not pending */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/reorders/{id}/receive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Mark an ORDERED reorder as RECEIVED and increment the item's stock by the reorder quantity. ADMIN/MANAGER only. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Reorder received; stock incremented */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReorderResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder has not been ordered */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/reorders/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Cancel an open (PENDING or ORDERED) reorder. ADMIN/MANAGER only. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Reorder cancelled */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReorderResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reorder is already received or cancelled */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/reports/assets": {
@@ -4010,6 +4308,9 @@ export interface components {
             category: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
             quantity: number;
             minStockLevel: number;
+            reorderPoint: number | null;
+            reorderQuantity: number | null;
+            supplier: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -4031,6 +4332,12 @@ export interface components {
             quantity: number | null;
             /** @example 5 */
             minStockLevel: number | null;
+            /** @example 5 */
+            reorderPoint?: number | null;
+            /** @example 20 */
+            reorderQuantity?: number;
+            /** @example Acme Supplies */
+            supplier?: string;
         };
         RestockInventoryItemInput: {
             /** @example 50 */
@@ -4045,6 +4352,12 @@ export interface components {
             quantity?: number | null;
             /** @example 5 */
             minStockLevel?: number | null;
+            /** @example 5 */
+            reorderPoint?: number | null;
+            /** @example 20 */
+            reorderQuantity?: number | null;
+            /** @example Acme Supplies */
+            supplier?: string | null;
         };
         NotificationsListResponse: {
             /** @enum {boolean} */
@@ -4061,7 +4374,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED";
+            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED";
             /** @example Low stock: "Cordless Drill" has 2 units (min: 5). */
             message: string;
             isRead: boolean;
@@ -4185,6 +4498,51 @@ export interface components {
             assignedTo?: string | null;
             /** @example 30 */
             intervalDays?: number;
+        };
+        ReordersListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Reorder"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        Reorder: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            inventoryItemId: string;
+            /** @enum {string} */
+            status: "PENDING" | "ORDERED" | "RECEIVED" | "CANCELLED";
+            quantity: number;
+            /** Format: uuid */
+            raisedBy: string | null;
+            /** Format: uuid */
+            reviewedBy: string | null;
+            inventoryItem: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                serialNumber: string;
+                quantity: number;
+                minStockLevel: number;
+            };
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ReorderResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Reorder"];
+        };
+        CreateReorderInput: {
+            /** Format: uuid */
+            inventoryItemId: string;
         };
         AssetReliabilityResponse: {
             /** @enum {boolean} */

@@ -4,6 +4,7 @@ import {
   CalendarClock,
   CheckCircle2,
   Clock,
+  PackagePlus,
   PackageX,
   XCircle,
 } from "lucide-react";
@@ -93,5 +94,13 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Request Rejected",
     unreadRowBg: "bg-red-soft",
     unreadBorderClass: "border-l-red",
+  },
+  REORDER_RAISED: {
+    icon: PackagePlus,
+    iconClass: "text-accent",
+    bgClass: "bg-accent-soft",
+    label: "Reorder Raised",
+    unreadRowBg: "bg-accent-soft",
+    unreadBorderClass: "border-l-accent",
   },
 };
