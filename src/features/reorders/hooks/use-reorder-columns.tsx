@@ -2,12 +2,18 @@ import { format } from "date-fns";
 
 import { Pill } from "@/shared/ui/pill";
 
+import { ReorderRowActions } from "../components/ReorderRowActions";
 import { REORDER_STATUS_PILL } from "../config";
 
 import type { Reorder } from "../api/reorders.api";
+import type { ReorderActionType } from "../types";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const useReorderColumns = (): ColumnDef<Reorder>[] => {
+type UseReorderColumnsOptions = {
+  onAction: (type: ReorderActionType, reorder: Reorder) => void;
+};
+
+export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): ColumnDef<Reorder>[] => {
   return [
     {
       id: "item",
@@ -50,6 +56,15 @@ export const useReorderColumns = (): ColumnDef<Reorder>[] => {
           {format(new Date(row.original.createdAt), "MMM d, yyyy")}
         </span>
       ),
+    },
+    {
+      id: "actions",
+      header: "",
+      enableSorting: false,
+      enableResizing: false,
+      enableHiding: false,
+      size: 220,
+      cell: ({ row }) => <ReorderRowActions reorder={row.original} onAction={onAction} />,
     },
   ];
 };
