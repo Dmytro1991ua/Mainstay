@@ -33,6 +33,9 @@ export const INVENTORY_FORM_FIELDS: InventoryFieldConfig[] = [
   },
   { name: "quantity", label: "Quantity", type: "number", placeholder: "0" },
   { name: "minStockLevel", label: "Min stock level", type: "number", placeholder: "0" },
+  { name: "reorderPoint", label: "Reorder point", type: "number", placeholder: "e.g. 5" },
+  { name: "reorderQuantity", label: "Reorder quantity", type: "number", placeholder: "e.g. 20" },
+  { name: "supplier", label: "Supplier", placeholder: "e.g. Acme Supplies", colSpan: 2 },
 ];
 
 export const ROW_HIGHLIGHT: Partial<Record<PillStatus, string>> = {
