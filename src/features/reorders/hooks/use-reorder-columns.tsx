@@ -30,12 +30,38 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       ),
     },
     {
+      id: "supplier",
+      header: "Supplier",
+      enableSorting: false,
+      size: 170,
+      cell: ({ row }) =>
+        row.original.inventoryItem.supplier ? (
+          <span className="text-text-2">{row.original.inventoryItem.supplier}</span>
+        ) : (
+          <span className="text-text-3">—</span>
+        ),
+    },
+    {
       id: "quantity",
       accessorKey: "quantity",
       header: "Quantity",
       enableSorting: false,
-      size: 110,
+      size: 100,
       cell: ({ row }) => <span className="tabular-nums text-text-2">{row.original.quantity}</span>,
+    },
+    {
+      id: "reorderPoint",
+      header: "Reorder point",
+      enableSorting: false,
+      size: 120,
+      cell: ({ row }) =>
+        row.original.inventoryItem.reorderPoint == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums text-text-2">
+            {row.original.inventoryItem.reorderPoint}
+          </span>
+        ),
     },
     {
       id: "status",

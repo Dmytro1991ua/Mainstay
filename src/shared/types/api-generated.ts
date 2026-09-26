@@ -4529,6 +4529,8 @@ export interface components {
                 serialNumber: string;
                 quantity: number;
                 minStockLevel: number;
+                reorderPoint: number | null;
+                supplier: string | null;
             };
             /** Format: date-time */
             createdAt: string;
@@ -4859,6 +4861,8 @@ export interface components {
                 LOW_STOCK: boolean;
                 OUT_OF_STOCK: boolean;
                 TASK_OVERDUE: boolean;
+                TASK_DUE_SOON: boolean;
+                REORDER_RAISED: boolean;
             };
         };
         NotificationPreferencesInput: {
@@ -4868,6 +4872,10 @@ export interface components {
             OUT_OF_STOCK?: boolean;
             /** @example false */
             TASK_OVERDUE?: boolean;
+            /** @example true */
+            TASK_DUE_SOON?: boolean;
+            /** @example true */
+            REORDER_RAISED?: boolean;
         };
         WorkOrderRequestResponse: {
             /** @enum {boolean} */
