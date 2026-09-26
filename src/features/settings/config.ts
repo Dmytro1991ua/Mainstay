@@ -88,4 +88,15 @@ export const NOTIFICATION_PREFERENCE_CONFIG: NotificationPreferenceConfig[] = [
     label: "Overdue task alerts",
     description: "Notify when an assigned task passes its due date",
   },
+  {
+    key: "TASK_DUE_SOON",
+    label: "Due-soon task reminders",
+    description: "Notify a few days before an assigned task is due",
+  },
+  {
+    key: "REORDER_RAISED",
+    label: "Reorder alerts",
+    description: "Notify when a replenishment order is raised for a low-stock item",
+    technicianHidden: true,
+  },
 ];

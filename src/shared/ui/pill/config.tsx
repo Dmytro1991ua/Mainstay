@@ -12,6 +12,8 @@ export enum PillStatus {
   Pending = "Pending",
   Approved = "Approved",
   Rejected = "Rejected",
+  Ordered = "Ordered",
+  Received = "Received",
 }
 
 type PillConfig = {
@@ -71,5 +73,14 @@ export const PILL_CONFIG: Record<PillStatus, PillConfig> = {
   [PillStatus.Rejected]: {
     className: "bg-red-soft text-red border border-red-border",
     dotClassName: "bg-red",
+  },
+  // Reorder lifecycle: Ordered (placed, in transit) → Received (stock arrived).
+  [PillStatus.Ordered]: {
+    className: "bg-purple-soft text-purple border border-purple-border",
+    dotClassName: "bg-purple",
+  },
+  [PillStatus.Received]: {
+    className: "bg-green-soft text-green border border-green-border",
+    dotClassName: "bg-green",
   },
 };

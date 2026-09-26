@@ -12,6 +12,8 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
   LOW_STOCK: true,
   OUT_OF_STOCK: true,
   TASK_OVERDUE: true,
+  TASK_DUE_SOON: true,
+  REORDER_RAISED: true,
 };
 
 export const useNotificationPreferences = () => {

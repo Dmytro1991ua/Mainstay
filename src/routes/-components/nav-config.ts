@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Package,
+  PackagePlus,
   Settings,
   Users,
 } from "lucide-react";
@@ -20,6 +21,7 @@ export type Role = components["schemas"]["User"]["roles"][number];
 export type AppPath =
   | "/dashboard"
   | "/inventory"
+  | "/reorders"
   | "/assets"
   | "/tasks"
   | "/work-order-requests"
@@ -45,6 +47,7 @@ export type NavItem = {
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/inventory", label: "Inventory", icon: Package },
+  { to: "/reorders", label: "Reorders", icon: PackagePlus, roles: ["ADMIN", "MANAGER"] },
   { to: "/assets", label: "Assets", icon: HardHat },
   { to: "/tasks", label: "Tasks", icon: ClipboardList },
   { to: "/work-order-requests", label: "Requests", icon: Inbox },

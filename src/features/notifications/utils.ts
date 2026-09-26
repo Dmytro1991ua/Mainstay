@@ -6,7 +6,7 @@ import type { Notification, NotificationType } from "./api/notifications-api";
 import type { InfiniteData, QueryClient } from "@tanstack/react-query";
 
 type NotificationNav = {
-  to: "/inventory" | "/tasks" | "/work-order-requests";
+  to: "/inventory" | "/tasks" | "/work-order-requests" | "/reorders";
   search?: { search: string };
 };
 
@@ -18,6 +18,7 @@ const NAV_TARGET: Record<NotificationType, NotificationNav["to"]> = {
   TASK_DUE_SOON: "/tasks",
   WORK_ORDER_APPROVED: "/work-order-requests",
   WORK_ORDER_REJECTED: "/work-order-requests",
+  REORDER_RAISED: "/reorders",
 };
 
 const extractQuotedName = (message: string): string | undefined =>
