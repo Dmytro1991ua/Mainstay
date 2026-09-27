@@ -95,12 +95,14 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     unreadRowBg: "bg-red-soft",
     unreadBorderClass: "border-l-red",
   },
+  // Purple (not accent) so a page of unread reorders doesn't go monochrome with
+  // the always-blue unread dot; also ties to the "Ordered" reorder pill.
   REORDER_RAISED: {
     icon: PackagePlus,
-    iconClass: "text-accent",
-    bgClass: "bg-accent-soft",
+    iconClass: "text-purple",
+    bgClass: "bg-purple-soft",
     label: "Reorder Raised",
-    unreadRowBg: "bg-accent-soft",
-    unreadBorderClass: "border-l-accent",
+    unreadRowBg: "bg-purple-soft",
+    unreadBorderClass: "border-l-purple",
   },
 };
