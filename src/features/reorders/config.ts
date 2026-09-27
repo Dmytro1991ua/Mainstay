@@ -24,6 +24,13 @@ export const REORDER_FILTER_CONFIG: FilterConfig[] = [
   { id: "status", label: "Status", type: "single", options: REORDER_STATUS_OPTIONS },
 ];
 
+// Terminal outcomes tint the row (RECEIVED→green, CANCELLED→red); active states
+// (PENDING/ORDERED) stay neutral, matching Tasks and Work Order Requests.
+export const REORDER_ROW_HIGHLIGHT: Partial<Record<ReorderStatus, string>> = {
+  RECEIVED: "bg-row-green",
+  CANCELLED: "bg-row-red",
+};
+
 export const REORDER_ACTIONS: Record<ReorderActionType, ReorderActionConfig> = {
   order: {
     icon: Truck,

@@ -12,6 +12,7 @@ import { useReorderActions } from "../hooks/use-reorder-actions";
 import { useReorderColumns } from "../hooks/use-reorder-columns";
 import { useReorderForm } from "../hooks/use-reorder-form";
 import { useReordersData } from "../hooks/use-reorders-data";
+import { getReorderRowHighlight } from "../utils";
 
 import { RaiseReorderSheet } from "./RaiseReorderSheet";
 
@@ -87,6 +88,7 @@ export const ReordersTable = ({ tableState, onSetTableState }: ReordersTableProp
             }
           />
         }
+        getRowHighlightInfo={getReorderRowHighlight}
         getRowId={(row) => row.id}
         tableState={tableState}
         onSetTableState={onSetTableState}
