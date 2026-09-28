@@ -44,11 +44,8 @@ export const deleteAccount = async (): Promise<void> => {
   await axiosInstance.delete("/users/me");
 };
 
-export type NotificationPreferences = {
-  LOW_STOCK: boolean;
-  OUT_OF_STOCK: boolean;
-  TASK_OVERDUE: boolean;
-};
+export type NotificationPreferences =
+  components["schemas"]["NotificationPreferencesResponse"]["data"];
 
 export const getNotificationPreferences = async (): Promise<NotificationPreferences> => {
   const { data } = await axiosInstance.get<{ success: true; data: NotificationPreferences }>(

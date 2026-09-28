@@ -4,6 +4,7 @@ import {
   CalendarClock,
   CheckCircle2,
   Clock,
+  PackagePlus,
   PackageX,
   XCircle,
 } from "lucide-react";
@@ -93,5 +94,15 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Request Rejected",
     unreadRowBg: "bg-red-soft",
     unreadBorderClass: "border-l-red",
+  },
+  // Purple (not accent) so a page of unread reorders doesn't go monochrome with
+  // the always-blue unread dot; also ties to the "Ordered" reorder pill.
+  REORDER_RAISED: {
+    icon: PackagePlus,
+    iconClass: "text-purple",
+    bgClass: "bg-purple-soft",
+    label: "Reorder Raised",
+    unreadRowBg: "bg-purple-soft",
+    unreadBorderClass: "border-l-purple",
   },
 };

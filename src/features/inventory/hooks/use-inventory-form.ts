@@ -40,6 +40,9 @@ export const useInventoryForm = () => {
       category: item.category,
       quantity: String(item.quantity),
       minStockLevel: String(item.minStockLevel),
+      reorderPoint: item.reorderPoint == null ? "" : String(item.reorderPoint),
+      reorderQuantity: item.reorderQuantity == null ? "" : String(item.reorderQuantity),
+      supplier: item.supplier ?? "",
     });
     setSheetMode({ type: "edit", item });
   };
@@ -52,6 +55,10 @@ export const useInventoryForm = () => {
         category: values.category as CreateInventoryItemInput["category"],
         quantity: _toNumber(values.quantity),
         minStockLevel: _toNumber(values.minStockLevel),
+        reorderPoint: values.reorderPoint === "" ? undefined : _toNumber(values.reorderPoint),
+        reorderQuantity:
+          values.reorderQuantity === "" ? undefined : _toNumber(values.reorderQuantity),
+        supplier: values.supplier || undefined,
       });
 
       toast.success("Item added", { description: `"${values.name}" was added to inventory.` });
@@ -77,6 +84,10 @@ export const useInventoryForm = () => {
           category: values.category as CreateInventoryItemInput["category"],
           quantity: _toNumber(values.quantity),
           minStockLevel: _toNumber(values.minStockLevel),
+          // "" clears the field on update (server accepts null).
+          reorderPoint: values.reorderPoint === "" ? null : _toNumber(values.reorderPoint),
+          reorderQuantity: values.reorderQuantity === "" ? null : _toNumber(values.reorderQuantity),
+          supplier: values.supplier || null,
         },
       });
 

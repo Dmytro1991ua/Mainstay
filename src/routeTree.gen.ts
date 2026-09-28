@@ -22,6 +22,7 @@ import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppTasksRouteImport } from './routes/_app.tasks'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppReordersRouteImport } from './routes/_app.reorders'
 import { Route as AppRecurringTasksRouteImport } from './routes/_app.recurring-tasks'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
@@ -31,6 +32,7 @@ import { Route as AppWorkOrderRequestsIndexRouteImport } from './routes/_app.wor
 import { Route as AppUsersIndexRouteImport } from './routes/_app.users.index'
 import { Route as AppTasksIndexRouteImport } from './routes/_app.tasks.index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app.reports.index'
+import { Route as AppReordersIndexRouteImport } from './routes/_app.reorders.index'
 import { Route as AppRecurringTasksIndexRouteImport } from './routes/_app.recurring-tasks.index'
 import { Route as AppInventoryIndexRouteImport } from './routes/_app.inventory.index'
 import { Route as AppAssetsIndexRouteImport } from './routes/_app.assets.index'
@@ -104,6 +106,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReordersRoute = AppReordersRouteImport.update({
+  id: '/reorders',
+  path: '/reorders',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRecurringTasksRoute = AppRecurringTasksRouteImport.update({
   id: '/recurring-tasks',
   path: '/recurring-tasks',
@@ -149,6 +156,11 @@ const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppReportsRoute,
+} as any)
+const AppReordersIndexRoute = AppReordersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppReordersRoute,
 } as any)
 const AppRecurringTasksIndexRoute = AppRecurringTasksIndexRouteImport.update({
   id: '/',
@@ -205,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof AppInventoryRouteWithChildren
   '/notifications': typeof AppNotificationsRoute
   '/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
+  '/reorders': typeof AppReordersRouteWithChildren
   '/reports': typeof AppReportsRouteWithChildren
   '/settings': typeof AppSettingsRoute
   '/tasks': typeof AppTasksRouteWithChildren
@@ -224,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/assets/': typeof AppAssetsIndexRoute
   '/inventory/': typeof AppInventoryIndexRoute
   '/recurring-tasks/': typeof AppRecurringTasksIndexRoute
+  '/reorders/': typeof AppReordersIndexRoute
   '/reports/': typeof AppReportsIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
   '/users/': typeof AppUsersIndexRoute
@@ -248,6 +262,7 @@ export interface FileRoutesByTo {
   '/assets': typeof AppAssetsIndexRoute
   '/inventory': typeof AppInventoryIndexRoute
   '/recurring-tasks': typeof AppRecurringTasksIndexRoute
+  '/reorders': typeof AppReordersIndexRoute
   '/reports': typeof AppReportsIndexRoute
   '/tasks': typeof AppTasksIndexRoute
   '/users': typeof AppUsersIndexRoute
@@ -263,6 +278,7 @@ export interface FileRoutesById {
   '/_app/inventory': typeof AppInventoryRouteWithChildren
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/recurring-tasks': typeof AppRecurringTasksRouteWithChildren
+  '/_app/reorders': typeof AppReordersRouteWithChildren
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tasks': typeof AppTasksRouteWithChildren
@@ -282,6 +298,7 @@ export interface FileRoutesById {
   '/_app/assets/': typeof AppAssetsIndexRoute
   '/_app/inventory/': typeof AppInventoryIndexRoute
   '/_app/recurring-tasks/': typeof AppRecurringTasksIndexRoute
+  '/_app/reorders/': typeof AppReordersIndexRoute
   '/_app/reports/': typeof AppReportsIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
   '/_app/users/': typeof AppUsersIndexRoute
@@ -296,6 +313,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/notifications'
     | '/recurring-tasks'
+    | '/reorders'
     | '/reports'
     | '/settings'
     | '/tasks'
@@ -315,6 +333,7 @@ export interface FileRouteTypes {
     | '/assets/'
     | '/inventory/'
     | '/recurring-tasks/'
+    | '/reorders/'
     | '/reports/'
     | '/tasks/'
     | '/users/'
@@ -339,6 +358,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/inventory'
     | '/recurring-tasks'
+    | '/reorders'
     | '/reports'
     | '/tasks'
     | '/users'
@@ -353,6 +373,7 @@ export interface FileRouteTypes {
     | '/_app/inventory'
     | '/_app/notifications'
     | '/_app/recurring-tasks'
+    | '/_app/reorders'
     | '/_app/reports'
     | '/_app/settings'
     | '/_app/tasks'
@@ -372,6 +393,7 @@ export interface FileRouteTypes {
     | '/_app/assets/'
     | '/_app/inventory/'
     | '/_app/recurring-tasks/'
+    | '/_app/reorders/'
     | '/_app/reports/'
     | '/_app/tasks/'
     | '/_app/users/'
@@ -478,6 +500,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reorders': {
+      id: '/_app/reorders'
+      path: '/reorders'
+      fullPath: '/reorders'
+      preLoaderRoute: typeof AppReordersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/recurring-tasks': {
       id: '/_app/recurring-tasks'
       path: '/recurring-tasks'
@@ -540,6 +569,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reports/'
       preLoaderRoute: typeof AppReportsIndexRouteImport
       parentRoute: typeof AppReportsRoute
+    }
+    '/_app/reorders/': {
+      id: '/_app/reorders/'
+      path: '/'
+      fullPath: '/reorders/'
+      preLoaderRoute: typeof AppReordersIndexRouteImport
+      parentRoute: typeof AppReordersRoute
     }
     '/_app/recurring-tasks/': {
       id: '/_app/recurring-tasks/'
@@ -648,6 +684,18 @@ const AppRecurringTasksRouteChildren: AppRecurringTasksRouteChildren = {
 const AppRecurringTasksRouteWithChildren =
   AppRecurringTasksRoute._addFileChildren(AppRecurringTasksRouteChildren)
 
+interface AppReordersRouteChildren {
+  AppReordersIndexRoute: typeof AppReordersIndexRoute
+}
+
+const AppReordersRouteChildren: AppReordersRouteChildren = {
+  AppReordersIndexRoute: AppReordersIndexRoute,
+}
+
+const AppReordersRouteWithChildren = AppReordersRoute._addFileChildren(
+  AppReordersRouteChildren,
+)
+
 interface AppReportsRouteChildren {
   AppReportsIndexRoute: typeof AppReportsIndexRoute
 }
@@ -707,6 +755,7 @@ interface AppRouteChildren {
   AppInventoryRoute: typeof AppInventoryRouteWithChildren
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppRecurringTasksRoute: typeof AppRecurringTasksRouteWithChildren
+  AppReordersRoute: typeof AppReordersRouteWithChildren
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppSettingsRoute: typeof AppSettingsRoute
   AppTasksRoute: typeof AppTasksRouteWithChildren
@@ -720,6 +769,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventoryRoute: AppInventoryRouteWithChildren,
   AppNotificationsRoute: AppNotificationsRoute,
   AppRecurringTasksRoute: AppRecurringTasksRouteWithChildren,
+  AppReordersRoute: AppReordersRouteWithChildren,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppSettingsRoute: AppSettingsRoute,
   AppTasksRoute: AppTasksRouteWithChildren,

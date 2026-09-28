@@ -11,7 +11,7 @@ import type { InventoryItem } from "./api/inventory.api";
 export const getInventoryDetailFields = (item: InventoryItem): DetailField[] => {
   const status = getInventoryStatus(item.quantity, item.minStockLevel);
 
-  return [
+  const fields: DetailField[] = [
     {
       label: "Stock level",
       value: <Pill status={status} />,
@@ -38,6 +38,27 @@ export const getInventoryDetailFields = (item: InventoryItem): DetailField[] => 
         </span>
       ),
     },
+  ];
+
+  if (item.supplier) {
+    fields.push({ label: "Supplier", value: <span className="text-text">{item.supplier}</span> });
+  }
+
+  if (item.reorderPoint != null) {
+    fields.push({
+      label: "Reorder point",
+      value: <span className="text-text">{item.reorderPoint}</span>,
+    });
+  }
+
+  if (item.reorderQuantity != null) {
+    fields.push({
+      label: "Reorder quantity",
+      value: <span className="text-text">{item.reorderQuantity}</span>,
+    });
+  }
+
+  fields.push(
     {
       label: "Added",
       value: <span className="text-text-2">{format(new Date(item.createdAt), "MMM d, yyyy")}</span>,
@@ -50,5 +71,7 @@ export const getInventoryDetailFields = (item: InventoryItem): DetailField[] => 
         </span>
       ),
     },
-  ];
+  );
+
+  return fields;
 };
