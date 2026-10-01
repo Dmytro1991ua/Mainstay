@@ -6,9 +6,11 @@ import {
   Clock,
   Package,
   PackageX,
+  Wallet,
 } from "lucide-react";
 
 import type { ChartConfig } from "@/shared/ui/chart";
+import { formatMoney } from "@/shared/utils";
 
 import { SkeletonChart, SkeletonCategoryBreakdown, SkeletonWidget } from "./DashboardSkeletons";
 import { DueThisWeekList } from "./DueThisWeekList";
@@ -28,12 +30,13 @@ type StatsKey =
   | "totalItems"
   | "lowStockCount"
   | "outOfStockCount"
+  | "stockValue"
   | "activeTasks"
   | "overdueCount"
   | "activeSchedules"
   | "schedulesThisWeek";
 
-export type Stats = Record<StatsKey, number> & { totalTasks: number };
+export type Stats = Record<StatsKey, number> & { totalTasks: number; unvaluedItems: number };
 
 type StatCardDef = {
   key: StatsKey;
@@ -42,6 +45,8 @@ type StatCardDef = {
   technicianHidden?: true;
   variant?: (value: number) => StatCardVariant;
   subtext?: (value: number, stats: Stats) => string | undefined;
+  /** Formats the numeric value for display (e.g. money). Defaults to the raw number. */
+  format?: (value: number) => string;
 };
 
 export const STATS_CARDS_CONFIG: StatCardDef[] = [
@@ -61,6 +66,15 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     technicianHidden: true,
     variant: (value) => (value > 0 ? "red" : "default"),
     subtext: (value) => (value > 0 ? "Zero units remaining" : "All items have stock"),
+  },
+  {
+    key: "stockValue",
+    label: "Stock Value",
+    icon: Wallet,
+    technicianHidden: true,
+    format: formatMoney,
+    subtext: (_, stats) =>
+      stats.unvaluedItems > 0 ? `${stats.unvaluedItems} unpriced` : undefined,
   },
   {
     key: "activeTasks",

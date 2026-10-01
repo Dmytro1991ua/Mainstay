@@ -35,6 +35,7 @@ export const INVENTORY_FORM_FIELDS: InventoryFieldConfig[] = [
   { name: "minStockLevel", label: "Min stock level", type: "number", placeholder: "0" },
   { name: "reorderPoint", label: "Reorder point", type: "number", placeholder: "e.g. 5" },
   { name: "reorderQuantity", label: "Reorder quantity", type: "number", placeholder: "e.g. 20" },
+  { name: "unitCost", label: "Unit cost", type: "number", placeholder: "e.g. 12.50" },
   { name: "supplier", label: "Supplier", placeholder: "e.g. Acme Supplies", colSpan: 2 },
 ];
 

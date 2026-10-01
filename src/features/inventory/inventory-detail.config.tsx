@@ -3,6 +3,7 @@ import { Hash } from "lucide-react";
 
 import type { DetailField } from "@/shared/ui/detail-shell";
 import { Pill } from "@/shared/ui/pill";
+import { formatMoney } from "@/shared/utils";
 
 import { formatCategoryLabel, getInventoryStatus } from "./utils";
 
@@ -39,6 +40,13 @@ export const getInventoryDetailFields = (item: InventoryItem): DetailField[] => 
       ),
     },
   ];
+
+  if (item.unitCost != null) {
+    fields.push({
+      label: "Unit cost",
+      value: <span className="text-text">{formatMoney(item.unitCost)}</span>,
+    });
+  }
 
   if (item.supplier) {
     fields.push({ label: "Supplier", value: <span className="text-text">{item.supplier}</span> });
