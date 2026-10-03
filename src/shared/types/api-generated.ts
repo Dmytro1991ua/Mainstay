@@ -1848,6 +1848,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reorders/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Committed spend across open (PENDING + ORDERED) reorders. ADMIN/MANAGER only. Orders with no captured cost are excluded from the total and counted as `unpricedOrders`. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Committed-spend summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReorderStatsResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reorders/{id}/order": {
         parameters: {
             query?: never;
@@ -4551,6 +4596,10 @@ export interface components {
             /** @enum {string} */
             status: "PENDING" | "ORDERED" | "RECEIVED" | "CANCELLED";
             quantity: number;
+            /** @example 8.50 */
+            unitCostAtRaise: string | null;
+            /** @example 510.00 */
+            lineTotal: string | null;
             /** Format: uuid */
             raisedBy: string | null;
             /** Format: uuid */
@@ -4569,6 +4618,18 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        ReorderStatsResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** @example 4210.00 */
+                committedSpend: string;
+                /** @example 12 */
+                openOrders: number;
+                /** @example 3 */
+                unpricedOrders: number;
+            };
         };
         ReorderResponse: {
             /** @enum {boolean} */
