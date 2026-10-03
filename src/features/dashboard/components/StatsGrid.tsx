@@ -18,13 +18,13 @@ export const StatsGrid = ({ stats, isTechnician }: StatsGridProps) => {
 
   return (
     <div className={cn("grid gap-4", getStatsColClass(cards.length))}>
-      {cards.map(({ key, label, icon, variant, subtext }) => {
+      {cards.map(({ key, label, icon, variant, subtext, format }) => {
         const value = stats[key];
         return (
           <StatCard
             key={key}
             label={label}
-            value={value}
+            value={format ? format(value) : value}
             icon={icon}
             variant={variant?.(value)}
             subtext={subtext?.(value, stats)}

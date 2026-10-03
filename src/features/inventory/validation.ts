@@ -9,6 +9,7 @@ export const FORM_DEFAULTS: InventoryFormValues = {
   reorderPoint: "",
   reorderQuantity: "",
   supplier: "",
+  unitCost: "",
 };
 
 const isWholeNonNegative = (v: string) =>
@@ -24,6 +25,14 @@ const optionalNumericField = z
   .string()
   .refine((v) => v === "" || isWholeNonNegative(v), "Must be a whole number (0 or more)");
 
+// Optional money — "" means "unpriced"; otherwise a non-negative amount with up to 2 decimals.
+const optionalMoneyField = z
+  .string()
+  .refine(
+    (v) => v === "" || (/^\d+(\.\d{1,2})?$/.test(v) && Number(v) >= 0),
+    "Enter a valid amount (0 or more, max 2 decimals)",
+  );
+
 export const inventoryFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   serialNumber: z.string().min(1, "Serial number is required"),
@@ -33,6 +42,7 @@ export const inventoryFormSchema = z.object({
   reorderPoint: optionalNumericField,
   reorderQuantity: optionalNumericField,
   supplier: z.string(),
+  unitCost: optionalMoneyField,
 });
 
 export type InventoryFormValues = z.infer<typeof inventoryFormSchema>;

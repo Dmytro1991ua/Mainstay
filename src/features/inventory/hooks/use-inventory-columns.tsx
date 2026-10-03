@@ -2,6 +2,7 @@ import { Checkbox } from "@/shared/ui/checkbox";
 import { DataTableCheckbox } from "@/shared/ui/data-table/data-table-checkbox";
 import { Pill, PillStatus } from "@/shared/ui/pill";
 import { RowActions } from "@/shared/ui/row-actions";
+import { formatMoney } from "@/shared/utils";
 
 import { formatCategoryLabel, getInventoryStatus } from "../utils";
 
@@ -84,6 +85,19 @@ export const useInventoryColumns = ({
       enableSorting: false,
       size: 80,
       cell: ({ row }) => <span className="text-text-2">{row.original.minStockLevel}</span>,
+    },
+    {
+      id: "unitCost",
+      accessorKey: "unitCost",
+      header: "Unit Cost",
+      enableSorting: false,
+      size: 110,
+      cell: ({ row }) =>
+        row.original.unitCost == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums text-text-2">{formatMoney(row.original.unitCost)}</span>
+        ),
     },
     {
       id: "status",

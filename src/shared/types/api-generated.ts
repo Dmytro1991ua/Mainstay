@@ -4236,54 +4236,81 @@ export interface components {
                 inStock: number;
                 lowStock: number;
                 outOfStock: number;
+                /** @example 1250.00 */
+                stockValue: string;
+                unvaluedItems: number;
                 byCategory: {
                     ELECTRICAL?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     PLUMBING?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     HVAC?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     TOOLS?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     FASTENERS?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     CHEMICALS?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     SAFETY?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                     BUILDING_MATERIALS?: {
                         total: number;
                         inStock: number;
                         lowStock: number;
                         outOfStock: number;
+                        /** @example 1250.00 */
+                        stockValue: string;
+                        unvaluedItems: number;
                     };
                 };
             };
@@ -4311,6 +4338,8 @@ export interface components {
             reorderPoint: number | null;
             reorderQuantity: number | null;
             supplier: string | null;
+            /** @example 8.50 */
+            unitCost: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -4338,6 +4367,8 @@ export interface components {
             reorderQuantity?: number;
             /** @example Acme Supplies */
             supplier?: string;
+            /** @example 8.50 */
+            unitCost?: string;
         };
         RestockInventoryItemInput: {
             /** @example 50 */
@@ -4358,6 +4389,8 @@ export interface components {
             reorderQuantity?: number | null;
             /** @example Acme Supplies */
             supplier?: string | null;
+            /** @example 8.50 */
+            unitCost?: string | null;
         };
         NotificationsListResponse: {
             /** @enum {boolean} */

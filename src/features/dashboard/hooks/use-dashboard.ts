@@ -129,6 +129,9 @@ export const useDashboard = () => {
       overdueCount,
       activeSchedules: managerStats?.schedules.active ?? 0,
       schedulesThisWeek: managerStats?.schedules.dueThisWeek ?? 0,
+      // stockValue arrives as a money string; parse for the numeric stat card.
+      stockValue: Number(inventoryStats.data?.stockValue ?? 0),
+      unvaluedItems: inventoryStats.data?.unvaluedItems ?? 0,
     },
     taskStatusData: { open, inprogress: inProgress, done },
     lowStockItems: lowStock.data?.items ?? [],

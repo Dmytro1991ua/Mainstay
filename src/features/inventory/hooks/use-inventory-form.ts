@@ -43,6 +43,7 @@ export const useInventoryForm = () => {
       reorderPoint: item.reorderPoint == null ? "" : String(item.reorderPoint),
       reorderQuantity: item.reorderQuantity == null ? "" : String(item.reorderQuantity),
       supplier: item.supplier ?? "",
+      unitCost: item.unitCost ?? "",
     });
     setSheetMode({ type: "edit", item });
   };
@@ -59,6 +60,7 @@ export const useInventoryForm = () => {
         reorderQuantity:
           values.reorderQuantity === "" ? undefined : _toNumber(values.reorderQuantity),
         supplier: values.supplier || undefined,
+        unitCost: values.unitCost || undefined,
       });
 
       toast.success("Item added", { description: `"${values.name}" was added to inventory.` });
@@ -88,6 +90,7 @@ export const useInventoryForm = () => {
           reorderPoint: values.reorderPoint === "" ? null : _toNumber(values.reorderPoint),
           reorderQuantity: values.reorderQuantity === "" ? null : _toNumber(values.reorderQuantity),
           supplier: values.supplier || null,
+          unitCost: values.unitCost || null,
         },
       });
 

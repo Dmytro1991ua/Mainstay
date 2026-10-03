@@ -18,6 +18,14 @@ const TIME_STEPS: TimeStep[] = [
 
 export const formatShortDate = (iso: string) => format(new Date(iso), "MMM d");
 
+const moneyFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+/** Money comes from the API as a 2-dp string (e.g. "1250.00"); render as "$1,250.00". */
+export const formatMoney = (value: string | number): string => {
+  const amount = typeof value === "string" ? Number(value) : value;
+  return Number.isFinite(amount) ? moneyFormatter.format(amount) : "—";
+};
+
 const ENUM_ACRONYMS: Record<string, string> = { HVAC: "HVAC", IT: "IT" };
 
 /** "IT_EQUIPMENT" → "IT Equipment", "OPERATIONAL" → "Operational". */
