@@ -6,6 +6,7 @@ import { EmptyState } from "@/shared/ui/empty-state";
 import { PageShell } from "@/shared/ui/page-shell";
 
 import { ReordersTable } from "./ReordersTable";
+import { ReorderStatsSummary } from "./ReorderStatsSummary";
 
 type ReordersPageProps = {
   tableState: TableUrlState;
@@ -31,7 +32,7 @@ export const ReordersPage = ({ tableState, onSetTableState }: ReordersPageProps)
   }
 
   return (
-    <PageShell title="Reorders" subtitle={SUBTITLE}>
+    <PageShell title="Reorders" subtitle={SUBTITLE} toolbar={<ReorderStatsSummary />}>
       <ReordersTable tableState={tableState} onSetTableState={onSetTableState} />
     </PageShell>
   );

@@ -4,6 +4,7 @@ import type { components } from "@/shared/types/api-generated";
 export type Reorder = components["schemas"]["Reorder"];
 export type ReorderStatus = Reorder["status"];
 export type CreateReorderInput = components["schemas"]["CreateReorderInput"];
+export type ReorderStats = components["schemas"]["ReorderStatsResponse"]["data"];
 
 export type ReorderSortBy = "createdAt" | "status";
 
@@ -22,6 +23,13 @@ export const fetchReorders = async (params: ReorderListParams) => {
   });
 
   return res.data;
+};
+
+export const fetchReorderStats = async (): Promise<ReorderStats> => {
+  const res =
+    await axiosInstance.get<components["schemas"]["ReorderStatsResponse"]>("/reorders/stats");
+
+  return res.data.data;
 };
 
 export const createReorder = async (data: CreateReorderInput) => {
