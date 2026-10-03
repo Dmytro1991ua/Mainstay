@@ -22,7 +22,6 @@ export const useReorderStatsQuery = () =>
   useQuery({
     queryKey: [REORDERS_KEY, "stats"],
     queryFn: fetchReorderStats,
-    staleTime: 60_000,
   });
 
 export const useCreateReorder = () => useMutation(REORDERS_KEY, createReorder);

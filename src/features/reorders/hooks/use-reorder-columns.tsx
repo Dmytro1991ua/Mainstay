@@ -52,6 +52,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
     },
     {
       id: "unitCostAtRaise",
+      accessorKey: "unitCostAtRaise",
       header: "Unit cost",
       enableSorting: false,
       size: 110,
@@ -66,6 +67,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
     },
     {
       id: "lineTotal",
+      accessorKey: "lineTotal",
       header: "Line total",
       enableSorting: false,
       size: 120,
