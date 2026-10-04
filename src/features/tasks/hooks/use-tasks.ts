@@ -21,6 +21,7 @@ export const TASKS_KEY = "tasks";
 const USERS_KEY = "users";
 const INVENTORY_KEY = "inventory";
 const ASSET_TASKS_KEY = "assets-tasks";
+const REORDERS_KEY = "reorders";
 
 export const useTasksQuery = (params: TaskListParams) =>
   useInfiniteQueryList<Task, TaskListParams>(TASKS_KEY, params, fetchTasks);
@@ -48,7 +49,8 @@ export const useCompleteTask = () =>
   useMutation(
     TASKS_KEY,
     ({ id, data }: { id: string; data: CompleteTaskInput }) => completeTask(id, data),
-    { alsoInvalidate: [USERS_KEY, INVENTORY_KEY, ASSET_TASKS_KEY] },
+    // Completing a task can consume stock, which may auto-raise a reorder server-side.
+    { alsoInvalidate: [USERS_KEY, INVENTORY_KEY, ASSET_TASKS_KEY, REORDERS_KEY] },
   );
 
 export const useCancelTask = () =>

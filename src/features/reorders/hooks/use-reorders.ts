@@ -1,9 +1,12 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useInfiniteQueryList, useMutation } from "@/shared/hooks/use-crud";
 
 import {
   cancelReorder,
   createReorder,
   fetchReorders,
+  fetchReorderStats,
   orderReorder,
   receiveReorder,
   type Reorder,
@@ -14,6 +17,12 @@ export const REORDERS_KEY = "reorders";
 
 export const useReordersQuery = (params: ReorderListParams, options?: { enabled?: boolean }) =>
   useInfiniteQueryList<Reorder, ReorderListParams>(REORDERS_KEY, params, fetchReorders, options);
+
+export const useReorderStatsQuery = () =>
+  useQuery({
+    queryKey: [REORDERS_KEY, "stats"],
+    queryFn: fetchReorderStats,
+  });
 
 export const useCreateReorder = () => useMutation(REORDERS_KEY, createReorder);
 

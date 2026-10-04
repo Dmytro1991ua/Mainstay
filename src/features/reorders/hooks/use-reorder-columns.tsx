@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 import { Pill } from "@/shared/ui/pill";
+import { formatMoney } from "@/shared/utils";
 
 import { ReorderRowActions } from "../components/ReorderRowActions";
 import { REORDER_STATUS_PILL } from "../config";
@@ -48,6 +49,36 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       enableSorting: false,
       size: 100,
       cell: ({ row }) => <span className="tabular-nums text-text-2">{row.original.quantity}</span>,
+    },
+    {
+      id: "unitCostAtRaise",
+      accessorKey: "unitCostAtRaise",
+      header: "Unit cost",
+      enableSorting: false,
+      size: 110,
+      cell: ({ row }) =>
+        row.original.unitCostAtRaise == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums text-text-2">
+            {formatMoney(row.original.unitCostAtRaise)}
+          </span>
+        ),
+    },
+    {
+      id: "lineTotal",
+      accessorKey: "lineTotal",
+      header: "Line total",
+      enableSorting: false,
+      size: 120,
+      cell: ({ row }) =>
+        row.original.lineTotal == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums font-medium text-text">
+            {formatMoney(row.original.lineTotal)}
+          </span>
+        ),
     },
     {
       id: "reorderPoint",
