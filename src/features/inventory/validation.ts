@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isValidMoneyInput, MONEY_INPUT_ERROR } from "@/shared/utils";
+
 export const FORM_DEFAULTS: InventoryFormValues = {
   name: "",
   serialNumber: "",
@@ -28,10 +30,7 @@ const optionalNumericField = z
 // Optional money — "" means "unpriced"; otherwise a non-negative amount with up to 2 decimals.
 const optionalMoneyField = z
   .string()
-  .refine(
-    (v) => v === "" || (/^\d+(\.\d{1,2})?$/.test(v) && Number(v) >= 0),
-    "Enter a valid amount (0 or more, max 2 decimals)",
-  );
+  .refine((v) => v === "" || isValidMoneyInput(v), MONEY_INPUT_ERROR);
 
 export const inventoryFormSchema = z.object({
   name: z.string().min(1, "Name is required"),

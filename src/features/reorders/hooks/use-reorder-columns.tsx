@@ -1,10 +1,12 @@
 import { format } from "date-fns";
 
+import { cn } from "@/shared/lib/utils";
 import { Pill } from "@/shared/ui/pill";
 import { formatMoney } from "@/shared/utils";
 
 import { ReorderRowActions } from "../components/ReorderRowActions";
 import { REORDER_STATUS_PILL } from "../config";
+import { getReorderEstimateDifference } from "../utils";
 
 import type { Reorder } from "../api/reorders.api";
 import type { ReorderActionType } from "../types";
@@ -20,7 +22,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       id: "item",
       header: "Item",
       enableSorting: false,
-      size: 280,
+      size: 240,
       cell: ({ row }) => (
         <div>
           <span className="font-medium">{row.original.inventoryItem.name}</span>
@@ -34,7 +36,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       id: "supplier",
       header: "Supplier",
       enableSorting: false,
-      size: 170,
+      size: 140,
       cell: ({ row }) =>
         row.original.inventoryItem.supplier ? (
           <span className="text-text-2">{row.original.inventoryItem.supplier}</span>
@@ -47,7 +49,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       accessorKey: "quantity",
       header: "Quantity",
       enableSorting: false,
-      size: 100,
+      size: 90,
       cell: ({ row }) => <span className="tabular-nums text-text-2">{row.original.quantity}</span>,
     },
     {
@@ -55,7 +57,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       accessorKey: "unitCostAtRaise",
       header: "Unit cost",
       enableSorting: false,
-      size: 110,
+      size: 95,
       cell: ({ row }) =>
         row.original.unitCostAtRaise == null ? (
           <span className="text-text-3">—</span>
@@ -70,7 +72,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       accessorKey: "lineTotal",
       header: "Line total",
       enableSorting: false,
-      size: 120,
+      size: 100,
       cell: ({ row }) =>
         row.original.lineTotal == null ? (
           <span className="text-text-3">—</span>
@@ -81,10 +83,54 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
         ),
     },
     {
+      id: "receivedUnitCost",
+      accessorKey: "receivedUnitCost",
+      header: "Actual cost",
+      enableSorting: false,
+      size: 100,
+      cell: ({ row }) =>
+        row.original.receivedUnitCost == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums text-text-2">
+            {formatMoney(row.original.receivedUnitCost)}
+          </span>
+        ),
+    },
+    {
+      id: "receivedTotal",
+      accessorKey: "receivedTotal",
+      header: "Actual total",
+      enableSorting: false,
+      size: 105,
+      cell: ({ row }) =>
+        row.original.receivedTotal == null ? (
+          <span className="text-text-3">—</span>
+        ) : (
+          <span className="tabular-nums font-medium text-text">
+            {formatMoney(row.original.receivedTotal)}
+          </span>
+        ),
+    },
+    {
+      id: "variance",
+      accessorKey: "variance",
+      header: "Vs estimate",
+      enableSorting: false,
+      size: 100,
+      cell: ({ row }) => {
+        if (row.original.variance == null) return <span className="text-text-3">—</span>;
+
+        const { text, className } = getReorderEstimateDifference(row.original.variance);
+
+        return <span className={cn("tabular-nums font-medium", className)}>{text}</span>;
+      },
+    },
+    {
       id: "reorderPoint",
       header: "Reorder point",
       enableSorting: false,
-      size: 120,
+      size: 110,
       cell: ({ row }) =>
         row.original.inventoryItem.reorderPoint == null ? (
           <span className="text-text-3">—</span>
@@ -99,7 +145,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       accessorKey: "status",
       header: "Status",
       enableSorting: true,
-      size: 130,
+      size: 110,
       cell: ({ row }) => <Pill status={REORDER_STATUS_PILL[row.original.status]} />,
     },
     {
@@ -107,7 +153,7 @@ export const useReorderColumns = ({ onAction }: UseReorderColumnsOptions): Colum
       accessorKey: "createdAt",
       header: "Raised",
       enableSorting: true,
-      size: 140,
+      size: 120,
       cell: ({ row }) => (
         <span className="text-text-2">
           {format(new Date(row.original.createdAt), "MMM d, yyyy")}

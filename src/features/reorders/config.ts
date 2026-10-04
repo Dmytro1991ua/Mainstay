@@ -4,7 +4,12 @@ import type { FilterConfig } from "@/shared/ui/data-table";
 import { PillStatus } from "@/shared/ui/pill";
 
 import type { ReorderStatus } from "./api/reorders.api";
-import type { ReorderActionConfig, ReorderActionType } from "./types";
+import type {
+  ReorderActionConfig,
+  ReorderActionType,
+  ReorderEstimateComparison,
+  ReorderEstimateComparisonConfig,
+} from "./types";
 
 export const REORDER_STATUS_PILL: Record<ReorderStatus, PillStatus> = {
   PENDING: PillStatus.Pending,
@@ -23,6 +28,15 @@ export const REORDER_STATUS_OPTIONS = [
 export const REORDER_FILTER_CONFIG: FilterConfig[] = [
   { id: "status", label: "Status", type: "single", options: REORDER_STATUS_OPTIONS },
 ];
+
+export const REORDER_ESTIMATE_COMPARISON_CONFIG: Record<
+  ReorderEstimateComparison,
+  ReorderEstimateComparisonConfig
+> = {
+  overEstimate: { className: "text-red", sign: "+" },
+  underEstimate: { className: "text-green", sign: "" },
+  asEstimated: { className: "text-text-2", sign: "" },
+};
 
 // Terminal outcomes tint the row (RECEIVED→green, CANCELLED→red); active states
 // (PENDING/ORDERED) stay neutral, matching Tasks and Work Order Requests.

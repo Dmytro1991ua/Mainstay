@@ -26,6 +26,13 @@ export const formatMoney = (value: string | number): string => {
   return Number.isFinite(amount) ? moneyFormatter.format(amount) : "—";
 };
 
+const MONEY_INPUT_PATTERN = /^\d+(\.\d{1,2})?$/;
+
+export const MONEY_INPUT_ERROR = "Enter a valid amount (0 or more, max 2 decimals)";
+
+/** A non-negative amount with at most 2 decimals — the format the API accepts for money. */
+export const isValidMoneyInput = (value: string): boolean => MONEY_INPUT_PATTERN.test(value);
+
 const ENUM_ACRONYMS: Record<string, string> = { HVAC: "HVAC", IT: "IT" };
 
 /** "IT_EQUIPMENT" → "IT Equipment", "OPERATIONAL" → "Operational". */
