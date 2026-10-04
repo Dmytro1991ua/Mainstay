@@ -80,6 +80,7 @@ export const InventoryFormSheet = ({
                 id={`inv-${field.name}`}
                 label={field.label}
                 type={field.type}
+                inputMode={field.inputMode}
                 placeholder={field.placeholder}
                 inputClassName={field.inputClassName}
                 disabled={field.readonlyInEdit && mode === "edit"}

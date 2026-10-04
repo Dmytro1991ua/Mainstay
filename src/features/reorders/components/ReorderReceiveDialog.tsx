@@ -61,7 +61,8 @@ export const ReorderReceiveDialog = ({
             <FormField
               id="receive-unit-cost"
               label="Actual unit cost (optional)"
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="e.g. 8.50"
               value={price}
               onChange={setPrice}
