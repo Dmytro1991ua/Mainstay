@@ -1971,7 +1971,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** @description Mark an ORDERED reorder as RECEIVED and increment the item's stock by the reorder quantity. ADMIN/MANAGER only. */
+        /** @description Mark an ORDERED reorder as RECEIVED and increment the item's stock by the reorder quantity. ADMIN/MANAGER only. Optionally record the actual price paid via `receivedUnitCost`. */
         patch: {
             parameters: {
                 query?: never;
@@ -1981,7 +1981,11 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ReceiveReorderInput"];
+                };
+            };
             responses: {
                 /** @description Reorder received; stock incremented */
                 200: {
@@ -4600,6 +4604,14 @@ export interface components {
             unitCostAtRaise: string | null;
             /** @example 510.00 */
             lineTotal: string | null;
+            /** @example 9.00 */
+            receivedUnitCost: string | null;
+            /** @example 540.00 */
+            receivedTotal: string | null;
+            /** @example 30.00 */
+            variance: string | null;
+            /** Format: date-time */
+            receivedAt: string | null;
             /** Format: uuid */
             raisedBy: string | null;
             /** Format: uuid */
@@ -4629,6 +4641,16 @@ export interface components {
                 openOrders: number;
                 /** @example 3 */
                 unpricedOrders: number;
+                /** @example 9800.00 */
+                spent: string;
+                /** @example 40 */
+                receivedOrders: number;
+                /** @example 5 */
+                unrecordedReceived: number;
+                /** @example 120.00 */
+                variance: string;
+                /** @example 31 */
+                comparableOrders: number;
             };
         };
         ReorderResponse: {
@@ -4639,6 +4661,10 @@ export interface components {
         CreateReorderInput: {
             /** Format: uuid */
             inventoryItemId: string;
+        };
+        ReceiveReorderInput: {
+            /** @example 9.00 */
+            receivedUnitCost?: string | null;
         };
         AssetReliabilityResponse: {
             /** @enum {boolean} */

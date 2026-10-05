@@ -15,6 +15,7 @@ import { useReordersData } from "../hooks/use-reorders-data";
 import { getReorderRowHighlight } from "../utils";
 
 import { RaiseReorderSheet } from "./RaiseReorderSheet";
+import { ReorderReceiveDialog } from "./ReorderReceiveDialog";
 
 type ReordersTableProps = {
   tableState: TableUrlState;
@@ -33,7 +34,7 @@ export const ReordersTable = ({ tableState, onSetTableState }: ReordersTableProp
     filterConfig,
   } = useReordersData(tableState);
 
-  const { pending, openAction, closeAction, confirm } = useReorderActions();
+  const { pending, openAction, closeAction, confirm, isPending } = useReorderActions();
   const {
     isOpen,
     openSheet,
@@ -46,7 +47,8 @@ export const ReordersTable = ({ tableState, onSetTableState }: ReordersTableProp
 
   const columns = useReorderColumns({ onAction: openAction });
 
-  const spec = pending ? REORDER_ACTIONS[pending.type] : null;
+  const isReceive = pending?.type === "receive";
+  const confirmSpec = pending && !isReceive ? REORDER_ACTIONS[pending.type] : null;
 
   return (
     <>
@@ -103,14 +105,25 @@ export const ReordersTable = ({ tableState, onSetTableState }: ReordersTableProp
         isSaving={isSaving}
       />
       <ConfirmDialog
-        open={pending !== null}
+        open={confirmSpec !== null}
         onClose={closeAction}
+        onConfirm={() => confirm()}
+        title={confirmSpec?.title ?? ""}
+        description={pending && confirmSpec ? confirmSpec.describe(pending.reorder) : undefined}
+        icon={
+          confirmSpec ? (
+            <confirmSpec.icon className={cn("size-5", confirmSpec.iconClass)} />
+          ) : undefined
+        }
+        confirmLabel={confirmSpec?.confirmLabel}
+        variant={confirmSpec?.dialogVariant ?? "default"}
+      />
+      <ReorderReceiveDialog
+        key={pending?.reorder.id}
+        target={isReceive ? pending.reorder : null}
         onConfirm={confirm}
-        title={spec?.title ?? ""}
-        description={pending && spec ? spec.describe(pending.reorder) : undefined}
-        icon={spec ? <spec.icon className={cn("size-5", spec.iconClass)} /> : undefined}
-        confirmLabel={spec?.confirmLabel}
-        variant={spec?.dialogVariant ?? "default"}
+        onClose={closeAction}
+        isReceiving={isPending}
       />
     </>
   );

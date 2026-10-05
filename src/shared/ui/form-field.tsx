@@ -15,6 +15,8 @@ type FormFieldProps = {
   children?: React.ReactNode;
   // Input-specific — ignored when children is provided
   type?: string;
+  /** Soft-keyboard hint. Prefer `type="text"` + `inputMode="decimal"` over `type="number"` for money, so a value the browser can't parse isn't silently reported as "". */
+  inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
   placeholder?: string;
   inputClassName?: string;
   autoComplete?: string;
@@ -33,6 +35,7 @@ export const FormField = ({
   hint,
   children,
   type,
+  inputMode,
   placeholder,
   inputClassName,
   autoComplete,
@@ -59,6 +62,7 @@ export const FormField = ({
         <Input
           id={id}
           type={type}
+          inputMode={inputMode}
           placeholder={placeholder}
           className={inputClassName}
           autoComplete={autoComplete}

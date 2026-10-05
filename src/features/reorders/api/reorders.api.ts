@@ -4,6 +4,7 @@ import type { components } from "@/shared/types/api-generated";
 export type Reorder = components["schemas"]["Reorder"];
 export type ReorderStatus = Reorder["status"];
 export type CreateReorderInput = components["schemas"]["CreateReorderInput"];
+export type ReceiveReorderInput = components["schemas"]["ReceiveReorderInput"];
 export type ReorderStats = components["schemas"]["ReorderStatsResponse"]["data"];
 
 export type ReorderSortBy = "createdAt" | "status";
@@ -44,9 +45,11 @@ export const orderReorder = async (id: string) => {
   return res.data.data;
 };
 
-export const receiveReorder = async (id: string) => {
+// The body is optional — omit receivedUnitCost to receive without recording the actual price.
+export const receiveReorder = async (id: string, data: ReceiveReorderInput = {}) => {
   const res = await axiosInstance.patch<components["schemas"]["ReorderResponse"]>(
     `/reorders/${id}/receive`,
+    data,
   );
   return res.data.data;
 };

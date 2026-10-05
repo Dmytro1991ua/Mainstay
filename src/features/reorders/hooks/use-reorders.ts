@@ -9,6 +9,7 @@ import {
   fetchReorderStats,
   orderReorder,
   receiveReorder,
+  type ReceiveReorderInput,
   type Reorder,
   type ReorderListParams,
 } from "../api/reorders.api";
@@ -29,6 +30,10 @@ export const useCreateReorder = () => useMutation(REORDERS_KEY, createReorder);
 export const useOrderReorder = () => useMutation(REORDERS_KEY, orderReorder);
 
 export const useReceiveReorder = () =>
-  useMutation(REORDERS_KEY, receiveReorder, { alsoInvalidate: ["inventory"] });
+  useMutation(
+    REORDERS_KEY,
+    ({ id, data }: { id: string; data?: ReceiveReorderInput }) => receiveReorder(id, data),
+    { alsoInvalidate: ["inventory"] },
+  );
 
 export const useCancelReorder = () => useMutation(REORDERS_KEY, cancelReorder);

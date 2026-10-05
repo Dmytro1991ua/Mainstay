@@ -5,7 +5,7 @@ import { toast } from "@/shared/ui/toast";
 
 import { useCancelReorder, useOrderReorder, useReceiveReorder } from "./use-reorders";
 
-import type { Reorder } from "../api/reorders.api";
+import type { ReceiveReorderInput, Reorder } from "../api/reorders.api";
 import type { ReorderActionType } from "../types";
 
 export type PendingReorderAction = { type: ReorderActionType; reorder: Reorder };
@@ -25,22 +25,25 @@ export const useReorderActions = () => {
   const receiveMutation = useReceiveReorder();
   const cancelMutation = useCancelReorder();
 
-  const mutations: Record<ReorderActionType, typeof orderMutation> = {
-    order: orderMutation,
-    receive: receiveMutation,
-    cancel: cancelMutation,
+  const runners: Record<
+    ReorderActionType,
+    (reorder: Reorder, payload?: ReceiveReorderInput) => Promise<unknown>
+  > = {
+    order: (reorder) => orderMutation.mutateAsync(reorder.id),
+    receive: (reorder, payload) => receiveMutation.mutateAsync({ id: reorder.id, data: payload }),
+    cancel: (reorder) => cancelMutation.mutateAsync(reorder.id),
   };
 
   const openAction = (type: ReorderActionType, reorder: Reorder) => setPending({ type, reorder });
   const closeAction = () => setPending(null);
 
-  const confirm = async () => {
+  const confirm = async (payload?: ReceiveReorderInput) => {
     if (!pending) return;
 
     const { type, reorder } = pending;
 
     try {
-      await mutations[type].mutateAsync(reorder.id);
+      await runners[type](reorder, payload);
 
       toast.success(SUCCESS_MESSAGE[type]);
 
