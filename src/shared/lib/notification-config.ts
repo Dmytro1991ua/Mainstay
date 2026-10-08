@@ -6,6 +6,7 @@ import {
   Clock,
   PackagePlus,
   PackageX,
+  ShieldAlert,
   XCircle,
 } from "lucide-react";
 
@@ -104,5 +105,14 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     label: "Reorder Raised",
     unreadRowBg: "bg-purple-soft",
     unreadBorderClass: "border-l-purple",
+  },
+  // Amber: a time-sensitive warning like "Task Overdue"; the shield icon tells them apart.
+  WARRANTY_EXPIRING: {
+    icon: ShieldAlert,
+    iconClass: "text-amber",
+    bgClass: "bg-amber-soft",
+    label: "Warranty Expiring",
+    unreadRowBg: "bg-amber-soft",
+    unreadBorderClass: "border-l-amber",
   },
 };

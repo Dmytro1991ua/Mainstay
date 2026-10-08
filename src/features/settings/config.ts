@@ -99,4 +99,10 @@ export const NOTIFICATION_PREFERENCE_CONFIG: NotificationPreferenceConfig[] = [
     description: "Notify when a replenishment order is raised for a low-stock item",
     technicianHidden: true,
   },
+  {
+    key: "WARRANTY_EXPIRING",
+    label: "Warranty expiry alerts",
+    description: "Notify before an asset's warranty runs out, in time to make a claim",
+    technicianHidden: true,
+  },
 ];

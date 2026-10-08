@@ -1,9 +1,11 @@
 import { format, formatDistanceToNow } from "date-fns";
 import { Hash } from "lucide-react";
 
+import { formatCalendarDate, isPastCalendarDate } from "@/shared/ui/date-picker";
 import type { DetailField } from "@/shared/ui/detail-shell";
 import { Pill } from "@/shared/ui/pill";
 
+import { WarrantyExpiredBadge } from "./components/WarrantyExpiredBadge";
 import { ASSET_STATUS_PILL } from "./config";
 import { formatCategoryLabel } from "./utils";
 
@@ -42,8 +44,18 @@ export const getAssetDetailFields = (asset: Asset): DetailField[] => {
   if (asset.installDate) {
     fields.push({
       label: "Installed",
+      value: <span className="text-text-2">{formatCalendarDate(asset.installDate)}</span>,
+    });
+  }
+
+  if (asset.warrantyExpiresAt) {
+    fields.push({
+      label: "Warranty expires",
       value: (
-        <span className="text-text-2">{format(new Date(asset.installDate), "MMM d, yyyy")}</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-text-2">{formatCalendarDate(asset.warrantyExpiresAt)}</span>
+          {isPastCalendarDate(asset.warrantyExpiresAt) && <WarrantyExpiredBadge />}
+        </div>
       ),
     });
   }
