@@ -27,7 +27,7 @@ export const NotificationPreferencesCard = () => {
       </p>
       {isTechnician && (
         <p className="mb-3 text-[12px] text-text-3">
-          Inventory alerts are managed by your administrator.
+          Inventory and asset alerts are managed by your administrator.
         </p>
       )}
       {isPending ? (

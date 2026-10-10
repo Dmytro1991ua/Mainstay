@@ -45,7 +45,8 @@ export const ASSET_FORM_FIELDS: AssetFieldConfig[] = [
   { name: "location", label: "Location", placeholder: "e.g. Building A — Roof", colSpan: 2 },
   { name: "manufacturer", label: "Manufacturer", placeholder: "e.g. Carrier" },
   { name: "model", label: "Model", placeholder: "e.g. 48TCED12" },
-  { name: "installDate", label: "Install date", type: "date", colSpan: 2 },
+  { name: "installDate", label: "Install date", type: "date" },
+  { name: "warrantyExpiresAt", label: "Warranty expires", type: "date" },
 ];
 
 export const ASSET_FILTER_CONFIG: FilterConfig[] = [

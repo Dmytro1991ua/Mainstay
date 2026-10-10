@@ -23,7 +23,13 @@ export const useNotificationRow = ({ notification, onMarkRead, onDelete }: Param
   const handleClick = () => {
     if (!notification.isRead) onMarkRead(notification.id);
 
-    if (nav) navigate({ to: nav.to, search: nav.search ?? {} });
+    if (!nav) return;
+
+    if ("params" in nav) {
+      navigate({ to: nav.to, params: nav.params });
+    } else {
+      navigate({ to: nav.to, search: nav.search ?? {} });
+    }
   };
 
   const handleDelete = (e: React.MouseEvent) => {

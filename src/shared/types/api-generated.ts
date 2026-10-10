@@ -1243,7 +1243,7 @@ export interface paths {
                     page?: number;
                     limit?: number;
                     isRead?: string;
-                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED";
+                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING";
                 };
                 header?: never;
                 path?: never;
@@ -3998,6 +3998,11 @@ export interface components {
             model: string | null;
             /** Format: date-time */
             installDate: string | null;
+            /**
+             * Format: date-time
+             * @example 2027-06-15T00:00:00.000Z
+             */
+            warrantyExpiresAt: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -4112,6 +4117,11 @@ export interface components {
              * @example 2021-06-15T00:00:00.000Z
              */
             installDate?: string | null;
+            /**
+             * Format: date-time
+             * @example 2027-06-15
+             */
+            warrantyExpiresAt?: string | null;
         };
         UpdateAssetInput: {
             name?: string;
@@ -4124,6 +4134,8 @@ export interface components {
             model?: string | null;
             /** Format: date-time */
             installDate?: string | null;
+            /** Format: date-time */
+            warrantyExpiresAt?: string | null;
         };
         RegisterResponse: {
             /** @enum {boolean} */
@@ -4456,7 +4468,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED";
+            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING";
             /** @example Low stock: "Cordless Drill" has 2 units (min: 5). */
             message: string;
             isRead: boolean;
@@ -4983,6 +4995,7 @@ export interface components {
                 TASK_OVERDUE: boolean;
                 TASK_DUE_SOON: boolean;
                 REORDER_RAISED: boolean;
+                WARRANTY_EXPIRING: boolean;
             };
         };
         NotificationPreferencesInput: {
@@ -4996,6 +5009,8 @@ export interface components {
             TASK_DUE_SOON?: boolean;
             /** @example true */
             REORDER_RAISED?: boolean;
+            /** @example true */
+            WARRANTY_EXPIRING?: boolean;
         };
         WorkOrderRequestResponse: {
             /** @enum {boolean} */

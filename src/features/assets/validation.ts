@@ -9,6 +9,7 @@ export const assetFormSchema = z.object({
   manufacturer: z.string(),
   model: z.string(),
   installDate: z.string(),
+  warrantyExpiresAt: z.string(),
 });
 
 export type AssetFormValues = z.infer<typeof assetFormSchema>;
@@ -22,4 +23,5 @@ export const FORM_DEFAULTS: AssetFormValues = {
   manufacturer: "",
   model: "",
   installDate: "",
+  warrantyExpiresAt: "",
 };

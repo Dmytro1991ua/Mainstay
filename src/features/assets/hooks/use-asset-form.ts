@@ -44,6 +44,7 @@ export const useAssetForm = () => {
       manufacturer: asset.manufacturer ?? "",
       model: asset.model ?? "",
       installDate: asset.installDate ? asset.installDate.slice(0, 10) : "",
+      warrantyExpiresAt: asset.warrantyExpiresAt ? asset.warrantyExpiresAt.slice(0, 10) : "",
     });
     setSheetMode({ type: "edit", asset });
   };
@@ -59,6 +60,7 @@ export const useAssetForm = () => {
         manufacturer: values.manufacturer || undefined,
         model: values.model || undefined,
         installDate: toIsoDate(values.installDate),
+        warrantyExpiresAt: toIsoDate(values.warrantyExpiresAt),
       });
 
       toast.success("Asset added", { description: `"${values.name}" was added.` });
@@ -87,6 +89,8 @@ export const useAssetForm = () => {
           manufacturer: values.manufacturer || null,
           model: values.model || null,
           installDate: toIsoDate(values.installDate) ?? null,
+          // Blank clears the warranty (the server re-arms the reminder when the date changes).
+          warrantyExpiresAt: toIsoDate(values.warrantyExpiresAt) ?? null,
         },
       });
 
