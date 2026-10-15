@@ -3,6 +3,8 @@ import { Pause, Pencil, Play, Trash2 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { BASE_BTN } from "@/shared/ui/row-actions/config";
 
+import { isMeterSchedule } from "../utils";
+
 import type { RecurringTask } from "../api/recurring-tasks.api";
 import type { LucideIcon } from "lucide-react";
 
@@ -42,12 +44,16 @@ export const RecurringTaskRowActions = ({
       onClick: (e) => stop(e, () => (schedule.isActive ? onPause(schedule) : onResume(schedule))),
       hoverClass: "hover:bg-amber-soft hover:text-amber",
     },
-    {
-      title: "Edit schedule",
-      icon: Pencil,
-      onClick: (e) => stop(e, () => onEdit(schedule)),
-      hoverClass: "hover:bg-panel-2 hover:text-text",
-    },
+    ...(isMeterSchedule(schedule)
+      ? []
+      : [
+          {
+            title: "Edit schedule",
+            icon: Pencil,
+            onClick: (e: React.MouseEvent) => stop(e, () => onEdit(schedule)),
+            hoverClass: "hover:bg-panel-2 hover:text-text",
+          } satisfies ActionConfig,
+        ]),
     ...(canDelete
       ? [
           {
