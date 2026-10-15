@@ -100,7 +100,7 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
   },
   {
     key: "schedulesThisWeek",
-    label: "Schedules Due",
+    label: "Time Schedules Due",
     icon: CalendarCheck,
     technicianHidden: true,
     variant: (value) => (value > 0 ? "amber" : "default"),
