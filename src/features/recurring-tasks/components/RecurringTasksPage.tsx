@@ -36,7 +36,7 @@ export const RecurringTasksPage = () => {
   return (
     <PageShell
       title="Maintenance Schedules"
-      subtitle="Define recurring maintenance work orders that auto-generate on a fixed interval"
+      subtitle="Define recurring maintenance work orders that auto-generate on a schedule or a meter reading"
       toolbar={tabControl}
     >
       <RecurringTasksTable isActiveFilter={toIsActive(activeFilter)} />
