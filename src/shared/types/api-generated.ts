@@ -1229,6 +1229,309 @@ export interface paths {
         };
         trace?: never;
     };
+    "/meters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List meters. Paginated; filter by `assetId`. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    assetId?: string;
+                    sortBy?: "name" | "lastReadingAt" | "createdAt";
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of meters */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MetersListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Add a meter (engine hours, odometer, cycles) to an asset. ADMIN/MANAGER only. The `initialReading` (default 0) is logged as the first reading. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateMeterInput"];
+                };
+            };
+            responses: {
+                /** @description Meter created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MeterResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description The asset already has a meter with that name */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/meters/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete a meter and its reading history. ADMIN/MANAGER only. Refused (409) while a maintenance schedule is triggered by the meter. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Meter deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Meter not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Maintenance schedules depend on this meter */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** @description Rename a meter. ADMIN/MANAGER only. The unit can't be changed. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateMeterInput"];
+                };
+            };
+            responses: {
+                /** @description Meter renamed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MeterResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Meter not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description The asset already has a meter with that name */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/meters/{id}/readings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Reading history for a meter, newest first. Paginated. */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated reading history */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MeterReadingsListResponse"];
+                    };
+                };
+                /** @description Meter not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Record a reading. Any authenticated role. The time is set by the server. A reading lower than the current one is rejected; an equal one is accepted. If it reaches a threshold of a meter-based maintenance schedule, the PM task is created and returned in `triggeredTasks`. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["RecordReadingInput"];
+                };
+            };
+            responses: {
+                /** @description Reading recorded; returns the reading and the updated meter */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecordReadingResponse"];
+                    };
+                };
+                /** @description Meter not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Reading is lower than the current reading */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/notifications": {
         parameters: {
             query?: never;
@@ -1473,7 +1776,7 @@ export interface paths {
             };
         };
         put?: never;
-        /** @description Create a recurring maintenance schedule. The first task will be generated on firstDueAt; subsequent tasks are generated every intervalDays thereafter. ADMIN/MANAGER only. */
+        /** @description Create a recurring maintenance schedule. ADMIN/MANAGER only. Time-based (no `meterId`): the first task is generated on `firstDueAt`, then every `intervalDays`. Meter-based (with `meterId`): a task is created whenever a reading reaches a threshold, every `intervalReading` units from `firstDueReading` (default: the meter's current reading plus the interval); only one task per schedule is open at a time. The asset of a meter schedule is taken from its meter. */
         post: {
             parameters: {
                 query?: never;
@@ -1496,7 +1799,7 @@ export interface paths {
                         "application/json": components["schemas"]["RecurringTaskResponse"];
                     };
                 };
-                /** @description Assignee not found */
+                /** @description Assignee, asset or meter not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1595,7 +1898,7 @@ export interface paths {
         };
         options?: never;
         head?: never;
-        /** @description Update a recurring schedule's title, interval, assignee, or other fields. ADMIN/MANAGER only. */
+        /** @description Update a recurring schedule's title, assignee, or other fields. ADMIN/MANAGER only. `intervalDays` and `assetId` apply to time-based schedules only; a meter schedule's meter, interval and asset are fixed (400 if sent). */
         patch: {
             parameters: {
                 query?: never;
@@ -4453,6 +4756,102 @@ export interface components {
             /** @example 8.50 */
             unitCost?: string | null;
         };
+        MetersListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Meter"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        Meter: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            assetId: string;
+            name: string;
+            unit: string;
+            currentReading: number;
+            /** Format: date-time */
+            lastReadingAt: string;
+            asset: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                serialNumber: string;
+            };
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        MeterResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["Meter"];
+        };
+        CreateMeterInput: {
+            /** Format: uuid */
+            assetId: string;
+            /** @example Engine hours */
+            name: string;
+            /** @example hours */
+            unit: string;
+            /**
+             * @default 0
+             * @example 1240
+             */
+            initialReading: number;
+        };
+        UpdateMeterInput: {
+            /** @example Engine hours (main) */
+            name: string;
+        };
+        MeterReadingsListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["MeterReading"][];
+            meta: {
+                total: number;
+                page: number;
+                limit: number;
+                pages: number;
+            };
+        };
+        MeterReading: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            meterId: string;
+            value: number;
+            /** Format: date-time */
+            recordedAt: string;
+            recorder: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+            } | null;
+        };
+        RecordReadingResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                reading: components["schemas"]["MeterReading"];
+                meter: components["schemas"]["Meter"];
+                triggeredTasks: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                }[];
+            };
+        };
+        RecordReadingInput: {
+            /** @example 1255 */
+            value: number;
+        };
         NotificationsListResponse: {
             /** @enum {boolean} */
             success: true;
@@ -4533,9 +4932,31 @@ export interface components {
                 /** Format: email */
                 email: string;
             } | null;
-            intervalDays: number;
+            /** Format: uuid */
+            assetId: string | null;
+            asset: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                serialNumber: string;
+            } | null;
+            /** @enum {string} */
+            triggerType: "TIME" | "METER";
+            intervalDays: number | null;
             /** Format: date-time */
-            nextDueAt: string;
+            nextDueAt: string | null;
+            /** Format: uuid */
+            meterId: string | null;
+            meter: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                unit: string;
+                currentReading: number;
+            } | null;
+            intervalReading: number | null;
+            firstDueReading: number | null;
+            nextDueReading: number | null;
             isActive: boolean;
             /** Format: uuid */
             createdBy: string;
@@ -4549,7 +4970,8 @@ export interface components {
             success: true;
             data: components["schemas"]["RecurringTask"];
         };
-        CreateRecurringTaskInput: {
+        CreateRecurringTaskInput: components["schemas"]["CreateTimeRecurringTaskInput"] | components["schemas"]["CreateMeterRecurringTaskInput"];
+        CreateTimeRecurringTaskInput: {
             /** @example Replace HVAC filter — Building A */
             title: string;
             /** @example Replace the return-air filter with a MERV-13 unit. */
@@ -4577,6 +4999,36 @@ export interface components {
              * @example 2026-09-01T00:00:00.000Z
              */
             firstDueAt: string | null;
+            /** Format: uuid */
+            assetId?: string;
+        };
+        CreateMeterRecurringTaskInput: {
+            /** @example Replace HVAC filter — Building A */
+            title: string;
+            /** @example Replace the return-air filter with a MERV-13 unit. */
+            description?: string;
+            /**
+             * @default MEDIUM
+             * @example MEDIUM
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH";
+            /**
+             * @example HVAC
+             * @enum {string}
+             */
+            category?: "ELECTRICAL" | "PLUMBING" | "HVAC" | "TOOLS" | "FASTENERS" | "CHEMICALS" | "SAFETY" | "BUILDING_MATERIALS";
+            /**
+             * Format: uuid
+             * @example f47ac10b-58cc-4372-a567-0e02b2c3d479
+             */
+            assignedTo?: string;
+            /** Format: uuid */
+            meterId: string;
+            /** @example 250 */
+            intervalReading: number;
+            /** @example 1250 */
+            firstDueReading?: number;
         };
         UpdateRecurringTaskInput: {
             title?: string;
@@ -4592,6 +5044,8 @@ export interface components {
             assignedTo?: string | null;
             /** @example 30 */
             intervalDays?: number;
+            /** Format: uuid */
+            assetId?: string | null;
         };
         ReordersListResponse: {
             /** @enum {boolean} */

@@ -1,9 +1,8 @@
-import { format } from "date-fns";
-
 import { TaskPriorityBadge } from "@/features/tasks/components/TaskPriorityBadge";
 
 import { RecurringTaskRowActions } from "../components/RecurringTaskRowActions";
 import { RecurringTaskStatusBadge } from "../components/RecurringTaskStatusBadge";
+import { getScheduleIntervalLabel, getScheduleNextDueLabel } from "../utils";
 
 import type { RecurringTask } from "../api/recurring-tasks.api";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -36,19 +35,21 @@ export const useRecurringTaskColumns = ({
     id: "intervalDays",
     header: "Repeats",
     size: 120,
-    cell: ({ row }) => (
-      <span className="text-sm text-text-2">Every {row.original.intervalDays}d</span>
-    ),
+    cell: ({ row }) => {
+      const interval = getScheduleIntervalLabel(row.original, "short");
+
+      return interval ? <span className="text-sm text-text-2">Every {interval}</span> : UNSET;
+    },
   },
   {
     id: "nextDueAt",
     header: "Next due",
     size: 130,
-    cell: ({ row }) => (
-      <span className="text-sm text-text-2">
-        {format(new Date(row.original.nextDueAt), "MMM d, yyyy")}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const nextDue = getScheduleNextDueLabel(row.original);
+
+      return nextDue ? <span className="text-sm text-text-2">{nextDue}</span> : UNSET;
+    },
   },
   {
     id: "priority",

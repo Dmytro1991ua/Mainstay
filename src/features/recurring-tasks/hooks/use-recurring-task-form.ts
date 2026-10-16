@@ -46,8 +46,9 @@ export const useRecurringTaskForm = () => {
       assignedTo: schedule.assignedTo ?? "",
       priority: schedule.priority,
       category: schedule.category ?? "",
-      intervalDays: schedule.intervalDays,
-      nextDueAt: schedule.nextDueAt.split("T")[0],
+      // Meter schedules have no day interval or due date; Edit is not offered for them yet.
+      intervalDays: schedule.intervalDays ?? RECURRING_TASK_FORM_DEFAULTS.intervalDays,
+      nextDueAt: schedule.nextDueAt?.split("T")[0] ?? "",
     });
 
     setSheetMode({ type: "edit", schedule });

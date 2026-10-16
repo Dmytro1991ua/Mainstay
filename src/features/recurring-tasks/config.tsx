@@ -4,6 +4,12 @@ import { TaskPriorityBadge } from "@/features/tasks/components/TaskPriorityBadge
 import type { DetailField } from "@/shared/ui/detail-shell";
 
 import { RecurringTaskStatusBadge } from "./components/RecurringTaskStatusBadge";
+import {
+  formatReading,
+  getScheduleIntervalLabel,
+  getScheduleNextDueLabel,
+  isMeterSchedule,
+} from "./utils";
 
 import type { RecurringTask } from "./api/recurring-tasks.api";
 import type { ActiveFilter } from "./types";
@@ -50,6 +56,9 @@ export const SCHEDULE_DETAIL_SKELETON_KEYS = [
 
 const UNSET = <span className="text-text-3">—</span>;
 
+const renderScheduleText = (text: string | null) =>
+  text ? <span className="text-sm text-text">{text}</span> : UNSET;
+
 export const getScheduleDetailFields = (schedule: RecurringTask): DetailField[] => [
   { label: "Status", value: <RecurringTaskStatusBadge isActive={schedule.isActive} /> },
   { label: "Priority", value: <TaskPriorityBadge priority={schedule.priority} /> },
@@ -59,20 +68,28 @@ export const getScheduleDetailFields = (schedule: RecurringTask): DetailField[] 
   },
   {
     label: "Repeats every",
-    value: (
-      <span className="text-sm text-text">
-        {schedule.intervalDays} {schedule.intervalDays === 1 ? "day" : "days"}
-      </span>
-    ),
+    value: renderScheduleText(getScheduleIntervalLabel(schedule)),
   },
   {
     label: "Next due",
-    value: (
-      <span className="text-sm text-text">
-        {format(new Date(schedule.nextDueAt), "MMM d, yyyy")}
-      </span>
-    ),
+    value: renderScheduleText(getScheduleNextDueLabel(schedule)),
   },
+  ...(isMeterSchedule(schedule) && schedule.meter
+    ? [
+        {
+          label: "Meter",
+          value: <span className="text-sm text-text">{schedule.meter.name}</span>,
+        },
+        {
+          label: "Current reading",
+          value: (
+            <span className="text-sm text-text">
+              {formatReading(schedule.meter.currentReading, schedule.meter.unit)}
+            </span>
+          ),
+        },
+      ]
+    : []),
   {
     label: "Assigned to",
     value: schedule.assignee ? (
