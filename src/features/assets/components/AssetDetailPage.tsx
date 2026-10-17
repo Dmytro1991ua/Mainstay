@@ -1,5 +1,6 @@
 import { AlertTriangle, RotateCcw } from "lucide-react";
 
+import { AssetMeters } from "@/features/meters";
 import { Button } from "@/shared/ui/button";
 import { DetailShell } from "@/shared/ui/detail-shell";
 import { EmptyState } from "@/shared/ui/empty-state";
@@ -81,6 +82,7 @@ export const AssetDetailPage = ({ assetId }: AssetDetailPageProps) => {
         fields={getAssetDetailFields(asset)}
         skeletonKeys={SKELETON_KEYS}
       >
+        <AssetMeters assetId={asset.id} canManage={canManage} />
         <AssetMaintenanceHistory assetId={asset.id} />
       </DetailShell>
 

@@ -2,14 +2,10 @@ import { format } from "date-fns";
 
 import { TaskPriorityBadge } from "@/features/tasks/components/TaskPriorityBadge";
 import type { DetailField } from "@/shared/ui/detail-shell";
+import { formatReading } from "@/shared/utils";
 
 import { RecurringTaskStatusBadge } from "./components/RecurringTaskStatusBadge";
-import {
-  formatReading,
-  getScheduleIntervalLabel,
-  getScheduleNextDueLabel,
-  isMeterSchedule,
-} from "./utils";
+import { getScheduleIntervalLabel, getScheduleNextDueLabel, isMeterSchedule } from "./utils";
 
 import type { RecurringTask } from "./api/recurring-tasks.api";
 import type { ActiveFilter } from "./types";
