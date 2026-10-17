@@ -37,8 +37,10 @@ export const useMeterReadings = (meterId: string, options?: { enabled?: boolean 
 export const useCreateMeter = () => useMutation(METERS_KEY, createMeter);
 
 export const useUpdateMeter = () =>
-  useMutation(METERS_KEY, ({ id, data }: { id: string; data: UpdateMeterInput }) =>
-    updateMeter(id, data),
+  useMutation(
+    METERS_KEY,
+    ({ id, data }: { id: string; data: UpdateMeterInput }) => updateMeter(id, data),
+    { alsoInvalidate: [RECURRING_TASKS_KEY] },
   );
 
 export const useDeleteMeter = () => useMutation(METERS_KEY, deleteMeter);
