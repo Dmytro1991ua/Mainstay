@@ -6,9 +6,11 @@ import { RowActions } from "@/shared/ui/row-actions";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { formatReading, formatTimeAgo } from "@/shared/utils";
 
+import { useMeterDelete } from "../hooks/use-meter-delete";
 import { useMeterForm } from "../hooks/use-meter-form";
 import { useMetersQuery } from "../hooks/use-meters";
 
+import { MeterDeleteDialog } from "./MeterDeleteDialog";
 import { MeterFormSheet } from "./MeterFormSheet";
 
 const SKELETON_KEYS = ["m1", "m2"];
@@ -24,6 +26,7 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
 
   const { sheetMode, form, openAdd, openEdit, closeSheet, handleSave, isSaving } =
     useMeterForm(assetId);
+  const { deleteTarget, openDelete, closeDelete, handleDelete, isDeleting } = useMeterDelete();
 
   const meters = data?.pages.flatMap((p) => p.data) ?? [];
   const total = data?.pages[0]?.meta.total ?? 0;
@@ -91,7 +94,13 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
               <span className="shrink-0 text-sm font-medium tabular-nums text-text">
                 {formatReading(meter.currentReading, meter.unit)}
               </span>
-              {canManage && <RowActions label={meter.name} onEdit={() => openEdit(meter)} />}
+              {canManage && (
+                <RowActions
+                  label={meter.name}
+                  onEdit={() => openEdit(meter)}
+                  onDelete={() => openDelete(meter)}
+                />
+              )}
             </li>
           ))}
         </ul>
@@ -129,6 +138,12 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
         onSave={handleSave}
         onClose={closeSheet}
         isSaving={isSaving}
+      />
+      <MeterDeleteDialog
+        target={deleteTarget}
+        onConfirm={handleDelete}
+        onClose={closeDelete}
+        isDeleting={isDeleting}
       />
     </section>
   );
