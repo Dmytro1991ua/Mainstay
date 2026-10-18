@@ -9,9 +9,11 @@ import { formatReading, formatTimeAgo } from "@/shared/utils";
 import { useMeterDelete } from "../hooks/use-meter-delete";
 import { useMeterForm } from "../hooks/use-meter-form";
 import { useMetersQuery } from "../hooks/use-meters";
+import { useReadingForm } from "../hooks/use-reading-form";
 
 import { MeterDeleteDialog } from "./MeterDeleteDialog";
 import { MeterFormSheet } from "./MeterFormSheet";
+import { RecordReadingDialog } from "./RecordReadingDialog";
 
 const SKELETON_KEYS = ["m1", "m2"];
 
@@ -24,12 +26,19 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
   const { data, isPending, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useMetersQuery({ assetId, limit: 50, sortBy: "name", sortOrder: "asc" });
 
+  const meters = data?.pages.flatMap((p) => p.data) ?? [];
+  const total = data?.pages[0]?.meta.total ?? 0;
+
   const { sheetMode, form, openAdd, openEdit, closeSheet, handleSave, isSaving } =
     useMeterForm(assetId);
   const { deleteTarget, openDelete, closeDelete, handleDelete, isDeleting } = useMeterDelete();
-
-  const meters = data?.pages.flatMap((p) => p.data) ?? [];
-  const total = data?.pages[0]?.meta.total ?? 0;
+  const {
+    target: recordTarget,
+    openRecord,
+    closeRecord,
+    handleRecord,
+    isRecording,
+  } = useReadingForm(meters);
 
   const renderContent = () => {
     if (isError) {
@@ -94,6 +103,10 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
               <span className="shrink-0 text-sm font-medium tabular-nums text-text">
                 {formatReading(meter.currentReading, meter.unit)}
               </span>
+              <Button variant="outline" size="sm" onClick={() => openRecord(meter)}>
+                <Gauge className="size-3.5" />
+                Record reading
+              </Button>
               {canManage && (
                 <RowActions
                   label={meter.name}
@@ -144,6 +157,13 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
         onConfirm={handleDelete}
         onClose={closeDelete}
         isDeleting={isDeleting}
+      />
+      <RecordReadingDialog
+        key={recordTarget?.id}
+        target={recordTarget}
+        onConfirm={handleRecord}
+        onClose={closeRecord}
+        isRecording={isRecording}
       />
     </section>
   );
