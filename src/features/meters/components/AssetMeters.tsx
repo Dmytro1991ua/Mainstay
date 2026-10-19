@@ -1,18 +1,20 @@
 import { AlertTriangle, Gauge, Plus, RotateCcw } from "lucide-react";
 
+import { useRecurringTasksQuery } from "@/features/recurring-tasks/hooks/use-recurring-tasks";
+import { flattenPages, getTotal } from "@/shared/hooks/use-crud";
 import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/shared/ui/empty-state";
-import { RowActions } from "@/shared/ui/row-actions";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { formatReading, formatTimeAgo } from "@/shared/utils";
 
 import { useMeterDelete } from "../hooks/use-meter-delete";
 import { useMeterForm } from "../hooks/use-meter-form";
 import { useMetersQuery } from "../hooks/use-meters";
 import { useReadingForm } from "../hooks/use-reading-form";
+import { getNextServiceLines } from "../utils";
 
 import { MeterDeleteDialog } from "./MeterDeleteDialog";
 import { MeterFormSheet } from "./MeterFormSheet";
+import { MeterRow } from "./MeterRow";
 import { RecordReadingDialog } from "./RecordReadingDialog";
 
 const SKELETON_KEYS = ["m1", "m2"];
@@ -25,9 +27,10 @@ type AssetMetersProps = {
 export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
   const { data, isPending, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useMetersQuery({ assetId, limit: 50, sortBy: "name", sortOrder: "asc" });
+  const { data: schedules } = useRecurringTasksQuery({ isActive: true }, { enabled: canManage });
 
-  const meters = data?.pages.flatMap((p) => p.data) ?? [];
-  const total = data?.pages[0]?.meta.total ?? 0;
+  const meters = flattenPages(data);
+  const total = getTotal(data);
 
   const { sheetMode, form, openAdd, openEdit, closeSheet, handleSave, isSaving } =
     useMeterForm(assetId);
@@ -90,31 +93,15 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
       <>
         <ul className="flex flex-col gap-1">
           {meters.map((meter) => (
-            <li
+            <MeterRow
               key={meter.id}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-panel-2"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-text">{meter.name}</p>
-                <p className="text-xs text-text-3">
-                  Last reading {formatTimeAgo(meter.lastReadingAt)}
-                </p>
-              </div>
-              <span className="shrink-0 text-sm font-medium tabular-nums text-text">
-                {formatReading(meter.currentReading, meter.unit)}
-              </span>
-              <Button variant="outline" size="sm" onClick={() => openRecord(meter)}>
-                <Gauge className="size-3.5" />
-                Record reading
-              </Button>
-              {canManage && (
-                <RowActions
-                  label={meter.name}
-                  onEdit={() => openEdit(meter)}
-                  onDelete={() => openDelete(meter)}
-                />
-              )}
-            </li>
+              meter={meter}
+              canManage={canManage}
+              serviceLines={getNextServiceLines(meter, schedules ?? [])}
+              onRecord={openRecord}
+              onEdit={openEdit}
+              onDelete={openDelete}
+            />
           ))}
         </ul>
         {hasNextPage && (
@@ -135,8 +122,14 @@ export const AssetMeters = ({ assetId, canManage }: AssetMetersProps) => {
 
   return (
     <section className="rounded-xl border border-border bg-panel p-5 shadow-card">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-text">Meters{data ? ` (${total})` : ""}</h2>
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold text-text">Meters{data ? ` (${total})` : ""}</h2>
+          <p className="mt-0.5 text-xs text-text-3">
+            Track usage like engine hours or kilometres. Maintenance schedules can create tasks
+            automatically when a meter reaches a set reading.
+          </p>
+        </div>
         {canManage && meters.length > 0 && (
           <Button variant="outline" size="sm" onClick={openAdd}>
             <Plus className="size-3.5" />

@@ -2,12 +2,23 @@ import {
   useInfiniteQuery,
   useMutation as useRQMutation,
   useQueryClient,
+  type InfiniteData,
 } from "@tanstack/react-query";
 
 export type PaginatedResponse<TItem = unknown> = {
   data: TItem[];
   meta: { page: number; pages: number; total: number; limit: number };
 };
+
+type InfinitePages<TItem> = InfiniteData<PaginatedResponse<TItem>> | undefined;
+
+/** An infinite query holds a list of pages; this joins them into one flat list of items. */
+export const flattenPages = <TItem>(data: InfinitePages<TItem>): TItem[] =>
+  data?.pages.flatMap((page) => page.data) ?? [];
+
+/** The total item count reported by the server, read from the first page. */
+export const getTotal = <TItem>(data: InfinitePages<TItem>): number =>
+  data?.pages[0]?.meta.total ?? 0;
 
 export const useInfiniteQueryList = <TItem, TParams extends { page?: number }>(
   queryKey: string,
