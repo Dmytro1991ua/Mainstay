@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 
+import { formatReading } from "@/shared/utils";
+
 import type { RecurringTask } from "./api/recurring-tasks.api";
 import type { ActiveFilter } from "./types";
 
@@ -11,10 +13,6 @@ export const toIsActive = (filter: ActiveFilter): boolean | undefined => {
 
 export const isMeterSchedule = (schedule: RecurringTask): boolean =>
   schedule.triggerType === "METER";
-
-/** "1,250 hrs" — a meter reading with its unit. */
-export const formatReading = (value: number, unit: string): string =>
-  `${value.toLocaleString("en-US")} ${unit}`;
 
 const formatDays = (days: number, style: "short" | "long"): string => {
   if (style === "short") return `${days}d`;

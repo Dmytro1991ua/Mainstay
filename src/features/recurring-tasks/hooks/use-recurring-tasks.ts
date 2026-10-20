@@ -16,10 +16,14 @@ import {
 
 export const RECURRING_TASKS_KEY = "recurring-tasks";
 
-export const useRecurringTasksQuery = (params?: RecurringTaskListParams) =>
+export const useRecurringTasksQuery = (
+  params?: RecurringTaskListParams,
+  options?: { enabled?: boolean },
+) =>
   useQuery({
     queryKey: [RECURRING_TASKS_KEY, params],
     queryFn: () => fetchRecurringTasks(params),
+    enabled: options?.enabled,
   });
 
 export const useRecurringTaskQuery = (id: string) =>

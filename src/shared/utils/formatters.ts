@@ -26,6 +26,10 @@ export const formatMoney = (value: string | number): string => {
   return Number.isFinite(amount) ? moneyFormatter.format(amount) : "—";
 };
 
+/** "1,250 hours" — a meter reading with its unit. */
+export const formatReading = (value: number, unit: string): string =>
+  `${value.toLocaleString("en-US")} ${unit}`;
+
 const MONEY_INPUT_PATTERN = /^\d+(\.\d{1,2})?$/;
 
 export const MONEY_INPUT_ERROR = "Enter a valid amount (0 or more, max 2 decimals)";
