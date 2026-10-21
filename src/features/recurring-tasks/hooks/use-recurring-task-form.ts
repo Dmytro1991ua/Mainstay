@@ -14,6 +14,7 @@ import {
 import { useCreateRecurringTask, useUpdateRecurringTask } from "./use-recurring-tasks";
 
 import type {
+  CreateRecurringTaskInput,
   RecurringTask,
   RecurringTaskCategory,
   UpdateRecurringTaskInput,
@@ -47,27 +48,51 @@ export const useRecurringTaskForm = () => {
       priority: schedule.priority,
       category: schedule.category ?? "",
       // Meter schedules have no day interval or due date; Edit is not offered for them yet.
+      triggerType: "TIME",
       intervalDays: schedule.intervalDays ?? RECURRING_TASK_FORM_DEFAULTS.intervalDays,
       nextDueAt: schedule.nextDueAt?.split("T")[0] ?? "",
+      meterId: "",
+      intervalReading: "",
+      firstDueReading: "",
     });
 
     setSheetMode({ type: "edit", schedule });
   };
 
+  const buildCreateInput = (values: RecurringTaskFormValues): CreateRecurringTaskInput => {
+    const common = {
+      title: values.title,
+      description: values.description || undefined,
+      assignedTo: values.assignedTo || undefined,
+      priority: values.priority,
+      category: (values.category as RecurringTaskCategory) || undefined,
+    };
+
+    if (values.triggerType === "METER") {
+      return {
+        ...common,
+        meterId: values.meterId,
+        intervalReading: Number(values.intervalReading),
+        firstDueReading: values.firstDueReading ? Number(values.firstDueReading) : undefined,
+      };
+    }
+
+    return {
+      ...common,
+      intervalDays: values.intervalDays,
+      firstDueAt: new Date(values.nextDueAt).toISOString(),
+    };
+  };
+
   const saveAdd = async (values: RecurringTaskFormValues) => {
     try {
-      await createMutation.mutateAsync({
-        title: values.title,
-        description: values.description || undefined,
-        assignedTo: values.assignedTo || undefined,
-        priority: values.priority,
-        category: (values.category as RecurringTaskCategory) || undefined,
-        intervalDays: values.intervalDays,
-        firstDueAt: new Date(values.nextDueAt).toISOString(),
-      });
+      await createMutation.mutateAsync(buildCreateInput(values));
 
       toast.success("Schedule created", {
-        description: `"${values.title}" will run every ${values.intervalDays} day(s).`,
+        description:
+          values.triggerType === "METER"
+            ? `"${values.title}" will create a task every ${values.intervalReading} units.`
+            : `"${values.title}" will run every ${values.intervalDays} day(s).`,
       });
 
       closeSheet();

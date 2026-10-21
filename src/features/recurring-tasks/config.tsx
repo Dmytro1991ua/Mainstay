@@ -119,3 +119,8 @@ export const getScheduleDetailFields = (schedule: RecurringTask): DetailField[] 
     ),
   },
 ];
+
+export const SCHEDULE_TRIGGER_OPTIONS = [
+  { value: "TIME", label: "Time (every N days)" },
+  { value: "METER", label: "Meter (every N hours, km, …)" },
+];

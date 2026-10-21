@@ -3,12 +3,12 @@ import { z } from "zod";
 import { formatReading } from "@/shared/utils";
 
 // Readings are Postgres integers.
-const MAX_READING = 2_147_483_647;
+export const MAX_READING = 2_147_483_647;
 
 // Digits only: rules out signs, decimals and a comma used as a decimal separator.
-const WHOLE_NUMBER_PATTERN = /^\d+$/;
-const WHOLE_NUMBER_ERROR = "Must be a whole number (0 or more)";
-const READING_TOO_LARGE_ERROR = "That number is too large";
+export const WHOLE_NUMBER_PATTERN = /^\d+$/;
+export const WHOLE_NUMBER_ERROR = "Must be a whole number (0 or more)";
+export const READING_TOO_LARGE_ERROR = "That number is too large";
 
 export const meterFormSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
