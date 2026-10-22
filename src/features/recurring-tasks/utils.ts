@@ -2,8 +2,13 @@ import { format } from "date-fns";
 
 import { formatReading } from "@/shared/utils";
 
-import type { RecurringTask } from "./api/recurring-tasks.api";
+import type {
+  RecurringTask,
+  RecurringTaskCategory,
+  UpdateRecurringTaskInput,
+} from "./api/recurring-tasks.api";
 import type { ActiveFilter } from "./types";
+import type { RecurringTaskFormValues } from "./validation";
 
 export const toIsActive = (filter: ActiveFilter): boolean | undefined => {
   if (filter === "active") return true;
@@ -46,3 +51,15 @@ export const getScheduleNextDueLabel = (schedule: RecurringTask): string | null 
 
   return schedule.nextDueAt == null ? null : format(new Date(schedule.nextDueAt), "MMM d, yyyy");
 };
+
+/** Only time schedules send their interval: a meter schedule's meter and interval are locked. */
+export const toUpdateSchedulePayload = (
+  values: RecurringTaskFormValues,
+): UpdateRecurringTaskInput => ({
+  title: values.title,
+  description: values.description || undefined,
+  assignedTo: values.assignedTo || null,
+  priority: values.priority,
+  category: (values.category as RecurringTaskCategory) || undefined,
+  ...(values.triggerType === "TIME" && { intervalDays: values.intervalDays }),
+});

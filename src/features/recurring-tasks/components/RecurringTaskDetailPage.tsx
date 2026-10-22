@@ -8,7 +8,6 @@ import { EmptyState } from "@/shared/ui/empty-state";
 
 import { getScheduleDetailFields, SCHEDULE_DETAIL_SKELETON_KEYS } from "../config";
 import { useRecurringTaskDetail } from "../hooks/use-recurring-task-detail";
-import { isMeterSchedule } from "../utils";
 
 import { RecurringTaskDetailActions } from "./RecurringTaskDetailActions";
 import { RecurringTaskFormSheet } from "./RecurringTaskFormSheet";
@@ -84,7 +83,6 @@ export const RecurringTaskDetailPage = ({ scheduleId }: RecurringTaskDetailPageP
               isActive={schedule.isActive}
               isPausing={isPausing}
               isResuming={isResuming}
-              canEdit={!isMeterSchedule(schedule)}
               canDelete={canDelete}
               onPause={handlePause}
               onResume={handleResume}

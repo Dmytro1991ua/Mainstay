@@ -9,7 +9,9 @@ import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 
 import { SCHEDULE_TRIGGER_OPTIONS } from "../config";
+import { getScheduleIntervalLabel } from "../utils";
 
+import type { RecurringTask } from "../api/recurring-tasks.api";
 import type { RecurringTaskFormValues } from "../validation";
 import type { UseFormReturn } from "react-hook-form";
 
@@ -17,10 +19,30 @@ type ScheduleTriggerFieldsProps = {
   form: UseFormReturn<RecurringTaskFormValues>;
   /** The trigger type and first due date are chosen on create; the server fixes them afterwards. */
   isAdd: boolean;
+  /** The schedule being edited, whose meter and interval are shown but cannot change. */
+  schedule?: RecurringTask;
 };
 
+/** The server fixes a meter schedule's meter and interval once created, so they are shown only. */
+const LockedMeterFields = ({ schedule }: { schedule: RecurringTask }) => (
+  <>
+    <FormField
+      id="schedule-meter-locked"
+      label="Meter"
+      value={schedule.meter ? `${schedule.meter.name}` : ""}
+      disabled
+    />
+    <FormField
+      id="schedule-interval-locked"
+      label="Repeat every"
+      value={getScheduleIntervalLabel(schedule) ?? ""}
+      disabled
+    />
+  </>
+);
+
 /** What makes the schedule fire: a number of days, or a meter reaching a reading. */
-export const ScheduleTriggerFields = ({ form, isAdd }: ScheduleTriggerFieldsProps) => {
+export const ScheduleTriggerFields = ({ form, isAdd, schedule }: ScheduleTriggerFieldsProps) => {
   const {
     register,
     control,
@@ -62,7 +84,9 @@ export const ScheduleTriggerFields = ({ form, isAdd }: ScheduleTriggerFieldsProp
           )}
         />
       )}
-      {isMeter ? (
+      {isMeter && !isAdd && schedule ? (
+        <LockedMeterFields schedule={schedule} />
+      ) : isMeter ? (
         <>
           <Controller
             name="meterId"

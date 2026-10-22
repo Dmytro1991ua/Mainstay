@@ -5,6 +5,7 @@ import { useFormState } from "@/shared/hooks/use-form-state";
 import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
+import { toUpdateSchedulePayload, isMeterSchedule } from "../utils";
 import {
   RECURRING_TASK_FORM_DEFAULTS,
   recurringTaskFormSchema,
@@ -17,7 +18,6 @@ import type {
   CreateRecurringTaskInput,
   RecurringTask,
   RecurringTaskCategory,
-  UpdateRecurringTaskInput,
 } from "../api/recurring-tasks.api";
 import type { SheetMode } from "../types";
 
@@ -47,12 +47,12 @@ export const useRecurringTaskForm = () => {
       assignedTo: schedule.assignedTo ?? "",
       priority: schedule.priority,
       category: schedule.category ?? "",
-      // Meter schedules have no day interval or due date; Edit is not offered for them yet.
-      triggerType: "TIME",
+      // Meter schedules have no day interval or due date, and their meter fields are read-only.
+      triggerType: isMeterSchedule(schedule) ? "METER" : "TIME",
       intervalDays: schedule.intervalDays ?? RECURRING_TASK_FORM_DEFAULTS.intervalDays,
       nextDueAt: schedule.nextDueAt?.split("T")[0] ?? "",
-      meterId: "",
-      intervalReading: "",
+      meterId: schedule.meterId ?? "",
+      intervalReading: schedule.intervalReading?.toString() ?? "",
       firstDueReading: "",
     });
 
@@ -103,15 +103,7 @@ export const useRecurringTaskForm = () => {
 
   const saveEdit = async (values: RecurringTaskFormValues, id: string) => {
     try {
-      // The server derives the next due date from intervalDays; update no longer accepts a date.
-      const update: UpdateRecurringTaskInput = {
-        title: values.title,
-        description: values.description || undefined,
-        assignedTo: values.assignedTo || null,
-        priority: values.priority,
-        category: (values.category as RecurringTaskCategory) || undefined,
-        intervalDays: values.intervalDays,
-      };
+      const update = toUpdateSchedulePayload(values);
       await updateMutation.mutateAsync({ id, data: update });
       toast.success("Schedule updated", { description: `"${values.title}" was saved.` });
       closeSheet();

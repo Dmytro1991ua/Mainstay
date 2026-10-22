@@ -137,7 +137,11 @@ export const RecurringTaskFormSheet = ({
             </FormField>
           )}
         />
-        <ScheduleTriggerFields form={form} isAdd={isAdd} />
+        <ScheduleTriggerFields
+          form={form}
+          isAdd={isAdd}
+          schedule={getEditState(sheetMode)?.schedule}
+        />
       </div>
     </FormSheet>
   );
