@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
 import { useDeleteAsset } from "./use-assets";
@@ -25,8 +26,8 @@ export const useAssetDelete = () => {
         toast.success("Asset deleted", { description: `"${name}" was removed.` });
         closeDelete();
       },
-      onError: () => {
-        toast.error("Failed to delete asset");
+      onError: (error) => {
+        toast.error("Failed to delete asset", { description: getApiErrorMessage(error) });
         closeDelete();
       },
     });
