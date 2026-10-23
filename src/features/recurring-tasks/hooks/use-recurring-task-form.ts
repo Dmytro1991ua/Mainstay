@@ -5,7 +5,7 @@ import { useFormState } from "@/shared/hooks/use-form-state";
 import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
-import { toUpdateSchedulePayload, isMeterSchedule } from "../utils";
+import { getScheduleCreatedMessage, isMeterSchedule, toUpdateSchedulePayload } from "../utils";
 import {
   RECURRING_TASK_FORM_DEFAULTS,
   recurringTaskFormSchema,
@@ -86,14 +86,9 @@ export const useRecurringTaskForm = () => {
 
   const saveAdd = async (values: RecurringTaskFormValues) => {
     try {
-      await createMutation.mutateAsync(buildCreateInput(values));
+      const created = await createMutation.mutateAsync(buildCreateInput(values));
 
-      toast.success("Schedule created", {
-        description:
-          values.triggerType === "METER"
-            ? `"${values.title}" will create a task every ${values.intervalReading} units.`
-            : `"${values.title}" will run every ${values.intervalDays} day(s).`,
-      });
+      toast.success("Schedule created", { description: getScheduleCreatedMessage(created) });
 
       closeSheet();
     } catch (error) {

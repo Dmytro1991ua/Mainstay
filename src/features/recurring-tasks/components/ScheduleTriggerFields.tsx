@@ -1,4 +1,4 @@
-import { Controller, useWatch } from "react-hook-form";
+import { Controller, useFormState, useWatch } from "react-hook-form";
 
 import { useMetersQuery } from "@/features/meters/hooks/use-meters";
 import { flattenPages } from "@/shared/hooks/use-crud";
@@ -43,12 +43,10 @@ const LockedMeterFields = ({ schedule }: { schedule: RecurringTask }) => (
 
 /** What makes the schedule fire: a number of days, or a meter reaching a reading. */
 export const ScheduleTriggerFields = ({ form, isAdd, schedule }: ScheduleTriggerFieldsProps) => {
-  const {
-    register,
-    control,
-    clearErrors,
-    formState: { errors },
-  } = form;
+  const { register, control, clearErrors } = form;
+  // Subscribe here: the React Compiler caches this component by its `form` prop, which never changes,
+  // so errors read off the prop would never show.
+  const { errors } = useFormState({ control });
 
   const triggerType = useWatch({ control, name: "triggerType" });
   const meterId = useWatch({ control, name: "meterId" });

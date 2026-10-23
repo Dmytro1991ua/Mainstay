@@ -63,3 +63,13 @@ export const toUpdateSchedulePayload = (
   category: (values.category as RecurringTaskCategory) || undefined,
   ...(values.triggerType === "TIME" && { intervalDays: values.intervalDays }),
 });
+
+/** "Oil change" will run every 7 days. / ... will create a task every 500 hours. */
+export const getScheduleCreatedMessage = (schedule: RecurringTask): string => {
+  const interval = getScheduleIntervalLabel(schedule);
+  const action = isMeterSchedule(schedule) ? "create a task" : "run";
+
+  return interval
+    ? `"${schedule.title}" will ${action} every ${interval}.`
+    : `"${schedule.title}" was created.`;
+};
