@@ -6,7 +6,6 @@ type RecurringTaskDetailActionsProps = {
   isActive: boolean;
   isPausing: boolean;
   isResuming: boolean;
-  canEdit: boolean;
   canDelete: boolean;
   onPause: () => void;
   onResume: () => void;
@@ -23,7 +22,6 @@ export const RecurringTaskDetailActions = ({
   isActive,
   isPausing,
   isResuming,
-  canEdit,
   canDelete,
   onPause,
   onResume,
@@ -38,7 +36,7 @@ export const RecurringTaskDetailActions = ({
         onClick: isActive ? onPause : onResume,
         show: true,
       },
-      { label: "Edit", icon: Pencil, onClick: onEdit, show: canEdit },
+      { label: "Edit", icon: Pencil, onClick: onEdit },
       { label: "Delete", icon: Trash2, onClick: onDelete, variant: "destructive", show: canDelete },
     ]}
   />

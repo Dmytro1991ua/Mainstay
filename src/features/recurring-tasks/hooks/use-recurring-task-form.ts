@@ -5,6 +5,7 @@ import { useFormState } from "@/shared/hooks/use-form-state";
 import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
+import { getScheduleCreatedMessage, isMeterSchedule, toUpdateSchedulePayload } from "../utils";
 import {
   RECURRING_TASK_FORM_DEFAULTS,
   recurringTaskFormSchema,
@@ -14,9 +15,9 @@ import {
 import { useCreateRecurringTask, useUpdateRecurringTask } from "./use-recurring-tasks";
 
 import type {
+  CreateRecurringTaskInput,
   RecurringTask,
   RecurringTaskCategory,
-  UpdateRecurringTaskInput,
 } from "../api/recurring-tasks.api";
 import type { SheetMode } from "../types";
 
@@ -46,29 +47,48 @@ export const useRecurringTaskForm = () => {
       assignedTo: schedule.assignedTo ?? "",
       priority: schedule.priority,
       category: schedule.category ?? "",
-      // Meter schedules have no day interval or due date; Edit is not offered for them yet.
+      // Meter schedules have no day interval or due date, and their meter fields are read-only.
+      triggerType: isMeterSchedule(schedule) ? "METER" : "TIME",
       intervalDays: schedule.intervalDays ?? RECURRING_TASK_FORM_DEFAULTS.intervalDays,
       nextDueAt: schedule.nextDueAt?.split("T")[0] ?? "",
+      meterId: schedule.meterId ?? "",
+      intervalReading: schedule.intervalReading?.toString() ?? "",
+      firstDueReading: "",
     });
 
     setSheetMode({ type: "edit", schedule });
   };
 
+  const buildCreateInput = (values: RecurringTaskFormValues): CreateRecurringTaskInput => {
+    const common = {
+      title: values.title,
+      description: values.description || undefined,
+      assignedTo: values.assignedTo || undefined,
+      priority: values.priority,
+      category: (values.category as RecurringTaskCategory) || undefined,
+    };
+
+    if (values.triggerType === "METER") {
+      return {
+        ...common,
+        meterId: values.meterId,
+        intervalReading: Number(values.intervalReading),
+        firstDueReading: values.firstDueReading ? Number(values.firstDueReading) : undefined,
+      };
+    }
+
+    return {
+      ...common,
+      intervalDays: values.intervalDays,
+      firstDueAt: new Date(values.nextDueAt).toISOString(),
+    };
+  };
+
   const saveAdd = async (values: RecurringTaskFormValues) => {
     try {
-      await createMutation.mutateAsync({
-        title: values.title,
-        description: values.description || undefined,
-        assignedTo: values.assignedTo || undefined,
-        priority: values.priority,
-        category: (values.category as RecurringTaskCategory) || undefined,
-        intervalDays: values.intervalDays,
-        firstDueAt: new Date(values.nextDueAt).toISOString(),
-      });
+      const created = await createMutation.mutateAsync(buildCreateInput(values));
 
-      toast.success("Schedule created", {
-        description: `"${values.title}" will run every ${values.intervalDays} day(s).`,
-      });
+      toast.success("Schedule created", { description: getScheduleCreatedMessage(created) });
 
       closeSheet();
     } catch (error) {
@@ -78,15 +98,7 @@ export const useRecurringTaskForm = () => {
 
   const saveEdit = async (values: RecurringTaskFormValues, id: string) => {
     try {
-      // The server derives the next due date from intervalDays; update no longer accepts a date.
-      const update: UpdateRecurringTaskInput = {
-        title: values.title,
-        description: values.description || undefined,
-        assignedTo: values.assignedTo || null,
-        priority: values.priority,
-        category: (values.category as RecurringTaskCategory) || undefined,
-        intervalDays: values.intervalDays,
-      };
+      const update = toUpdateSchedulePayload(values);
       await updateMutation.mutateAsync({ id, data: update });
       toast.success("Schedule updated", { description: `"${values.title}" was saved.` });
       closeSheet();

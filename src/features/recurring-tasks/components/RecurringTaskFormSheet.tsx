@@ -4,14 +4,14 @@ import { useUsersList } from "@/features/tasks/hooks/use-users-list";
 import { cn } from "@/shared/lib/utils";
 import { useAuthStore } from "@/shared/stores/auth-store";
 import { InfiniteCombobox, toComboboxOption } from "@/shared/ui/combobox";
-import { ControlledDatePicker } from "@/shared/ui/date-picker";
 import { FormField } from "@/shared/ui/form-field";
-import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { FormSheet, FormSheetFooter } from "@/shared/ui/sheet";
 import { getEditState } from "@/shared/utils";
 
 import { SCHEDULE_CATEGORY_OPTIONS, SCHEDULE_PRIORITY_OPTIONS } from "../config";
+
+import { ScheduleTriggerFields } from "./ScheduleTriggerFields";
 
 import type { SheetMode } from "../types";
 import type { RecurringTaskFormValues } from "../validation";
@@ -36,7 +36,6 @@ export const RecurringTaskFormSheet = ({
   const {
     register,
     control,
-    clearErrors,
     formState: { errors },
   } = form;
 
@@ -138,29 +137,11 @@ export const RecurringTaskFormSheet = ({
             </FormField>
           )}
         />
-        <FormField id="schedule-interval" label="Repeat every (days)" error={errors.intervalDays}>
-          <Input
-            id="schedule-interval"
-            type="number"
-            min={1}
-            placeholder="e.g. 30"
-            aria-invalid={!!errors.intervalDays}
-            {...register("intervalDays", { valueAsNumber: true })}
-          />
-        </FormField>
-        {/* Only shown on create: the server derives the next due date from the
-            interval on update, so it isn't editable once a schedule exists. */}
-        {isAdd && (
-          <ControlledDatePicker
-            name="nextDueAt"
-            control={control}
-            label="First due date"
-            placeholder="Pick a date"
-            error={errors.nextDueAt}
-            disablePast
-            clearErrors={clearErrors}
-          />
-        )}
+        <ScheduleTriggerFields
+          form={form}
+          isAdd={isAdd}
+          schedule={getEditState(sheetMode)?.schedule}
+        />
       </div>
     </FormSheet>
   );
