@@ -111,10 +111,16 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     variant: (value) => (value > 0 ? "amber" : "default"),
     // The server counts these separately (no overlap): time schedules due this week, and meter
     // schedules within 10% of their interval of the next reading.
-    subtext: (value, stats) =>
-      value > 0
-        ? `${stats.timeSchedulesDue} this week · ${stats.meterSchedulesDue} by meter reading`
-        : "Nothing due soon",
+    subtext: (value, stats) => {
+      if (value === 0) return "Nothing due soon";
+
+      return [
+        stats.timeSchedulesDue > 0 && `${stats.timeSchedulesDue} this week`,
+        stats.meterSchedulesDue > 0 && `${stats.meterSchedulesDue} by meter reading`,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+    },
   },
 ];
 
