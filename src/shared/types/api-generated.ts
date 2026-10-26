@@ -4572,6 +4572,8 @@ export interface components {
             schedules: {
                 active: number;
                 dueThisWeek: number;
+                /** @description Active meter schedules within 10% of their interval of the next threshold, or already past it. Not included in dueThisWeek. */
+                meterDueSoon: number;
             };
         };
         TechnicianDashboard: {

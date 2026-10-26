@@ -102,6 +102,8 @@ export const useDashboard = () => {
   const inProgress = taskStats?.byStatus.IN_PROGRESS ?? 0;
   const done = taskStats?.byStatus.DONE ?? 0;
   const overdueCount = taskStats?.overdue ?? 0;
+  const timeSchedulesDue = managerStats?.schedules.dueThisWeek ?? 0;
+  const meterSchedulesDue = managerStats?.schedules.meterDueSoon ?? 0;
 
   // Inventory queries only run for managers; the stats query runs for everyone.
   const inventoryIsLoading = isManager && (inventoryStats.isPending || lowStock.isPending);
@@ -128,7 +130,9 @@ export const useDashboard = () => {
       totalTasks: open + inProgress + done,
       overdueCount,
       activeSchedules: managerStats?.schedules.active ?? 0,
-      schedulesThisWeek: managerStats?.schedules.dueThisWeek ?? 0,
+      schedulesDue: timeSchedulesDue + meterSchedulesDue,
+      timeSchedulesDue,
+      meterSchedulesDue,
       // stockValue arrives as a money string; parse for the numeric stat card.
       stockValue: Number(inventoryStats.data?.stockValue ?? 0),
       unvaluedItems: inventoryStats.data?.unvaluedItems ?? 0,

@@ -34,9 +34,14 @@ type StatsKey =
   | "activeTasks"
   | "overdueCount"
   | "activeSchedules"
-  | "schedulesThisWeek";
+  | "schedulesDue";
 
-export type Stats = Record<StatsKey, number> & { totalTasks: number; unvaluedItems: number };
+export type Stats = Record<StatsKey, number> & {
+  totalTasks: number;
+  unvaluedItems: number;
+  timeSchedulesDue: number;
+  meterSchedulesDue: number;
+};
 
 type StatCardDef = {
   key: StatsKey;
@@ -99,12 +104,17 @@ export const STATS_CARDS_CONFIG: StatCardDef[] = [
     subtext: (value) => (value > 0 ? "Recurring schedules running" : "No active schedules"),
   },
   {
-    key: "schedulesThisWeek",
-    label: "Time Schedules Due",
+    key: "schedulesDue",
+    label: "Schedules Due",
     icon: CalendarCheck,
     technicianHidden: true,
     variant: (value) => (value > 0 ? "amber" : "default"),
-    subtext: (value) => (value > 0 ? "Generating tasks this week" : "Nothing due this week"),
+    // The server counts these separately (no overlap): time schedules due this week, and meter
+    // schedules within 10% of their interval of the next reading.
+    subtext: (value, stats) =>
+      value > 0
+        ? `${stats.timeSchedulesDue} this week · ${stats.meterSchedulesDue} by meter reading`
+        : "Nothing due soon",
   },
 ];
 
