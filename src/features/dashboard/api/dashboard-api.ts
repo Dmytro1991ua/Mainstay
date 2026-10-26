@@ -4,31 +4,8 @@ import { sortBy } from "lodash";
 import { axiosInstance } from "@/shared/lib/api-client";
 import type { components } from "@/shared/types/api-generated";
 
-// Manual types until server PR #60 is reflected in generated types
-type TasksByStatus = { OPEN: number; IN_PROGRESS: number; DONE: number; CANCELLED: number };
-
-export type ManagerDashboardStats = {
-  tasks: {
-    total: number;
-    byStatus: TasksByStatus;
-    overdue: number;
-    createdThisMonth: number;
-    completedThisMonth: number;
-    avgCompletionDays: number | null;
-  };
-  inventory: { total: number; inStock: number; lowStock: number; outOfStock: number };
-  technicians: { id: string; userName: string; openTasks: number; overdueTasks: number }[];
-  schedules: { active: number; dueThisWeek: number };
-};
-
-export type TechnicianDashboardStats = {
-  myTasks: {
-    total: number;
-    byStatus: TasksByStatus;
-    overdue: number;
-    completedThisMonth: number;
-  };
-};
+export type ManagerDashboardStats = components["schemas"]["ManagerDashboard"];
+export type TechnicianDashboardStats = components["schemas"]["TechnicianDashboard"];
 
 export type DashboardStats = ManagerDashboardStats | TechnicianDashboardStats;
 
