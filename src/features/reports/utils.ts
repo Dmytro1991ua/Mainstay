@@ -18,6 +18,12 @@ export const getDefaultRange = (): DateRange => ({
   to: new Date(),
 });
 
+/**
+ * A picked day as a plain date ("2026-10-29"). The server reads a plain `to` as "through the end of
+ * that day"; a UTC timestamp from toISOString() would shift by the user's offset and cut the day off.
+ */
+export const toApiDate = (date: Date): string => format(date, "yyyy-MM-dd");
+
 export const formatBucketLabel = (bucket: string, groupBy: ThroughputGranularity): string => {
   // Buckets are UTC boundaries (…T00:00:00.000Z). Parse the date part as a local
   // date so format() doesn't shift the label back a day/month west of UTC.
