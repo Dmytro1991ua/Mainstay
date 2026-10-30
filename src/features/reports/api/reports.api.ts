@@ -6,7 +6,15 @@ export type AssetReliabilityRow = components["schemas"]["AssetReliabilityRow"];
 export type ThroughputReport = components["schemas"]["ThroughputResponse"]["data"];
 export type ThroughputBucket = components["schemas"]["ThroughputBucket"];
 export type ThroughputGranularity = ThroughputReport["groupBy"];
+export type SpendReport = components["schemas"]["SpendResponse"]["data"];
+export type SpendGranularity = SpendReport["groupBy"];
 export type TechnicianWorkloadRow = components["schemas"]["TechnicianWorkloadRow"];
+
+export type SpendParams = {
+  from?: string;
+  to?: string;
+  groupBy?: SpendGranularity;
+};
 
 export type TechnicianSortBy =
   | "openTasks"
@@ -78,4 +86,12 @@ export const fetchTechnicianWorkload = async (
   );
 
   return { data: res.data.data, meta: res.data.meta };
+};
+
+export const fetchSpend = async (params: SpendParams): Promise<SpendReport> => {
+  const res = await axiosInstance.get<components["schemas"]["SpendResponse"]>("/reports/spend", {
+    params,
+  });
+
+  return res.data.data;
 };
