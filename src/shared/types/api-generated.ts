@@ -2506,7 +2506,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Maintenance throughput over time: tasks created vs completed per bucket (day/week/month), zero-filled across the range, plus a summary with completion rate and average cycle time. Defaults to the last 12 weeks. ADMIN/MANAGER only. */
+        /** @description Maintenance throughput over time: tasks created vs completed per bucket (day/week/month), zero-filled across the range, plus a summary with completion rate and average cycle time. A plain-date `to` (2026-07-31) includes that whole day. Defaults to the last 12 weeks. ADMIN/MANAGER only. */
         get: {
             parameters: {
                 query?: {
@@ -2527,6 +2527,64 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["ThroughputResponse"];
+                    };
+                };
+                /** @description Invalid range (`from` after `to`) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reports/spend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Purchasing spend: what was actually paid (quantity x received unit cost) for RECEIVED reorders whose receivedAt falls in the range. Returns a summary (spent, variance against the estimate, and how many received orders had no price recorded and are excluded from the totals), a zero-filled series per day/week/month, and breakdowns by supplier and by category (biggest first; supplier null = none set), using the supplier and category the item had when the order was received, so later edits to an item do not move past spend. A plain-date `to` (2026-07-31) includes that whole day. Defaults to the last 12 months by month. Money is a 2-decimal string. ADMIN/MANAGER only. */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string | null;
+                    to?: string | null;
+                    groupBy?: "day" | "week" | "month";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Spend summary, series and breakdowns */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SpendResponse"];
                     };
                 };
                 /** @description Invalid range (`from` after `to`) */
@@ -5207,6 +5265,53 @@ export interface components {
             bucket: string;
             created: number;
             completed: number;
+        };
+        SpendResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: date-time */
+                from: string;
+                /** Format: date-time */
+                to: string;
+                /** @enum {string} */
+                groupBy: "day" | "week" | "month";
+                summary: {
+                    /** @example 9800.00 */
+                    spent: string;
+                    /** @example 40 */
+                    receivedOrders: number;
+                    /** @example 5 */
+                    unrecordedReceived: number;
+                    /** @example 120.00 */
+                    variance: string;
+                    /** @example 31 */
+                    comparableOrders: number;
+                };
+                series: {
+                    /** @example 9800.00 */
+                    spent: string;
+                    /** @example 40 */
+                    receivedOrders: number;
+                    /** Format: date-time */
+                    bucket: string;
+                }[];
+                bySupplier: {
+                    /** @example 9800.00 */
+                    spent: string;
+                    /** @example 40 */
+                    receivedOrders: number;
+                    /** @description null = no supplier set */
+                    supplier: string | null;
+                }[];
+                byCategory: {
+                    /** @example 9800.00 */
+                    spent: string;
+                    /** @example 40 */
+                    receivedOrders: number;
+                    category: string;
+                }[];
+            };
         };
         TaskCommentsListResponse: {
             /** @enum {boolean} */

@@ -1,1 +1,1 @@
-export type ReportTab = "throughput" | "reliability" | "technicians";
+export type ReportTab = "throughput" | "reliability" | "technicians" | "spend";

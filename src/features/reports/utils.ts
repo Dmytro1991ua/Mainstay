@@ -1,7 +1,8 @@
-import { format, parseISO, subWeeks } from "date-fns";
+import { format, parseISO, subMonths, subWeeks } from "date-fns";
 
 import type { TableUrlState } from "@/shared/ui/data-table";
 import type { DateRange } from "@/shared/ui/date-picker";
+import { formatMoney } from "@/shared/utils";
 
 import type {
   ReliabilityListParams,
@@ -12,11 +13,37 @@ import type {
 } from "./api/reports.api";
 
 const DEFAULT_RANGE_WEEKS = 12;
+const DEFAULT_SPEND_RANGE_MONTHS = 12;
 
 export const getDefaultRange = (): DateRange => ({
   from: subWeeks(new Date(), DEFAULT_RANGE_WEEKS),
   to: new Date(),
 });
+
+export const getDefaultSpendRange = (): DateRange => ({
+  from: subMonths(new Date(), DEFAULT_SPEND_RANGE_MONTHS),
+  to: new Date(),
+});
+
+const compactMoneyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+});
+
+/** "$9.8K": the short form for chart axes. */
+export const formatCompactMoney = (value: number): string => compactMoneyFormatter.format(value);
+
+/** "+$120.00" when actual spend ran over the estimate, "-$50.00" when under, "$0.00" when equal. */
+export const formatVariance = (variance: string): string => {
+  const amount = Number(variance);
+  if (!Number.isFinite(amount)) return "—";
+  if (amount === 0) return formatMoney(0);
+
+  return `${amount > 0 ? "+" : "-"}${formatMoney(Math.abs(amount))}`;
+};
 
 /**
  * A picked day as a plain date ("2026-10-29"). The server reads a plain `to` as "through the end of
