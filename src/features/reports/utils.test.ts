@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatVariance, toApiDate } from "./utils";
+import { formatCompactMoney, formatVariance, toApiDate } from "./utils";
 
 describe("toApiDate", () => {
   it("keeps the picked day, whatever the time zone offset", () => {
@@ -26,5 +26,13 @@ describe("formatVariance", () => {
 
   it("falls back to a dash for a value that isn't a number", () => {
     expect(formatVariance("abc")).toBe("—");
+  });
+});
+
+describe("formatCompactMoney", () => {
+  it("shortens large amounts for chart axes", () => {
+    expect(formatCompactMoney(9800)).toBe("$9.8K");
+    expect(formatCompactMoney(0)).toBe("$0");
+    expect(formatCompactMoney(1_250_000)).toBe("$1.3M");
   });
 });

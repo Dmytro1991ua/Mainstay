@@ -16,6 +16,10 @@ export const THROUGHPUT_CHART_CONFIG = {
   completed: { label: "Completed", color: "var(--green)" },
 } satisfies ChartConfig;
 
+export const SPEND_CHART_CONFIG = {
+  spent: { label: "Spent", color: "var(--accent)" },
+} satisfies ChartConfig;
+
 export const GROUP_BY_OPTIONS = [
   { value: "day", label: "Day" },
   { value: "week", label: "Week" },

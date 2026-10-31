@@ -25,6 +25,17 @@ export const getDefaultSpendRange = (): DateRange => ({
   to: new Date(),
 });
 
+const compactMoneyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+});
+
+/** "$9.8K": the short form for chart axes. */
+export const formatCompactMoney = (value: number): string => compactMoneyFormatter.format(value);
+
 /** "+$120.00" when actual spend ran over the estimate, "-$50.00" when under, "$0.00" when equal. */
 export const formatVariance = (variance: string): string => {
   const amount = Number(variance);
