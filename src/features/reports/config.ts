@@ -6,7 +6,10 @@ export const REPORT_TABS: { key: ReportTab; label: string }[] = [
   { key: "throughput", label: "Throughput" },
   { key: "reliability", label: "Asset reliability" },
   { key: "technicians", label: "Technician workload" },
+  { key: "spend", label: "Spend" },
 ];
+
+export const PLAIN_LAYOUT_TABS: ReportTab[] = ["throughput", "spend"];
 
 export const THROUGHPUT_CHART_CONFIG = {
   created: { label: "Created", color: "var(--accent)" },
