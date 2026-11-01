@@ -36,6 +36,13 @@ const compactMoneyFormatter = new Intl.NumberFormat("en-US", {
 /** "$9.8K": the short form for chart axes. */
 export const formatCompactMoney = (value: number): string => compactMoneyFormatter.format(value);
 
+/** A breakdown bar's width as a percent of the largest row, with a sliver kept for any non-zero row. */
+export const getBarPercent = (value: number, max: number): number => {
+  if (value <= 0 || max <= 0) return 0;
+
+  return Math.max(2, Math.round((value / max) * 100));
+};
+
 /** "+$120.00" when actual spend ran over the estimate, "-$50.00" when under, "$0.00" when equal. */
 export const formatVariance = (variance: string): string => {
   const amount = Number(variance);

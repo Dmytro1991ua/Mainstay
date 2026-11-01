@@ -10,6 +10,7 @@ import { GROUP_BY_OPTIONS } from "../config";
 import { useSpendQuery } from "../hooks/use-reports";
 import { useSpendControls } from "../hooks/use-spend-controls";
 
+import { SpendBreakdowns } from "./SpendBreakdowns";
 import { SpendChart } from "./SpendChart";
 import { SpendSummaryCards } from "./SpendSummaryCards";
 
@@ -65,6 +66,7 @@ export const SpendReport = () => {
         <div className="rounded-xl border border-border bg-panel p-5 shadow-card">
           <SpendChart series={data.series} groupBy={groupBy} />
         </div>
+        <SpendBreakdowns bySupplier={data.bySupplier} byCategory={data.byCategory} />
         {data.summary.unrecordedReceived > 0 && (
           <p className="text-xs text-text-3">
             {data.summary.unrecordedReceived} received{" "}

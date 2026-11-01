@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatCompactMoney, formatVariance, toApiDate } from "./utils";
+import { formatCompactMoney, formatVariance, getBarPercent, toApiDate } from "./utils";
 
 describe("toApiDate", () => {
   it("keeps the picked day, whatever the time zone offset", () => {
@@ -34,5 +34,18 @@ describe("formatCompactMoney", () => {
     expect(formatCompactMoney(9800)).toBe("$9.8K");
     expect(formatCompactMoney(0)).toBe("$0");
     expect(formatCompactMoney(1_250_000)).toBe("$1.3M");
+  });
+});
+
+describe("getBarPercent", () => {
+  it("sizes a row against the largest", () => {
+    expect(getBarPercent(500, 1000)).toBe(50);
+    expect(getBarPercent(1000, 1000)).toBe(100);
+  });
+
+  it("keeps a sliver for a tiny non-zero row, and none for zero", () => {
+    expect(getBarPercent(1, 100_000)).toBe(2);
+    expect(getBarPercent(0, 1000)).toBe(0);
+    expect(getBarPercent(5, 0)).toBe(0);
   });
 });
