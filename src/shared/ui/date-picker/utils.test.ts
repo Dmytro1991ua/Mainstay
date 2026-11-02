@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { formatCalendarDate, isPastCalendarDate } from "./utils";
+import { formatCalendarDate, formatDateRange, isPastCalendarDate } from "./utils";
 
 // The bug only shows west of UTC: midnight UTC is still the previous evening there.
 beforeAll(() => {
@@ -35,5 +35,26 @@ describe("calendar dates in a time zone west of UTC", () => {
 
   it("is not past the day before", () => {
     expect(isPastCalendarDate(MIDNIGHT_UTC, new Date(2027, 5, 14, 12, 0))).toBe(false);
+  });
+});
+
+describe("formatDateRange", () => {
+  it("shows the year once when the range stays inside one year", () => {
+    expect(formatDateRange({ from: new Date(2026, 9, 5), to: new Date(2026, 9, 29) }, "Pick")).toBe(
+      "Oct 5 – Oct 29, 2026",
+    );
+  });
+
+  it("shows both years when the range crosses a year", () => {
+    expect(
+      formatDateRange({ from: new Date(2025, 10, 2), to: new Date(2026, 10, 2) }, "Pick"),
+    ).toBe("Nov 2, 2025 – Nov 2, 2026");
+  });
+
+  it("falls back to the start date, or the placeholder, when the range is incomplete", () => {
+    expect(formatDateRange({ from: new Date(2026, 9, 5), to: undefined }, "Pick")).toBe(
+      "Oct 5, 2026",
+    );
+    expect(formatDateRange({ from: undefined, to: undefined }, "Pick")).toBe("Pick");
   });
 });
