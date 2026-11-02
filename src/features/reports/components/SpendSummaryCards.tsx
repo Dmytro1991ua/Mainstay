@@ -1,7 +1,6 @@
+import { getReorderEstimateDifference } from "@/features/reorders/utils";
 import { cn } from "@/shared/lib/utils";
 import { formatMoney } from "@/shared/utils";
-
-import { formatVariance } from "../utils";
 
 import type { SpendReport } from "../api/reports.api";
 
@@ -10,18 +9,17 @@ type SpendSummaryCardsProps = {
 };
 
 export const SpendSummaryCards = ({ summary }: SpendSummaryCardsProps) => {
-  const variance = Number(summary.variance);
   const hasComparison = summary.comparableOrders > 0;
+  // Shared with the Reorders page, so the same number reads the same on both.
+  const estimateDifference = hasComparison ? getReorderEstimateDifference(summary.variance) : null;
 
   const cards = [
     { label: "Total spent", value: formatMoney(summary.spent) },
     { label: "Received orders", value: summary.receivedOrders.toLocaleString("en-US") },
     {
       label: "Vs estimate",
-      value: hasComparison ? formatVariance(summary.variance) : "—",
-      // Over the estimate is the one to notice; under it is good news.
-      valueClass:
-        hasComparison && variance !== 0 ? (variance > 0 ? "text-amber" : "text-green") : "",
+      value: estimateDifference?.text ?? "—",
+      valueClass: estimateDifference?.className,
       hint: hasComparison
         ? `Across ${summary.comparableOrders.toLocaleString("en-US")} priced orders`
         : "No orders with both prices",

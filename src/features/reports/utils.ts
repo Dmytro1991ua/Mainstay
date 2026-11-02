@@ -2,7 +2,6 @@ import { format, parseISO, subMonths, subWeeks } from "date-fns";
 
 import type { TableUrlState } from "@/shared/ui/data-table";
 import type { DateRange } from "@/shared/ui/date-picker";
-import { formatMoney } from "@/shared/utils";
 
 import type {
   ReliabilityListParams,
@@ -41,15 +40,6 @@ export const getBarPercent = (value: number, max: number): number => {
   if (value <= 0 || max <= 0) return 0;
 
   return Math.max(2, Math.round((value / max) * 100));
-};
-
-/** "+$120.00" when actual spend ran over the estimate, "-$50.00" when under, "$0.00" when equal. */
-export const formatVariance = (variance: string): string => {
-  const amount = Number(variance);
-  if (!Number.isFinite(amount)) return "—";
-  if (amount === 0) return formatMoney(0);
-
-  return `${amount > 0 ? "+" : "-"}${formatMoney(Math.abs(amount))}`;
 };
 
 /**
