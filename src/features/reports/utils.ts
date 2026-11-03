@@ -1,4 +1,4 @@
-import { format, parseISO, subWeeks } from "date-fns";
+import { format, parseISO, subMonths, subWeeks } from "date-fns";
 
 import type { TableUrlState } from "@/shared/ui/data-table";
 import type { DateRange } from "@/shared/ui/date-picker";
@@ -12,11 +12,35 @@ import type {
 } from "./api/reports.api";
 
 const DEFAULT_RANGE_WEEKS = 12;
+const DEFAULT_SPEND_RANGE_MONTHS = 12;
 
 export const getDefaultRange = (): DateRange => ({
   from: subWeeks(new Date(), DEFAULT_RANGE_WEEKS),
   to: new Date(),
 });
+
+export const getDefaultSpendRange = (): DateRange => ({
+  from: subMonths(new Date(), DEFAULT_SPEND_RANGE_MONTHS),
+  to: new Date(),
+});
+
+const compactMoneyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+});
+
+/** "$9.8K": the short form for chart axes. */
+export const formatCompactMoney = (value: number): string => compactMoneyFormatter.format(value);
+
+/** A breakdown bar's width as a percent of the largest row, with a sliver kept for any non-zero row. */
+export const getBarPercent = (value: number, max: number): number => {
+  if (value <= 0 || max <= 0) return 0;
+
+  return Math.max(2, Math.round((value / max) * 100));
+};
 
 /**
  * A picked day as a plain date ("2026-10-29"). The server reads a plain `to` as "through the end of

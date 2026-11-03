@@ -4,10 +4,12 @@ import { useInfiniteQueryList } from "@/shared/hooks/use-crud";
 
 import {
   fetchAssetReliability,
+  fetchSpend,
   fetchTechnicianWorkload,
   fetchThroughput,
   type AssetReliabilityRow,
   type ReliabilityListParams,
+  type SpendParams,
   type TechnicianListParams,
   type TechnicianWorkloadRow,
   type ThroughputParams,
@@ -33,5 +35,12 @@ export const useThroughputQuery = (params: ThroughputParams) =>
   useQuery({
     queryKey: [REPORTS_KEY, "throughput", params],
     queryFn: () => fetchThroughput(params),
+    staleTime: 60_000,
+  });
+
+export const useSpendQuery = (params: SpendParams) =>
+  useQuery({
+    queryKey: [REPORTS_KEY, "spend", params],
+    queryFn: () => fetchSpend(params),
     staleTime: 60_000,
   });

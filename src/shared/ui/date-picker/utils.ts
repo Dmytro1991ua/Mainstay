@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { format, isSameYear, parseISO } from "date-fns";
 
 import type { DateRange } from "./types";
 
@@ -28,9 +28,12 @@ export const formatCalendarDate = (iso: string): string =>
 export const isPastCalendarDate = (iso: string, today: Date = new Date()): boolean =>
   iso.slice(0, 10) < format(today, "yyyy-MM-dd");
 
+/** The start year is only shown when the range crosses a year: "Oct 5 – Oct 29, 2026" vs "Nov 2, 2025 – Nov 2, 2026". */
 export const formatDateRange = (range: DateRange, placeholder: string): string => {
   if (range.from && range.to) {
-    return `${format(range.from, "MMM d")} – ${format(range.to, "MMM d, yyyy")}`;
+    const startFormat = isSameYear(range.from, range.to) ? "MMM d" : "MMM d, yyyy";
+
+    return `${format(range.from, startFormat)} – ${format(range.to, "MMM d, yyyy")}`;
   }
 
   if (range.from) return format(range.from, "MMM d, yyyy");

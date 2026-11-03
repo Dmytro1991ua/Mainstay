@@ -6,9 +6,10 @@ import type { OnSetTableState, TableUrlState } from "@/shared/ui/data-table";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { PageShell } from "@/shared/ui/page-shell";
 
-import { REPORT_TABS } from "../config";
+import { PLAIN_LAYOUT_TABS, REPORT_TABS } from "../config";
 
 import { AssetReliabilityReport } from "./AssetReliabilityReport";
+import { SpendReport } from "./SpendReport";
 import { TechnicianWorkloadReport } from "./TechnicianWorkloadReport";
 import { ThroughputReport } from "./ThroughputReport";
 
@@ -66,10 +67,11 @@ export const ReportsPage = ({
     <PageShell
       title="Reports"
       subtitle="Operational analytics across assets and tasks"
-      variant={activeTab === "throughput" ? "plain" : "card"}
+      variant={PLAIN_LAYOUT_TABS.includes(activeTab) ? "plain" : "card"}
       toolbar={tabControl}
     >
       {activeTab === "throughput" && <ThroughputReport />}
+      {activeTab === "spend" && <SpendReport />}
       {activeTab === "reliability" && (
         <AssetReliabilityReport tableState={tableState} onSetTableState={onSetTableState} />
       )}
