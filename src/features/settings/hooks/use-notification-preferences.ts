@@ -15,6 +15,7 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
   TASK_DUE_SOON: true,
   REORDER_RAISED: true,
   WARRANTY_EXPIRING: true,
+  METER_SERVICE_DUE: true,
 };
 
 export const useNotificationPreferences = () => {

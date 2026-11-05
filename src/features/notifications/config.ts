@@ -19,6 +19,7 @@ export const FILTER_TABS: FilterTab[] = [
   { key: "WORK_ORDER_REJECTED", label: "Rejected", params: { type: "WORK_ORDER_REJECTED" } },
   { key: "REORDER_RAISED", label: "Reorders", params: { type: "REORDER_RAISED" } },
   { key: "WARRANTY_EXPIRING", label: "Warranty", params: { type: "WARRANTY_EXPIRING" } },
+  { key: "METER_SERVICE_DUE", label: "Meter service", params: { type: "METER_SERVICE_DUE" } },
 ];
 
 export const SKEL_KEYS = ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"] as const;
