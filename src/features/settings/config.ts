@@ -105,4 +105,10 @@ export const NOTIFICATION_PREFERENCE_CONFIG: NotificationPreferenceConfig[] = [
     description: "Notify before an asset's warranty runs out, in time to make a claim",
     technicianHidden: true,
   },
+  {
+    key: "METER_SERVICE_DUE",
+    label: "Meter service alerts",
+    description: "Notify when a meter-based maintenance schedule is close to its next service",
+    technicianHidden: true,
+  },
 ];

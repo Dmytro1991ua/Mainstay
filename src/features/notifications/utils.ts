@@ -9,7 +9,8 @@ type ListRoute = "/inventory" | "/tasks" | "/work-order-requests" | "/reorders";
 
 export type NotificationNav =
   | { to: ListRoute; search?: { search: string } }
-  | { to: "/assets/$assetId"; params: { assetId: string } };
+  | { to: "/assets/$assetId"; params: { assetId: string } }
+  | { to: "/recurring-tasks/$scheduleId"; params: { scheduleId: string } };
 
 const extractQuotedName = (message: string): string | undefined =>
   message.match(/[""](.+?)[""]/)?.[1];
@@ -30,6 +31,12 @@ const toAsset = (_: Notification, entityId: string): NotificationNav => ({
   params: { assetId: entityId },
 });
 
+// Meter service reminders open the schedule that is about to fire (the related entity is its id).
+const toSchedule = (_: Notification, entityId: string): NotificationNav => ({
+  to: "/recurring-tasks/$scheduleId",
+  params: { scheduleId: entityId },
+});
+
 const NAV_TARGET: Record<
   NotificationType,
   (notification: Notification, entityId: string) => NotificationNav
@@ -43,6 +50,7 @@ const NAV_TARGET: Record<
   WORK_ORDER_REJECTED: toList("/work-order-requests"),
   REORDER_RAISED: toList("/reorders"),
   WARRANTY_EXPIRING: toAsset,
+  METER_SERVICE_DUE: toSchedule,
 };
 
 export const getNotificationNav = (notification: Notification): NotificationNav | null => {

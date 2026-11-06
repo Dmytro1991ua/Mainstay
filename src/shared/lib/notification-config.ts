@@ -4,6 +4,7 @@ import {
   CalendarClock,
   CheckCircle2,
   Clock,
+  Gauge,
   PackagePlus,
   PackageX,
   ShieldAlert,
@@ -112,6 +113,15 @@ export const NOTIFICATION_TYPE_CONFIG: Record<NotificationType, NotificationType
     iconClass: "text-amber",
     bgClass: "bg-amber-soft",
     label: "Warranty Expiring",
+    unreadRowBg: "bg-amber-soft",
+    unreadBorderClass: "border-l-amber",
+  },
+  // Amber like the other approaching-deadline warnings; the gauge icon ties it to meters.
+  METER_SERVICE_DUE: {
+    icon: Gauge,
+    iconClass: "text-amber",
+    bgClass: "bg-amber-soft",
+    label: "Service Due Soon",
     unreadRowBg: "bg-amber-soft",
     unreadBorderClass: "border-l-amber",
   },

@@ -1546,7 +1546,7 @@ export interface paths {
                     page?: number;
                     limit?: number;
                     isRead?: string;
-                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING";
+                    type?: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING" | "METER_SERVICE_DUE";
                 };
                 header?: never;
                 path?: never;
@@ -4927,7 +4927,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING";
+            type: "LOW_STOCK" | "OUT_OF_STOCK" | "TASK_OVERDUE" | "TASK_CANCELLED" | "TASK_DUE_SOON" | "WORK_ORDER_APPROVED" | "WORK_ORDER_REJECTED" | "REORDER_RAISED" | "WARRANTY_EXPIRING" | "METER_SERVICE_DUE";
             /** @example Low stock: "Cordless Drill" has 2 units (min: 5). */
             message: string;
             isRead: boolean;
@@ -5557,6 +5557,7 @@ export interface components {
                 TASK_DUE_SOON: boolean;
                 REORDER_RAISED: boolean;
                 WARRANTY_EXPIRING: boolean;
+                METER_SERVICE_DUE: boolean;
             };
         };
         NotificationPreferencesInput: {
@@ -5572,6 +5573,8 @@ export interface components {
             REORDER_RAISED?: boolean;
             /** @example true */
             WARRANTY_EXPIRING?: boolean;
+            /** @example true */
+            METER_SERVICE_DUE?: boolean;
         };
         WorkOrderRequestResponse: {
             /** @enum {boolean} */
