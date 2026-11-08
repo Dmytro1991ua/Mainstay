@@ -50,8 +50,9 @@ export const useWorkOrderTriage = (requestId: string) => {
 
       closeApprove();
     } catch (err) {
+      // 409 isn't only "already reviewed" (an inactive or busy assignee too), so show the server's text.
       if (getApiErrorStatus(err) === 409) {
-        toast.error("Couldn't approve", { description: STALE_STATUS_MESSAGE });
+        toast.error("Couldn't approve", { description: getApiErrorMessage(err) });
       } else {
         toast.error("Failed to approve request", { description: getApiErrorMessage(err) });
       }
