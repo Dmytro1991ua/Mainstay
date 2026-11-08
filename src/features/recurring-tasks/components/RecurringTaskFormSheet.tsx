@@ -41,7 +41,14 @@ export const RecurringTaskFormSheet = ({
 
   const currentUserId = useAuthStore((s) => s.user?.id);
 
-  const { data: usersData, fetchNextPage, hasNextPage, isFetchingNextPage } = useUsersList();
+  const {
+    data: usersData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useUsersList({
+    activeOnly: true,
+  });
 
   const isAdd = sheetMode?.type === "add";
 
