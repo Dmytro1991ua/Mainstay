@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
 import { useFormState } from "@/shared/hooks/use-form-state";
-import { getApiErrorMessage } from "@/shared/lib/api-error";
+import { getApiErrorMessage, getApiErrorStatus } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
 
 import { getScheduleCreatedMessage, isMeterSchedule, toUpdateSchedulePayload } from "../utils";
@@ -84,6 +84,15 @@ export const useRecurringTaskForm = () => {
     };
   };
 
+  // 409: the default assignee is an inactive user. Shown on the field, like the task form does.
+  const showAssigneeConflict = (error: unknown): boolean => {
+    if (getApiErrorStatus(error) !== 409) return false;
+
+    form.setError("assignedTo", { message: getApiErrorMessage(error) });
+
+    return true;
+  };
+
   const saveAdd = async (values: RecurringTaskFormValues) => {
     try {
       const created = await createMutation.mutateAsync(buildCreateInput(values));
@@ -92,6 +101,8 @@ export const useRecurringTaskForm = () => {
 
       closeSheet();
     } catch (error) {
+      if (showAssigneeConflict(error)) return;
+
       toast.error("Failed to create schedule", { description: getApiErrorMessage(error) });
     }
   };
@@ -103,6 +114,8 @@ export const useRecurringTaskForm = () => {
       toast.success("Schedule updated", { description: `"${values.title}" was saved.` });
       closeSheet();
     } catch (error) {
+      if (showAssigneeConflict(error)) return;
+
       toast.error("Failed to update schedule", { description: getApiErrorMessage(error) });
     }
   };

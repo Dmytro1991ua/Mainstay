@@ -36,6 +36,7 @@ export const RecurringTaskFormSheet = ({
   const {
     register,
     control,
+    clearErrors,
     formState: { errors },
   } = form;
 
@@ -129,10 +130,13 @@ export const RecurringTaskFormSheet = ({
           name="assignedTo"
           control={control}
           render={({ field }) => (
-            <FormField id="schedule-assignee" label="Default assignee">
+            <FormField id="schedule-assignee" label="Default assignee" error={errors.assignedTo}>
               <InfiniteCombobox
                 value={field.value ?? ""}
-                onValueChange={(v) => field.onChange(v || null)}
+                onValueChange={(v) => {
+                  field.onChange(v || null);
+                  clearErrors("assignedTo");
+                }}
                 options={assigneeOptions}
                 selectedOption={selectedAssigneeOption}
                 placeholder="Select assignee"
