@@ -27,7 +27,9 @@ export const WorkOrderApproveSheet = ({
 }: WorkOrderApproveSheetProps) => {
   const { control, clearErrors } = form;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useUsersList();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useUsersList({
+    activeOnly: true,
+  });
 
   const assigneeOptions =
     data?.pages.flatMap((p) => p.data).map((u) => ({ value: u.id, label: u.userName })) ?? [];

@@ -54,6 +54,7 @@ export const TaskFormSheet = ({
     isFetchingNextPage,
   } = useUsersList({
     availableOnly: isAdd,
+    activeOnly: true,
   });
 
   const assigneeOptions =
