@@ -20,7 +20,7 @@ export const TASKS_KEY = "tasks";
 
 const USERS_KEY = "users";
 const INVENTORY_KEY = "inventory";
-const ASSET_TASKS_KEY = "assets-tasks";
+export const ASSET_TASKS_KEY = "assets-tasks";
 const REORDERS_KEY = "reorders";
 
 export const useTasksQuery = (params: TaskListParams) =>
