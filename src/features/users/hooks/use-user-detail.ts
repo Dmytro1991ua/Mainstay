@@ -7,6 +7,8 @@ import { toast } from "@/shared/ui/toast";
 
 import { deleteUser, getUser, updateUserStatus } from "../api/users-api";
 
+import { invalidateReleasedWork } from "./invalidate-released-work";
+
 import type { User } from "../api/users-api";
 
 const USERS_KEY = ["users"];
@@ -46,6 +48,7 @@ export const useUserDetail = (userId: string) => {
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: USERS_KEY });
       queryClient.invalidateQueries({ queryKey: [...USERS_KEY, userId] });
+      if (updated.status === "INACTIVE") invalidateReleasedWork(queryClient);
       const label = updated.status === "ACTIVE" ? "activated" : "deactivated";
       toast.success(`User ${label}`, { description: `${updated.userName} is now ${label}.` });
     },

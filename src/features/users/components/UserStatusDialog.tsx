@@ -26,7 +26,8 @@ export const UserStatusDialog = ({
         <strong className="font-medium text-text">
           {target?.userName ? formatUserName(target.userName) : target?.email}
         </strong>{" "}
-        will be deactivated and will no longer be able to sign in.
+        will be deactivated and will no longer be able to sign in. Their open tasks and schedules
+        will be unassigned, and reactivating them will not restore those assignments.
       </>
     }
     icon={<UserX className="size-5 text-red" />}
