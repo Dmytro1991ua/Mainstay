@@ -13,7 +13,7 @@ export const useLoginForm = () => {
   const navigate = useNavigate();
   const router = useRouter();
   const login = useLogin();
-  const { redirect } = useSearch({ from: "/_auth/login" });
+  const { redirect, reason } = useSearch({ from: "/_auth/login" });
 
   const { formState: form, onReset } = useFormState<LoginFormValues>({
     initialValues: INITIAL_VALUES,
@@ -48,6 +48,7 @@ export const useLoginForm = () => {
     onReset,
     errors,
     isPending: login.isPending,
+    wasDeactivated: reason === "deactivated",
     isError: login.isError,
     error: login.error,
     fillDemo,
