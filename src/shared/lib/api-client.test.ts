@@ -1,9 +1,5 @@
-import { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import { useAuthStore } from "@/shared/stores/auth-store";
-
-import { axiosInstance } from "./api-client";
 
 const rejectWith = (status: number, message: string) => (config: InternalAxiosRequestConfig) =>
   Promise.reject(
@@ -18,7 +14,15 @@ const rejectWith = (status: number, message: string) => (config: InternalAxiosRe
 
 const assign = vi.fn();
 
-beforeEach(() => {
+let axiosInstance: AxiosInstance;
+let useAuthStore: typeof import("@/shared/stores/auth-store").useAuthStore;
+
+beforeEach(async () => {
+  // The client signs out only once per page load, so each test needs a fresh copy of it.
+  vi.resetModules();
+  ({ axiosInstance } = await import("./api-client"));
+  ({ useAuthStore } = await import("@/shared/stores/auth-store"));
+
   assign.mockClear();
   vi.stubGlobal("location", { ...window.location, assign });
   useAuthStore.getState().setSession("token", { id: "u1" } as never);
@@ -36,6 +40,23 @@ describe("deactivated account", () => {
 
     expect(useAuthStore.getState().status).toBe("unauthenticated");
     expect(assign).toHaveBeenCalledWith("/login?reason=deactivated");
+  });
+
+  it("also signs out when the token refresh is the request that is rejected", async () => {
+    axiosInstance.defaults.adapter = rejectWith(403, "Your account has been deactivated");
+
+    await expect(axiosInstance.post("/auth/refresh")).rejects.toBeDefined();
+
+    expect(useAuthStore.getState().status).toBe("unauthenticated");
+    expect(assign).toHaveBeenCalledWith("/login?reason=deactivated");
+  });
+
+  it("signs out once when several requests fail together", async () => {
+    axiosInstance.defaults.adapter = rejectWith(403, "Your account has been deactivated");
+
+    await Promise.allSettled([axiosInstance.get("/tasks"), axiosInstance.get("/assets")]);
+
+    expect(assign).toHaveBeenCalledTimes(1);
   });
 
   it("leaves other 403s alone", async () => {
