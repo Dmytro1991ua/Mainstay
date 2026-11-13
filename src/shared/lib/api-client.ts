@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 
+import { isAccountDeactivatedError } from "@/shared/lib/api-error";
 import { queryClient } from "@/shared/lib/query-client";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
@@ -38,10 +39,34 @@ async function refreshAccessToken(): Promise<string> {
   return refreshPromise;
 }
 
+// A deactivated user is rejected on every request, so many can fail together; sign out once.
+let isSigningOut = false;
+
+const signOutDeactivatedUser = () => {
+  if (isSigningOut) return;
+
+  useAuthStore.getState().clearSession();
+  queryClient.clear();
+
+  // Already on the login page (a failed refresh at startup): nothing to leave, and reloading it
+  // would repeat the request. The flag stays off so a later sign-in on this page still works.
+  if (window.location.pathname === "/login") return;
+
+  isSigningOut = true;
+  // A full navigation drops everything held in memory, and lets the login page say why.
+  window.location.assign("/login?reason=deactivated");
+};
+
 axiosInstance.interceptors.response.use(undefined, async (error: AxiosError) => {
   const config = error.config;
 
   const isAuthEndpoint = config?.url?.startsWith("/auth/");
+
+  // The login form shows this message itself; anything else, refresh included, signs out.
+  const isLogin = config?.url === "/auth/login";
+
+  if (!isLogin && isAccountDeactivatedError(error)) signOutDeactivatedUser();
+
   const canRetry =
     error.response?.status === 401 && !!config && !config.isRetried && !isAuthEndpoint;
 

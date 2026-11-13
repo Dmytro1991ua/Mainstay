@@ -12,10 +12,17 @@ import { useLoginForm } from "../hooks/use-login-form";
 import { DEMO_ACCOUNTS, LOGIN_FORM_FIELDS } from "./configs";
 
 export const LoginForm = () => {
-  const { register, onSubmit, errors, isPending, isError, error, fillDemo } = useLoginForm();
+  const { register, onSubmit, errors, isPending, wasDeactivated, isError, error, fillDemo } =
+    useLoginForm();
 
   return (
     <>
+      {wasDeactivated && (
+        <Alert variant="warning" className="mb-4">
+          Your account has been deactivated. Contact an administrator if you think this is a
+          mistake.
+        </Alert>
+      )}
       <div
         className={cn(
           "overflow-hidden transition-all duration-200",
