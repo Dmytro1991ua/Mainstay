@@ -45,13 +45,14 @@ let isSigningOut = false;
 const signOutDeactivatedUser = () => {
   if (isSigningOut) return;
 
-  isSigningOut = true;
   useAuthStore.getState().clearSession();
   queryClient.clear();
+
   // Already on the login page (a failed refresh at startup): nothing to leave, and reloading it
-  // would repeat the request.
+  // would repeat the request. The flag stays off so a later sign-in on this page still works.
   if (window.location.pathname === "/login") return;
 
+  isSigningOut = true;
   // A full navigation drops everything held in memory, and lets the login page say why.
   window.location.assign("/login?reason=deactivated");
 };

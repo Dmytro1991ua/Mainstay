@@ -59,6 +59,23 @@ describe("deactivated account", () => {
     expect(assign).toHaveBeenCalledTimes(1);
   });
 
+  it("stays put on the login page, and can still sign out after a later sign-in", async () => {
+    vi.stubGlobal("location", { ...window.location, pathname: "/login", assign });
+    axiosInstance.defaults.adapter = rejectWith(403, "Your account has been deactivated");
+
+    await expect(axiosInstance.post("/auth/refresh")).rejects.toBeDefined();
+
+    expect(assign).not.toHaveBeenCalled();
+
+    // Signs in on this page, then is deactivated: the next request must still sign out.
+    vi.stubGlobal("location", { ...window.location, pathname: "/tasks", assign });
+    useAuthStore.getState().setSession("token", { id: "u2" } as never);
+
+    await expect(axiosInstance.get("/tasks")).rejects.toBeDefined();
+
+    expect(assign).toHaveBeenCalledWith("/login?reason=deactivated");
+  });
+
   it("leaves other 403s alone", async () => {
     axiosInstance.defaults.adapter = rejectWith(403, "ADMIN role required");
 
