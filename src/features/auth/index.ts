@@ -7,3 +7,4 @@ export { RegisterPage } from "./components/RegisterPage";
 export { ResetPasswordPage } from "./components/ResetPasswordPage";
 export { bootstrapAuth } from "./hooks/use-bootstrap-auth";
 export { useLogout } from "./hooks/use-logout";
+export { useSyncRoles } from "./hooks/use-sync-roles";
