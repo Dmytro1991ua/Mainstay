@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { ROLE_DENIED_EVENT } from "@/shared/lib/api-client";
+import { queryClient } from "@/shared/lib/query-client";
 import { toast } from "@/shared/ui/toast";
 
 import { refreshCurrentUser } from "../lib/refresh-current-user";
@@ -16,6 +17,8 @@ export const useSyncRoles = () => {
       const rolesChanged = await refreshCurrentUser(minIntervalMs);
 
       if (rolesChanged) {
+        // Some responses depend on role (dashboard stats, for one), so cached data may be from the old role.
+        void queryClient.invalidateQueries();
         toast.info("Your permissions changed", {
           description: "Menus and actions now match your current role.",
         });
