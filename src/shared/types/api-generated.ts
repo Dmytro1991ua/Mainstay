@@ -2770,6 +2770,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tasks/{id}/time-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List a task's time entries, oldest work date first, with the total minutes. ADMIN and MANAGER also get each entry's rate and cost, the total cost, and the minutes with no rate (excluded from the total). */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Time entries and totals */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TimeEntriesListResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Log time against a task, as the authenticated user. A technician can log only on tasks assigned to them; ADMIN and MANAGER on any task. The user's hourly rate is frozen on the entry. Not allowed on a cancelled task. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateTimeEntryInput"];
+                };
+            };
+            responses: {
+                /** @description Time entry created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TimeEntryResponse"];
+                    };
+                };
+                /** @description Work date is in the future */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task is not assigned to you */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Task is cancelled */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/time-entries/{entryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete a time entry. Authors can delete their own; ADMIN and MANAGER can delete any. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    entryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not your time entry */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Entry not found, or it does not belong to this task */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks": {
         parameters: {
             query?: never;
@@ -3941,6 +4105,66 @@ export interface paths {
                     };
                 };
                 /** @description ADMIN role required, or attempting to change own status */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description User not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/users/{id}/hourly-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Set or clear a user's hourly labor rate (null clears it). ADMIN and MANAGER. Only time entries logged afterwards use the new rate. The rate is not part of the normal user response. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateHourlyRateInput"];
+                };
+            };
+            responses: {
+                /** @description Rate updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["HourlyRateResponse"];
+                    };
+                };
+                /** @description ADMIN or MANAGER role required */
                 403: {
                     headers: {
                         [name: string]: unknown;
@@ -5379,6 +5603,55 @@ export interface components {
             /** @example Found worn bearings at joint 3. Need replacement part #B-204. */
             body: string;
         };
+        TimeEntriesListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["TimeEntriesSummary"];
+        };
+        TimeEntriesSummary: {
+            entries: components["schemas"]["TimeEntry"][];
+            totalMinutes: number;
+            /** @example 112.50 */
+            totalCost?: string;
+            unratedMinutes?: number;
+        };
+        TimeEntry: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            taskId: string;
+            minutes: number;
+            /** Format: date */
+            workedOn: string;
+            note: string | null;
+            user: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** @example 25.00 */
+            hourlyRate?: string | null;
+            /** @example 37.50 */
+            cost?: string | null;
+        };
+        TimeEntryResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["TimeEntry"];
+        };
+        CreateTimeEntryInput: {
+            /** @example 90 */
+            minutes: number;
+            /**
+             * Format: date
+             * @example 2026-11-14
+             */
+            workedOn?: string;
+            /** @example Replaced the drive belt */
+            note?: string;
+        };
         TaskResponse: {
             /** @enum {boolean} */
             success: true;
@@ -5582,6 +5855,21 @@ export interface components {
              * @enum {string}
              */
             status: "ACTIVE" | "INACTIVE";
+        };
+        HourlyRateResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+                /** @example 25.00 */
+                hourlyRate: string | null;
+            };
+        };
+        UpdateHourlyRateInput: {
+            /** @example 25.00 */
+            hourlyRate: string | null;
         };
         NotificationPreferencesResponse: {
             /** @enum {boolean} */
