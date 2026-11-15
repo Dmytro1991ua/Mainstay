@@ -15,12 +15,13 @@ const rejectWith = (status: number, message: string) => (config: InternalAxiosRe
 const assign = vi.fn();
 
 let axiosInstance: AxiosInstance;
+let ROLE_DENIED_EVENT: string;
 let useAuthStore: typeof import("@/shared/stores/auth-store").useAuthStore;
 
 beforeEach(async () => {
   // The client signs out only once per page load, so each test needs a fresh copy of it.
   vi.resetModules();
-  ({ axiosInstance } = await import("./api-client"));
+  ({ axiosInstance, ROLE_DENIED_EVENT } = await import("./api-client"));
   ({ useAuthStore } = await import("@/shared/stores/auth-store"));
 
   assign.mockClear();
@@ -76,13 +77,32 @@ describe("deactivated account", () => {
     expect(assign).toHaveBeenCalledWith("/login?reason=deactivated");
   });
 
-  it("leaves other 403s alone", async () => {
+  it("leaves other 403s alone, apart from announcing them", async () => {
+    const onDenied = vi.fn();
+    window.addEventListener(ROLE_DENIED_EVENT, onDenied);
     axiosInstance.defaults.adapter = rejectWith(403, "ADMIN role required");
 
     await expect(axiosInstance.get("/users")).rejects.toBeDefined();
+    window.removeEventListener(ROLE_DENIED_EVENT, onDenied);
 
     expect(useAuthStore.getState().status).toBe("authenticated");
     expect(assign).not.toHaveBeenCalled();
+    expect(onDenied).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not announce a role refusal for a deactivated account or for the login call", async () => {
+    const onDenied = vi.fn();
+    window.addEventListener(ROLE_DENIED_EVENT, onDenied);
+
+    axiosInstance.defaults.adapter = rejectWith(403, "Your account has been deactivated");
+    await expect(axiosInstance.get("/tasks")).rejects.toBeDefined();
+
+    axiosInstance.defaults.adapter = rejectWith(403, "Invalid credentials");
+    await expect(axiosInstance.post("/auth/login")).rejects.toBeDefined();
+
+    window.removeEventListener(ROLE_DENIED_EVENT, onDenied);
+
+    expect(onDenied).not.toHaveBeenCalled();
   });
 
   it("lets the login form show the message itself", async () => {

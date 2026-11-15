@@ -14,6 +14,10 @@ const baseURL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
 
 export const axiosInstance = axios.create({ baseURL, withCredentials: true });
 
+// Fired when the server refuses a request the signed-in user isn't allowed to make. The server reads
+// roles from the database on each request, so the roles held here may be out of date.
+export const ROLE_DENIED_EVENT = "api:role-denied";
+
 // Shared across concurrent 401s so a burst of requests triggers one refresh
 // call, not one per request — callers all await the same in-flight promise.
 let refreshPromise: Promise<string> | null = null;
@@ -66,6 +70,8 @@ axiosInstance.interceptors.response.use(undefined, async (error: AxiosError) => 
   const isLogin = config?.url === "/auth/login";
 
   if (!isLogin && isAccountDeactivatedError(error)) signOutDeactivatedUser();
+  else if (!isLogin && error.response?.status === 403)
+    window.dispatchEvent(new Event(ROLE_DENIED_EVENT));
 
   const canRetry =
     error.response?.status === 401 && !!config && !config.isRetried && !isAuthEndpoint;
