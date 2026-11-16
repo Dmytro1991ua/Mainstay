@@ -5,8 +5,10 @@ import { DetailShell } from "@/shared/ui/detail-shell";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 import { getUserDetailFields } from "../config";
+import { useHourlyRateForm } from "../hooks/use-hourly-rate-form";
 import { useUserDetail } from "../hooks/use-user-detail";
 
+import { HourlyRateDialog } from "./HourlyRateDialog";
 import { UserDeleteDialog } from "./UserDeleteDialog";
 import { UserDetailActions } from "./UserDetailActions";
 import { UserStatusDialog } from "./UserStatusDialog";
@@ -22,6 +24,7 @@ export const UserDetailPage = ({ userId }: UserDetailPageProps) => {
     isError,
     refetch,
     canManageUser,
+    canSetHourlyRate,
     deleteTarget,
     openDelete,
     closeDelete,
@@ -34,6 +37,8 @@ export const UserDetailPage = ({ userId }: UserDetailPageProps) => {
     handleActivate,
     isUpdatingStatus,
   } = useUserDetail(userId);
+
+  const hourlyRate = useHourlyRateForm();
 
   if (isPending) {
     return (
@@ -71,7 +76,9 @@ export const UserDetailPage = ({ userId }: UserDetailPageProps) => {
         actions={
           <UserDetailActions
             canManageUser={canManageUser}
+            canSetHourlyRate={canSetHourlyRate}
             isActive={user.status === "ACTIVE"}
+            onSetHourlyRate={() => hourlyRate.open(user)}
             onDeactivate={openDeactivate}
             onActivate={handleActivate}
             onDelete={openDelete}
@@ -81,6 +88,13 @@ export const UserDetailPage = ({ userId }: UserDetailPageProps) => {
         skeletonKeys={SKELETON_KEYS}
       />
 
+      <HourlyRateDialog
+        target={hourlyRate.target}
+        form={hourlyRate.form}
+        onSave={hourlyRate.save}
+        onClose={hourlyRate.close}
+        isSaving={hourlyRate.isSaving}
+      />
       <UserStatusDialog
         target={statusTarget}
         onConfirm={confirmDeactivate}

@@ -22,6 +22,7 @@ export const useUserDetail = (userId: string) => {
   const isAdmin = roles.includes("ADMIN");
   const isOwnAccount = currentUser?.id === userId;
   const canManageUser = isAdmin && !isOwnAccount;
+  const canSetHourlyRate = isAdmin || roles.includes("MANAGER");
 
   const {
     data: user,
@@ -96,6 +97,7 @@ export const useUserDetail = (userId: string) => {
     refetch,
     isAdmin,
     canManageUser,
+    canSetHourlyRate,
     deleteTarget,
     openDelete,
     closeDelete,

@@ -1,10 +1,12 @@
-import { PowerIcon, PowerOff, Trash2 } from "lucide-react";
+import { DollarSign, PowerIcon, PowerOff, Trash2 } from "lucide-react";
 
 import { DetailActions } from "@/shared/ui/detail-actions";
 
 type UserDetailActionsProps = {
   canManageUser: boolean;
+  canSetHourlyRate: boolean;
   isActive: boolean;
+  onSetHourlyRate: () => void;
   onDeactivate: () => void;
   onActivate: () => void;
   onDelete: () => void;
@@ -12,13 +14,21 @@ type UserDetailActionsProps = {
 
 export const UserDetailActions = ({
   canManageUser,
+  canSetHourlyRate,
   isActive,
+  onSetHourlyRate,
   onDeactivate,
   onActivate,
   onDelete,
 }: UserDetailActionsProps) => (
   <DetailActions
     actions={[
+      {
+        label: "Set hourly rate",
+        icon: DollarSign,
+        onClick: onSetHourlyRate,
+        show: canSetHourlyRate,
+      },
       {
         label: "Deactivate",
         icon: PowerOff,

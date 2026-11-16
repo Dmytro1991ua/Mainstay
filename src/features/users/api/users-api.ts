@@ -36,6 +36,18 @@ export const updateUserRoles = async (id: string, roles: UserRole[]): Promise<Us
   return data.data;
 };
 
+/** `null` clears the rate. Money is a 2-decimal string, like every other amount in the API. */
+export const updateUserHourlyRate = async (
+  id: string,
+  hourlyRate: string | null,
+): Promise<components["schemas"]["HourlyRateResponse"]["data"]> => {
+  const { data } = await axiosInstance.patch<components["schemas"]["HourlyRateResponse"]>(
+    `/users/${id}/hourly-rate`,
+    { hourlyRate },
+  );
+  return data.data;
+};
+
 export const sendInvite = async (
   input: components["schemas"]["InviteUserInput"],
 ): Promise<components["schemas"]["InviteResponse"]["data"]> => {
