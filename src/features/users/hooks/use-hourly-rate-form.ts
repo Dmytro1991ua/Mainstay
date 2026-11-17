@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useFormState } from "@/shared/hooks/use-form-state";
 import { getApiErrorMessage } from "@/shared/lib/api-error";
 import { toast } from "@/shared/ui/toast";
-import { formatMoney } from "@/shared/utils";
+import { formatMoney, formatUserName } from "@/shared/utils";
 
 import { updateUserHourlyRate } from "../api/users-api";
 import { HOURLY_RATE_DEFAULTS, hourlyRateSchema, type HourlyRateFormValues } from "../validation";
@@ -41,10 +41,12 @@ export const useHourlyRateForm = () => {
         hourlyRate: hourlyRate === "" ? null : Number(hourlyRate).toFixed(2),
       });
 
+      const name = formatUserName(updated.userName);
+
       toast.success(updated.hourlyRate ? "Hourly rate updated" : "Hourly rate cleared", {
         description: updated.hourlyRate
-          ? `${updated.userName} is now rated at ${formatMoney(updated.hourlyRate)} per hour.`
-          : `${updated.userName} has no hourly rate.`,
+          ? `${name} is now rated at ${formatMoney(updated.hourlyRate)} per hour.`
+          : `${name} has no hourly rate.`,
       });
 
       close();

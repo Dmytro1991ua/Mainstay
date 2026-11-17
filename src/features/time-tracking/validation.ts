@@ -4,6 +4,7 @@ import { z } from "zod";
 import { toTotalMinutes } from "./utils";
 
 export const MAX_MINUTES_PER_ENTRY = 1440;
+const NOTE_MAX_LENGTH = 500;
 
 const WHOLE_NUMBER_PATTERN = /^\d*$/;
 const WHOLE_NUMBER_ERROR = "Whole numbers only";
@@ -26,7 +27,7 @@ export const timeEntryFormSchema = z
       .string()
       .min(1, "Pick a date")
       .refine((value) => value <= today(), "Can't be in the future"),
-    note: z.string().trim(),
+    note: z.string().trim().max(NOTE_MAX_LENGTH, `Max ${NOTE_MAX_LENGTH} characters`),
   })
   .superRefine(({ hours, minutes }, ctx) => {
     const addIssue = (path: "hours" | "minutes", message: string) =>

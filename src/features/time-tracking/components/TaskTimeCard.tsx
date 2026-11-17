@@ -72,6 +72,10 @@ export const TaskTimeCard = ({ taskId, canLog }: TaskTimeCardProps) => {
       );
     }
 
+    const unratedNote = getUnratedNote(summary);
+    // With no rated time the server still sends "0.00", which would read as a real labor cost.
+    const hasRatedTime = summary.unratedMinutes !== summary.totalMinutes;
+
     return (
       <>
         <ul className="divide-y divide-border">
@@ -86,15 +90,13 @@ export const TaskTimeCard = ({ taskId, canLog }: TaskTimeCardProps) => {
         </ul>
         <div className="mt-2 flex items-center justify-between border-t border-border pt-3 text-sm">
           <span className="font-medium text-text">Total {formatMinutes(summary.totalMinutes)}</span>
-          {summary.totalCost !== undefined && (
+          {summary.totalCost !== undefined && hasRatedTime && (
             <span className="font-medium text-text tabular-nums">
               {formatMoney(summary.totalCost)}
             </span>
           )}
         </div>
-        {getUnratedNote(summary) && (
-          <p className="mt-1 text-xs text-text-3">{getUnratedNote(summary)}</p>
-        )}
+        {unratedNote && <p className="mt-1 text-xs text-text-3">{unratedNote}</p>}
       </>
     );
   };

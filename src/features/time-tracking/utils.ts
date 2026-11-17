@@ -17,7 +17,7 @@ export const formatMinutes = (minutes: number): string => {
 export const toTotalMinutes = (hours: string, minutes: string): number =>
   Number(hours || 0) * MINUTES_PER_HOUR + Number(minutes || 0);
 
-/** Cost fields are sent to managers only, so their absence means "don't show a cost". */
+/** The "Excludes …" line shown with the total cost; managers only, as technicians get no unrated minutes. */
 export const getUnratedNote = (summary: TimeEntriesSummary): string | undefined =>
   summary.unratedMinutes
     ? `Excludes ${formatMinutes(summary.unratedMinutes)} logged by people with no hourly rate`
