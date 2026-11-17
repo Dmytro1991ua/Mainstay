@@ -43,6 +43,10 @@ export const useTaskDetail = (taskId: string) => {
 
   const canCancel = !isTerminal && canManage;
 
+  // Unlike the other actions, time can still be logged on a completed task.
+  const canLogTime =
+    task?.status !== "CANCELLED" && (canManage || (isTechnician && task?.assignedTo === user?.id));
+
   const canUploadBeforePhoto =
     task?.status === "IN_PROGRESS" &&
     (canManage || (isTechnician && task?.assignedTo === user?.id));
@@ -89,6 +93,7 @@ export const useTaskDetail = (taskId: string) => {
     canEditStatus,
     canComplete,
     canCancel,
+    canLogTime,
     canUploadBeforePhoto,
     isUploadingBeforePhoto: uploadBeforePhotoMutation.isPending,
     handleUploadBeforePhoto,

@@ -1,5 +1,6 @@
 import { AlertTriangle, RotateCcw } from "lucide-react";
 
+import { TaskTimeCard } from "@/features/time-tracking";
 import { Button } from "@/shared/ui/button";
 import { DetailShell } from "@/shared/ui/detail-shell";
 import { EmptyState } from "@/shared/ui/empty-state";
@@ -41,6 +42,7 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
     canEditStatus,
     canComplete,
     canCancel,
+    canLogTime,
     canUploadBeforePhoto,
     isUploadingBeforePhoto,
     handleUploadBeforePhoto,
@@ -118,6 +120,7 @@ export const TaskDetailPage = ({ taskId }: TaskDetailPageProps) => {
         })}
         skeletonKeys={SKELETON_KEYS}
       >
+        <TaskTimeCard taskId={task.id} canLog={canLogTime} />
         <TaskComments taskId={task.id} canComment={!isTerminal} />
       </DetailShell>
       <TaskFormSheet
