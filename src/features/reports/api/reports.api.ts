@@ -38,6 +38,8 @@ export type ReliabilitySortBy =
   | "overdueTasks"
   | "completedTasks"
   | "partsConsumed"
+  | "laborMinutes"
+  | "laborCost"
   | "avgCompletionDays"
   | "name";
 
