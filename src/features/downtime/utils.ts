@@ -14,6 +14,10 @@ export const formatDowntimeDuration = (minutes: number | null): string => {
   return hours === 0 ? `${days}d` : `${days}d ${hours}h`;
 };
 
+/** A datetime-local value is the viewer's local time; the API wants an ISO instant. Empty means "now". */
+export const toIsoDateTime = (local: string): string | undefined =>
+  local === "" ? undefined : new Date(local).toISOString();
+
 /** The server sends null when the window has no measurable time. */
 export const formatAvailability = (percent: number | null): string =>
   percent === null ? "—" : `${percent.toFixed(1)}%`;

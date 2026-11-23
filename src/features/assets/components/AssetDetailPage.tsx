@@ -84,7 +84,7 @@ export const AssetDetailPage = ({ assetId }: AssetDetailPageProps) => {
         skeletonKeys={SKELETON_KEYS}
       >
         <AssetMeters assetId={asset.id} canManage={canManage} />
-        <AssetDowntime assetId={asset.id} />
+        <AssetDowntime assetId={asset.id} assetStatus={asset.status} />
         <AssetMaintenanceHistory assetId={asset.id} />
       </DetailShell>
 

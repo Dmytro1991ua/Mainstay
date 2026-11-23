@@ -4,14 +4,10 @@ import { format } from "date-fns";
 import { cn } from "@/shared/lib/utils";
 import { formatUserName } from "@/shared/utils";
 
+import { DOWNTIME_REASON_LABELS } from "../config";
 import { formatDowntimeDuration } from "../utils";
 
 import type { DowntimeEvent } from "../api/downtime.api";
-
-const REASON_LABELS: Record<DowntimeEvent["reason"], string> = {
-  BREAKDOWN: "Breakdown",
-  PLANNED: "Planned",
-};
 
 const formatDateTime = (iso: string) => format(new Date(iso), "MMM d, yyyy, h:mm a");
 
@@ -24,7 +20,7 @@ export const DowntimeEventItem = ({ event }: { event: DowntimeEvent }) => (
           event.reason === "BREAKDOWN" ? "text-red" : "text-text",
         )}
       >
-        {REASON_LABELS[event.reason]}
+        {DOWNTIME_REASON_LABELS[event.reason]}
       </span>
       <span className="text-sm tabular-nums text-text">
         {formatDowntimeDuration(event.durationMinutes)}

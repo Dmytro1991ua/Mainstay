@@ -160,6 +160,63 @@ export function ConfirmDialog({
   );
 }
 
+// ─── FormDialog ───────────────────────────────────────────────────────────────
+
+type FormDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  submitLabel: string;
+  savingLabel: string;
+  isSaving: boolean;
+  submitVariant?: "default" | "destructive";
+  children: React.ReactNode;
+};
+
+export const FormDialog = ({
+  open,
+  onClose,
+  onSubmit,
+  icon,
+  title,
+  description,
+  submitLabel,
+  savingLabel,
+  isSaving,
+  submitVariant = "default",
+  children,
+}: FormDialogProps) => (
+  <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+    <DialogContent>
+      <form onSubmit={onSubmit} noValidate>
+        <DialogBody className="flex flex-col items-center gap-3 pb-2 pt-8 text-center">
+          <div className="flex size-12 items-center justify-center rounded-full bg-panel-2">
+            {icon}
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </div>
+          <div className="w-full text-left">{children}</div>
+        </DialogBody>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="outline" disabled={isSaving}>
+              Back
+            </Button>
+          </DialogClose>
+          <Button type="submit" variant={submitVariant} disabled={isSaving}>
+            {isSaving ? savingLabel : submitLabel}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
+);
+
 // ─── Title / Description ──────────────────────────────────────────────────────
 
 export function DialogTitle({

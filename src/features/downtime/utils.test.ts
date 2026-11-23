@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { formatAvailability, formatDowntimeDuration } from "./utils";
+import { formatAvailability, formatDowntimeDuration, toIsoDateTime } from "./utils";
+
+describe("toIsoDateTime", () => {
+  it("sends nothing for an empty field, so the server uses now", () => {
+    expect(toIsoDateTime("")).toBeUndefined();
+  });
+
+  it("turns the viewer's local time into an ISO instant", () => {
+    expect(toIsoDateTime("2026-11-22T10:30")).toBe(new Date(2026, 10, 22, 10, 30).toISOString());
+  });
+});
 
 describe("formatDowntimeDuration", () => {
   it("shows a dash when there is no value", () => {
