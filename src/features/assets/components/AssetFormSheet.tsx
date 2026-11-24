@@ -64,6 +64,7 @@ export const AssetFormSheet = ({
                     id={`asset-${field.name}`}
                     label={field.label}
                     error={errors[field.name]}
+                    hint={mode === "edit" ? field.editHint : undefined}
                   >
                     <Select
                       value={f.value}
