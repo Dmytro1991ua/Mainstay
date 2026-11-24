@@ -24,6 +24,10 @@ export const startDowntime = async (assetId: string, data: StartDowntimeInput) =
   return res.data.data;
 };
 
+export const deleteDowntime = async (assetId: string, downtimeId: string) => {
+  await axiosInstance.delete(`/assets/${assetId}/downtime/${downtimeId}`);
+};
+
 export const endDowntime = async (assetId: string, downtimeId: string, data: EndDowntimeInput) => {
   const res = await axiosInstance.post<components["schemas"]["DowntimeEventResponse"]>(
     `/assets/${assetId}/downtime/${downtimeId}/end`,

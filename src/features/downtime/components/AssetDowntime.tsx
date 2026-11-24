@@ -3,9 +3,11 @@ import { Activity, AlertTriangle, Power, PowerOff, RotateCcw } from "lucide-reac
 import type { AssetStatus } from "@/features/assets/api/assets.api";
 import { Button } from "@/shared/ui/button";
 import { type ActionConfig, DetailActions } from "@/shared/ui/detail-actions";
+import { ConfirmDialog } from "@/shared/ui/dialog";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { Skeleton } from "@/shared/ui/skeleton";
 
+import { useDeleteDowntimeEvent } from "../hooks/use-delete-downtime-event";
 import { useDowntime } from "../hooks/use-downtime";
 import { useEndDowntimeForm } from "../hooks/use-end-downtime-form";
 import { useStartDowntimeForm } from "../hooks/use-start-downtime-form";
@@ -15,14 +17,15 @@ import { DowntimeSummaryTiles } from "./DowntimeSummaryTiles";
 import { EndDowntimeDialog } from "./EndDowntimeDialog";
 import { StartDowntimeDialog } from "./StartDowntimeDialog";
 
-type AssetDowntimeProps = { assetId: string; assetStatus: AssetStatus };
+type AssetDowntimeProps = { assetId: string; assetStatus: AssetStatus; canManage: boolean };
 
 const SKELETON_KEYS = ["s1", "s2", "s3"];
 
-export const AssetDowntime = ({ assetId, assetStatus }: AssetDowntimeProps) => {
+export const AssetDowntime = ({ assetId, assetStatus, canManage }: AssetDowntimeProps) => {
   const { data, isPending, isError, refetch } = useDowntime(assetId);
   const start = useStartDowntimeForm(assetId);
   const end = useEndDowntimeForm(assetId);
+  const remove = useDeleteDowntimeEvent(assetId);
 
   const ongoingEvent = data?.events.find((event) => event.endedAt === null);
   // The server refuses a second downtime while one is open, and any on a retired asset.
@@ -78,7 +81,12 @@ export const AssetDowntime = ({ assetId, assetStatus }: AssetDowntimeProps) => {
         ) : (
           <ul className="mt-2 divide-y divide-border">
             {data.events.map((event) => (
-              <DowntimeEventItem key={event.id} event={event} />
+              <DowntimeEventItem
+                key={event.id}
+                event={event}
+                canDelete={canManage}
+                onDelete={remove.open}
+              />
             ))}
           </ul>
         )}
@@ -96,6 +104,15 @@ export const AssetDowntime = ({ assetId, assetStatus }: AssetDowntimeProps) => {
         <DetailActions actions={actions} />
       </div>
       {renderContent()}
+      <ConfirmDialog
+        open={remove.target !== null}
+        onClose={remove.close}
+        onConfirm={remove.confirm}
+        title="Delete downtime event?"
+        description="It will be removed from the history and availability figures."
+        variant="destructive"
+        confirmLabel="Delete"
+      />
       <StartDowntimeDialog
         open={start.isOpen}
         form={start.form}

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ASSETS_KEY } from "@/features/assets/hooks/use-assets";
 
 import {
+  deleteDowntime,
   endDowntime,
   fetchDowntime,
   startDowntime,
@@ -35,6 +36,15 @@ export const useStartDowntime = (assetId: string) => {
 
   return useMutation({
     mutationFn: (data: StartDowntimeInput) => startDowntime(assetId, data),
+    onSuccess: refresh,
+  });
+};
+
+export const useDeleteDowntime = (assetId: string) => {
+  const refresh = useRefreshAfterChange(assetId);
+
+  return useMutation({
+    mutationFn: (downtimeId: string) => deleteDowntime(assetId, downtimeId),
     onSuccess: refresh,
   });
 };
