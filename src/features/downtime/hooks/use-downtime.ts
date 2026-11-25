@@ -11,28 +11,25 @@ import {
   type StartDowntimeInput,
 } from "../api/downtime.api";
 
-export const DOWNTIME_KEY = "asset-downtime";
-
 export const useDowntime = (assetId: string) =>
   useQuery({
-    queryKey: [DOWNTIME_KEY, assetId],
+    queryKey: [ASSETS_KEY, assetId, "downtime"],
     queryFn: () => fetchDowntime(assetId),
     staleTime: 30_000,
   });
 
-const useRefreshAfterChange = (assetId: string) => {
+const useRefreshAfterChange = () => {
   const queryClient = useQueryClient();
 
   return () =>
     Promise.all([
-      queryClient.invalidateQueries({ queryKey: [DOWNTIME_KEY, assetId] }),
       queryClient.invalidateQueries({ queryKey: [ASSETS_KEY] }),
       queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
     ]);
 };
 
 export const useStartDowntime = (assetId: string) => {
-  const refresh = useRefreshAfterChange(assetId);
+  const refresh = useRefreshAfterChange();
 
   return useMutation({
     mutationFn: (data: StartDowntimeInput) => startDowntime(assetId, data),
@@ -41,7 +38,7 @@ export const useStartDowntime = (assetId: string) => {
 };
 
 export const useDeleteDowntime = (assetId: string) => {
-  const refresh = useRefreshAfterChange(assetId);
+  const refresh = useRefreshAfterChange();
 
   return useMutation({
     mutationFn: (downtimeId: string) => deleteDowntime(assetId, downtimeId),
@@ -50,7 +47,7 @@ export const useDeleteDowntime = (assetId: string) => {
 };
 
 export const useEndDowntime = (assetId: string) => {
-  const refresh = useRefreshAfterChange(assetId);
+  const refresh = useRefreshAfterChange();
 
   return useMutation({
     mutationFn: ({ downtimeId, data }: { downtimeId: string; data: EndDowntimeInput }) =>

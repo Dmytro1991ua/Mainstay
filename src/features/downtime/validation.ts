@@ -5,10 +5,12 @@ const pastOrNow = z
   .string()
   .refine((value) => value === "" || new Date(value) <= new Date(), "Can't be in the future");
 
+const NOTE_MAX_LENGTH = 500;
+
 export const startDowntimeSchema = z.object({
   reason: z.enum(["BREAKDOWN", "PLANNED"]),
   startedAt: pastOrNow,
-  note: z.string().trim(),
+  note: z.string().trim().max(NOTE_MAX_LENGTH, `Max ${NOTE_MAX_LENGTH} characters`),
 });
 
 export type StartDowntimeFormValues = z.infer<typeof startDowntimeSchema>;

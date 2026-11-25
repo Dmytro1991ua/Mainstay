@@ -39,6 +39,21 @@ describe("startDowntimeSchema", () => {
     ).toBe(false);
   });
 
+  it("rejects a note over 500 characters, as the server does", () => {
+    const result = startDowntimeSchema.safeParse({
+      ...START_DOWNTIME_DEFAULTS,
+      note: "a".repeat(501),
+    });
+
+    expect(result.error?.issues[0]?.message).toBe("Max 500 characters");
+  });
+
+  it("accepts a note of exactly 500 characters", () => {
+    expect(
+      startDowntimeSchema.safeParse({ ...START_DOWNTIME_DEFAULTS, note: "a".repeat(500) }).success,
+    ).toBe(true);
+  });
+
   it("accepts a planned stop", () => {
     expect(
       startDowntimeSchema.safeParse({ ...START_DOWNTIME_DEFAULTS, reason: "PLANNED" }).success,
