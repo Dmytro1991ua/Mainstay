@@ -4,6 +4,243 @@
  */
 
 export interface paths {
+    "/assets/{id}/downtime": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Downtime events that overlap the range (newest first) with a summary: downtime minutes (breakdown and planned), breakdown count, availability, MTTR (mean time to repair) and MTBF (mean time between breakdowns). Events count only the part inside the range, and an ongoing one counts up to now. MTTR and MTBF use breakdowns only; planned downtime lowers availability but is not a failure. A plain-date `to` includes that whole day. Defaults to the last 365 days. */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string | null;
+                    to?: string | null;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Downtime events and summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DowntimeListResponse"];
+                    };
+                };
+                /** @description Invalid range (`from` after `to`) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Asset not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** @description Record that an asset went down, and mark it DOWN. `startedAt` defaults to now and may be backdated, but not before the asset's previous downtime ended. Any authenticated user can record it. The optional task must belong to this asset. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StartDowntimeInput"];
+                };
+            };
+            responses: {
+                /** @description Downtime started */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DowntimeEventResponse"];
+                    };
+                };
+                /** @description Start in the future, or the task belongs to another asset */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Asset or task not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Already down, retired, or overlaps previous downtime */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets/{id}/downtime/{downtimeId}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Record that an asset is back in service, and mark it OPERATIONAL. `endedAt` defaults to now; it must be after the start and not in the future. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    downtimeId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["EndDowntimeInput"];
+                };
+            };
+            responses: {
+                /** @description Downtime ended */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DowntimeEventResponse"];
+                    };
+                };
+                /** @description End not after start, or in the future */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Event not found, or it does not belong to this asset */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Already ended */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assets/{id}/downtime/{downtimeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete a downtime event, for a mistaken entry. Deleting an ongoing event puts the asset back to OPERATIONAL. ADMIN and MANAGER only. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    downtimeId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description ADMIN or MANAGER role required */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Event not found, or it does not belong to this asset */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/assets/categories": {
         parameters: {
             query?: never;
@@ -4529,6 +4766,97 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        DowntimeListResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: {
+                /** Format: date-time */
+                from: string;
+                /** Format: date-time */
+                to: string;
+                summary: {
+                    windowMinutes: number;
+                    downtimeMinutes: number;
+                    breakdownMinutes: number;
+                    plannedMinutes: number;
+                    breakdowns: number;
+                    /** @example 98.7 */
+                    availabilityPercent: number | null;
+                    /** @description Mean time to repair */
+                    mttrMinutes: number | null;
+                    /** @description Mean time between breakdowns */
+                    mtbfMinutes: number | null;
+                };
+                events: components["schemas"]["DowntimeEvent"][];
+            };
+        };
+        DowntimeEvent: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            assetId: string;
+            /** Format: uuid */
+            taskId: string | null;
+            /** @enum {string} */
+            reason: "BREAKDOWN" | "PLANNED";
+            /** Format: date-time */
+            startedAt: string;
+            /**
+             * Format: date-time
+             * @description null = still down
+             */
+            endedAt: string | null;
+            note: string | null;
+            durationMinutes: number;
+            creator: {
+                /** Format: uuid */
+                id: string;
+                userName: string;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ErrorResponse: {
+            /** @enum {boolean} */
+            success: false;
+            error: {
+                /** @example VALIDATION_ERROR */
+                code: string;
+                /** @example Validation failed */
+                message: string;
+                fields?: {
+                    [key: string]: string[];
+                };
+            };
+        };
+        DowntimeEventResponse: {
+            /** @enum {boolean} */
+            success: true;
+            data: components["schemas"]["DowntimeEvent"];
+        };
+        StartDowntimeInput: {
+            /**
+             * @default BREAKDOWN
+             * @enum {string}
+             */
+            reason: "BREAKDOWN" | "PLANNED";
+            /**
+             * Format: date-time
+             * @example 2026-11-19T08:30:00.000Z
+             */
+            startedAt?: string;
+            /** @example Compressor tripped */
+            note?: string;
+            /** Format: uuid */
+            taskId?: string;
+        };
+        EndDowntimeInput: {
+            /**
+             * Format: date-time
+             * @example 2026-11-19T14:00:00.000Z
+             */
+            endedAt?: string;
+        };
         AssetCategoriesResponse: {
             /** @enum {boolean} */
             success: true;
@@ -4696,19 +5024,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-        };
-        ErrorResponse: {
-            /** @enum {boolean} */
-            success: false;
-            error: {
-                /** @example VALIDATION_ERROR */
-                code: string;
-                /** @example Validation failed */
-                message: string;
-                fields?: {
-                    [key: string]: string[];
-                };
-            };
         };
         AssetResponse: {
             /** @enum {boolean} */

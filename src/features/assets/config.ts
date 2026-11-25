@@ -27,6 +27,7 @@ export type AssetFieldConfig = {
   inputClassName?: string;
   readonlyInEdit?: boolean;
   select?: "category" | "status";
+  editHint?: string;
   colSpan?: 1 | 2;
 };
 
@@ -41,7 +42,13 @@ export const ASSET_FORM_FIELDS: AssetFieldConfig[] = [
     colSpan: 2,
   },
   { name: "category", label: "Category", placeholder: "Select a category", select: "category" },
-  { name: "status", label: "Status", placeholder: "Select a status", select: "status" },
+  {
+    name: "status",
+    label: "Status",
+    placeholder: "Select a status",
+    select: "status",
+    editHint: "Also updates downtime.",
+  },
   { name: "location", label: "Location", placeholder: "e.g. Building A — Roof", colSpan: 2 },
   { name: "manufacturer", label: "Manufacturer", placeholder: "e.g. Carrier" },
   { name: "model", label: "Model", placeholder: "e.g. 48TCED12" },
